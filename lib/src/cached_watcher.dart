@@ -119,19 +119,25 @@ class CachedWatcher<T> extends Watcher<T> {
   /// Asynchronously clears the cache for this specific [CachedWatcher] instance.
   /// This method deletes the data associated with this watcher's [key] from the local storage,
   /// effectively resetting its cached state.
-  Future<void> deleteCache() async => _BaseStoredWatcher.reset(key);
+  Future<void> deleteCache() async => _BaseStoredWatcher._reset(key);
 
   /// [deleteAllCaches]
   ///
   /// A static method that asynchronously clears all caches associated with [CachedWatcher].
   /// This method is useful for scenarios where a complete reset of all cached states is required,
   /// such as during a sign-out process or when clearing app data.
-  static Future<void> deleteAllCaches() async => _BaseStoredWatcher.resetAll();
+  static Future<void> deleteAllCaches() async => _BaseStoredWatcher._resetAll();
 
+  /// [isCaching]
+  ///
+  /// A getter that returns a boolean indicating whether caching is currently active for this [CachedWatcher].
+  /// If [true], changes to the watcher's value are automatically written to the local cache.
+  /// If [false], the caching functionality is disabled, and changes are not written to the cache.
   bool _isCaching = true;
 
+  /// this is the starting point of the caching process when initializing a new [CachedWatcher]
   Future<void> _init() async {
-    await _BaseStoredWatcher.init();
+    await _BaseStoredWatcher._init();
     final box = await _BaseStoredWatcher._box;
     if (box.containsKey(key)) {
       final storedValue = box.get(key);
@@ -153,7 +159,7 @@ class CachedWatcher<T> extends Watcher<T> {
   set v(T newValue) => this.value = newValue;
 
   Future<void> _writeCache(dynamic data, {Box<dynamic>? box}) async =>
-      _BaseStoredWatcher.updateValue(data, key: key, box: box);
+      _BaseStoredWatcher._updateValue(data, key: key, box: box);
 }
 
 abstract class _BaseStoredWatcher {
@@ -162,7 +168,7 @@ abstract class _BaseStoredWatcher {
 
   static bool _isHiveInit = false;
 
-  static Future<void> init() async {
+  static Future<void> _init() async {
     if (!_isHiveInit) {
       await Hive.initFlutter();
       _isHiveInit = true;
@@ -179,12 +185,12 @@ abstract class _BaseStoredWatcher {
   }
 
   // Static method to clear the entire box
-  static Future<void> resetAll() async {
+  static Future<void> _resetAll() async {
     final box = await _box;
     await box.clear();
   }
 
-  static Future<void> updateValue(
+  static Future<void> _updateValue(
     dynamic data, {
     required String key,
     Box<dynamic>? box,
@@ -194,7 +200,7 @@ abstract class _BaseStoredWatcher {
     await (await _box).put(key, data);
   }
 
-  static Future<void> reset(String key) async {
+  static Future<void> _reset(String key) async {
     final box = await _box;
     await box.delete(key);
   }

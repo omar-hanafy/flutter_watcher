@@ -7,6 +7,7 @@ class Watcher<T> extends ValueNotifier<T> {
   /// gets the previous value of the [Watcher].
   late T prevValue = value;
 
+  /// rebuilds and trigger any listeners of any [ValueWatch] or [watch] attached to that [Watcher].
   void refresh() {
     notifyListeners();
   }
@@ -30,62 +31,62 @@ class Watcher<T> extends ValueNotifier<T> {
 }
 
 class BoolWatcher extends Watcher<bool> {
+  /// allows to quickly create a Watcher of type bool.
   BoolWatcher(super.initial);
 }
 
-// For Double
 class DoubleWatcher extends Watcher<double> {
+  /// allows to quickly create a Watcher of type double.
   DoubleWatcher(super.initial);
 
   @override
   String toString() => value.toStringAsFixed(2);
 }
 
-// For Integer
 class IntWatcher extends Watcher<int> {
+  /// allows to quickly create a Watcher of type int.
   IntWatcher(super.initial);
 }
 
-// For Num (covers both int and double)
 class NumWatcher extends Watcher<num> {
+  /// allows to quickly create a Watcher of type num.
   NumWatcher(super.initial);
 }
 
-// For String
 class StringWatcher extends Watcher<String> {
+  /// allows to quickly create a Watcher of type String.
   StringWatcher(super.initial);
 
   @override
   String toString() => value;
 }
 
-// For Color
 class ColorWatcher extends Watcher<Color> {
+  /// allows to quickly create a Watcher of type Color.
   ColorWatcher(super.initial);
 }
 
-// For Uri
 class UriWatcher extends Watcher<Uri> {
+  /// allows to quickly create a Watcher of type Uri.
   UriWatcher(super.initial);
 }
 
-// For Generic List<T>
 class ListWatcher<T> extends Watcher<List<T>> {
+  /// allows to quickly create a Watcher of type List<T>.
   ListWatcher(super.initial);
 }
 
-// For Generic Iterable<T>
 class IterableWatcher<E> extends Watcher<Iterable<E>> {
+  /// allows to quickly create a Watcher of type Iterable<E>.
   IterableWatcher(super.initial);
 }
 
-// For Generic Map<K, V>
 class MapWatcher<K, V> extends Watcher<Map<K, V>> {
+  /// allows to quickly create a Watcher of type Map<K, V>.
   MapWatcher(super.initial);
 }
 
-// For Duration
-
 class DurationWatcher extends Watcher<Duration> {
+  /// allows to quickly create a Watcher of type Duration.
   DurationWatcher(super.initial);
 }
