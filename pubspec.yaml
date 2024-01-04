@@ -1,0 +1,22 @@
+name: flutter_watcher
+description: "Streamlined state management in Flutter using ValueNotifier, with advanced features and helper functions."
+repository: https://github.com/omar-hanafy/flutter_watcher
+version: 1.0.0
+
+environment:
+  sdk: '>=3.0.6 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  flutter_helper_utils: 3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^5.1.0
+
+flutter:

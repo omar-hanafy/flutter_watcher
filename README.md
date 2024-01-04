@@ -1,0 +1,2 @@
+# flutter_watcher
+ Flutter Watcher is a state management solution that simplifies Flutter development by wrapping around ValueListenableBuilder and ValueNotifier. It offers an array of additional extensions, helper functions, and features, focusing on enhancing simplicity and user-friendly syntax. This package is ideal for developers looking to manage state in Flutter applications efficiently, with built-in utilities for handling changes, combining watchers, and integrating with Flutter's native controllers.
