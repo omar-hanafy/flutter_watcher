@@ -99,9 +99,8 @@ class _ValueWatchState<T> extends State<ValueWatch<T>> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return widget.builder(context, widget.watcher.value);
-  }
+  Widget build(BuildContext context) =>
+      widget.builder(context, widget.watcher.value);
 
   @override
   void dispose() {

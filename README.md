@@ -328,9 +328,7 @@ class MyCounter extends StatelessWidget {
 
 ## Contributions
 
-Contributions to this package are welcome.
-If you have any suggestions, issues, or feature requests,
-please create a pull request in the [repository](https://github.com/omar-hanafy/flutter_watcher).
+Contributions to this package are welcome. If you have any suggestions, issues, or feature requests, please create a pull request in the [repository](https://github.com/omar-hanafy/flutter_watcher).
 
 ## License
 

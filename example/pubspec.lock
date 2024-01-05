@@ -81,10 +81,11 @@ packages:
   flutter_helper_utils:
     dependency: transitive
     description:
-      path: "../../flutter_helper_utils"
-      relative: true
-    source: path
-    version: "2.1.0"
+      name: flutter_helper_utils
+      sha256: c5aa34a41c74714ec76e759fd8804e7729a87954762fc8987e9e0b9e4272d6ef
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.2"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -104,7 +105,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.3"
   hive:
     dependency: transitive
     description:

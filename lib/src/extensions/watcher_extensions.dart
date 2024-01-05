@@ -20,11 +20,8 @@ import 'package:flutter_watcher/flutter_watcher.dart';
 /// final myBoolWatcher = myBool.watcher; // Creates a Watcher instance for a boolean value.
 ///
 /// final myString = 'Hello';
-/// final myStringCachedWatcher = myString.cachedWatcher(
-///   key: 'my_string_key',
-///   write: (value) => value,
-///   read: (value) => value.toString(),
-/// );
+/// // Creates a CachedWatcher instance for a String value.
+/// final myStringCachedWatcher = myString.cachedWatcher('my_string_key');
 /// ```
 ///
 /// These extensions provide a convenient and efficient way to integrate state management into your Flutter
