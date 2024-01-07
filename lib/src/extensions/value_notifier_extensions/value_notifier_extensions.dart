@@ -28,6 +28,7 @@ export 'bool_value_notifier_ex.dart';
 export 'double_value_notifier_ex.dart';
 export 'int_value_notifier_ex.dart';
 export 'iterable_value_notifier_ex.dart';
+export 'list_value_notifier_ex.dart';
 export 'map_value_notifier_ex.dart';
 export 'numeric_value_notifier_ex.dart';
 export 'uri_value_notifier_ex.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 
 /// IterableValueNotifierEx
 ///
@@ -18,6 +19,7 @@ import 'package:flutter/material.dart';
 /// iterableWatcher.remove(2); // Directly removes an element from the iterable
 /// // These operations modify the iterable within the ValueNotifier without directly accessing `.value`
 /// ```
+
 extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   /// A new `Iterator` that allows iterating the elements of this `Iterable`.
   ///
@@ -64,7 +66,7 @@ extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   ///
   /// Example:
   /// ```dart
-  /// var planets = <String>['Earth', 'Jupiter'];
+  /// var planets = <String>['Earth', 'Jupiter'].watcher;
   /// var updated = planets.followedBy(['Mars', 'Venus']);
   /// print(updated); // (Earth, Jupiter, Mars, Venus)
   /// ```
@@ -124,7 +126,7 @@ extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   ///
   /// Example:
   /// ```dart
-  /// final numbers = <int>[1, 2, 3, 5, 6, 7];
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
   /// var result = numbers.where((x) => x < 5); // (1, 2, 3)
   /// result = numbers.where((x) => x > 5); // (6, 7)
   /// result = numbers.where((x) => x.isEven); // (2, 6)
@@ -203,7 +205,7 @@ extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   ///
   /// Example:
   /// ```dart
-  /// final numbers = <int>[1, 2, 6, 7];
+  /// final numbers = <int>[1, 2, 6, 7].watcher;
   /// numbers.forEach(print);
   /// // 1
   /// // 2
@@ -230,7 +232,7 @@ extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   /// ```
   /// Example of calculating the sum of an iterable:
   /// ```dart
-  /// final numbers = <double>[10, 2, 5, 0.5];
+  /// final numbers = <double>[10, 2, 5, 0.5].watcher;
   /// final result = numbers.reduce((value, element) => value + element);
   /// print(result); // 17.5
   /// ```
@@ -251,7 +253,7 @@ extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   /// ```
   /// Example of calculating the sum of an iterable:
   /// ```dart
-  /// final numbers = <double>[10, 2, 5, 0.5];
+  /// final numbers = <double>[10, 2, 5, 0.5].watcher;
   /// const initialValue = 100.0;
   /// final result = numbers.fold<double>(
   ///     initialValue, (previousValue, element) => previousValue + element);
@@ -298,7 +300,7 @@ extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   ///
   /// Example:
   /// ```dart
-  /// final numbers = <int>[1, 2, 3, 5, 6, 7];
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
   /// var result = numbers.any((element) => element >= 5); // true;
   /// result = numbers.any((element) => element >= 10); // false;
   /// ```
@@ -347,7 +349,7 @@ extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   ///
   /// Example:
   /// ```dart
-  /// final emptyList = <int>[];
+  /// final emptyList = <int>[].watcher;
   /// print(emptyList.isEmpty); // true;
   /// print(emptyList.iterator.moveNext()); // false
   /// ```
@@ -377,7 +379,7 @@ extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   ///
   /// Example:
   /// ```dart
-  /// final numbers = <int>[1, 2, 3, 5, 6, 7];
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
   /// final result = numbers.take(4); // (1, 2, 3, 5)
   /// final takeAll = numbers.take(100); // (1, 2, 3, 5, 6, 7)
   /// ```
@@ -394,7 +396,7 @@ extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   ///
   /// Example:
   /// ```dart
-  /// final numbers = <int>[1, 2, 3, 5, 6, 7];
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
   /// var result = numbers.takeWhile((x) => x < 5); // (1, 2, 3)
   /// result = numbers.takeWhile((x) => x != 3); // (1, 2)
   /// result = numbers.takeWhile((x) => x != 4); // (1, 2, 3, 5, 6, 7)
@@ -417,7 +419,7 @@ extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   ///
   /// Example:
   /// ```dart
-  /// final numbers = <int>[1, 2, 3, 5, 6, 7];
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
   /// final result = numbers.skip(4); // (6, 7)
   /// final skipAll = numbers.skip(100); // () - no elements.
   /// ```
@@ -438,7 +440,7 @@ extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   ///
   /// Example:
   /// ```dart
-  /// final numbers = <int>[1, 2, 3, 5, 6, 7];
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
   /// var result = numbers.skipWhile((x) => x < 5); // (5, 6, 7)
   /// result = numbers.skipWhile((x) => x != 3); // (3, 5, 6, 7)
   /// result = numbers.skipWhile((x) => x != 4); // ()
@@ -475,7 +477,7 @@ extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   ///
   /// Example:
   /// ```dart
-  /// final numbers = <int>[1, 2, 3, 5, 6, 7];
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
   /// var result = numbers.firstWhere((element) => element < 5); // 1
   /// result = numbers.firstWhere((element) => element > 5); // 6
   /// result =
@@ -500,7 +502,7 @@ extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   ///
   /// Example:
   /// ```dart
-  /// final numbers = <int>[1, 2, 3, 5, 6, 7];
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
   /// var result = numbers.lastWhere((element) => element < 5); // 3
   /// result = numbers.lastWhere((element) => element > 5); // 7
   /// result = numbers.lastWhere((element) => element > 10,
@@ -523,7 +525,7 @@ extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   ///
   /// Example:
   /// ```dart
-  /// final numbers = <int>[2, 2, 10];
+  /// final numbers = <int>[2, 2, 10].watcher;
   /// var result = numbers.singleWhere((element) => element > 5); // 10
   /// ```
   /// When no matching element is found, the result of calling [orElse] is
@@ -551,8 +553,35 @@ extension IterableValueNotifierEx<E> on ValueNotifier<Iterable<E>> {
   ///
   /// Example:
   /// ```dart
-  /// final numbers = <int>[1, 2, 3, 5, 6, 7];
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
   /// final elementAt = numbers.elementAt(4); // 6
   /// ```
   E elementAt(int index) => value.elementAt(index);
+}
+
+/// same as [IterableValueNotifierEx] but for Nullable [Iterable] values.
+extension NullableIterableValueNotifierEx<E> on ValueNotifier<Iterable<E>?> {
+  /// Whether this collection has no elements.
+  ///
+  /// May be computed by checking if `iterator.moveNext()` returns `false`.
+  ///
+  /// Example:
+  /// ```dart
+  /// final emptyList = <int>[].watcher;
+  /// print(emptyList.isEmpty); // true;
+  /// print(emptyList.iterator.moveNext()); // false
+  /// ```
+  bool get isEmptyOrNull => value.isEmptyOrNull;
+
+  /// Whether this collection has at least one element.
+  ///
+  /// May be computed by checking if `iterator.moveNext()` returns `true`.
+  ///
+  /// Example:
+  /// ```dart
+  /// final numbers = <int>{1, 2, 3};
+  /// print(numbers.isNotEmpty); // true;
+  /// print(numbers.iterator.moveNext()); // true
+  /// ```
+  bool get isNotEmptyOrNull => value.isNotEmptyOrNull;
 }

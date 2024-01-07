@@ -1,3 +1,9 @@
+### 1.0.4
+
+- This version returns the `ListValueNotifierEx` Accidentally removed from the previous version.
+
+- Added new `NullableIterableValueNotifierEx` for Nullable `Iterable` values inside the `Watcher`.
+
 ### 1.0.3
 
 - All extensions for the `Watcher<T>` class in Flutter have been enhanced.
