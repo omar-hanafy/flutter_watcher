@@ -79,13 +79,13 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_helper_utils:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_helper_utils
-      sha256: c5aa34a41c74714ec76e759fd8804e7729a87954762fc8987e9e0b9e4272d6ef
+      sha256: "25cdd2e80048a1c33d36ef6f3902918cbbd4e5fb3016c3f8c8177ef687f79ae6"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.2"
+    version: "3.0.3"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -105,7 +105,15 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.4"
+    version: "1.0.5"
+  get:
+    dependency: "direct main"
+    description:
+      name: get
+      sha256: e4e7335ede17452b391ed3b2ede016545706c01a02292a6c97619705e7d2a85e
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.6.6"
   hive:
     dependency: transitive
     description:
@@ -329,4 +337,4 @@ packages:
     version: "1.0.4"
 sdks:
   dart: ">=3.2.0 <4.0.0"
-  flutter: ">=3.10.0"
+  flutter: ">=3.13.0"

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
@@ -7,7 +8,7 @@ import 'package:flutter_watcher/flutter_watcher.dart';
 /// It efficiently handles the rendering of widgets in response to state changes, utilizing
 /// Flutter's native [ValueListenableBuilder] and [ValueNotifier] for effective state management.
 ///
-/// The [ValueWatch] widget takes a [Watcher] instance and a builder function. The builder function
+/// The [WatchValue] widget takes a [Watcher] instance and a builder function. The builder function
 /// is responsible for returning the widget that should be rendered based on the current value of the [Watcher].
 /// This setup ensures that the widget is automatically updated whenever the [Watcher]'s value changes,
 /// making it highly efficient for creating reactive UI components.
@@ -38,26 +39,27 @@ import 'package:flutter_watcher/flutter_watcher.dart';
 /// }
 /// ```
 ///
-/// [ValueWatch] is an essential part of the flutter_watcher package, streamlining state management
+/// [WatchValue] is an essential part of the flutter_watcher package, streamlining state management
 /// in Flutter applications and facilitating the development of responsive and dynamic user interfaces.
-class ValueWatch<T> extends StatefulWidget {
-  const ValueWatch({
+class WatchValue<T> extends StatefulWidget {
+  const WatchValue({
     required this.watcher,
     required this.builder,
     this.watchWhen,
+    this.threshold,
     super.key,
   });
 
   /// [watcher]
   ///
-  /// A [Watcher] instance that [ValueWatch] listens to for changes.
+  /// A [Watcher] instance that [WatchValue] listens to for changes.
   /// The widget updates whenever this watcher's value changes, triggering a rebuild of the widget
   /// returned by the [builder] function.
   ///
-  /// This variable holds the state that the [ValueWatch] widget will be observing.
+  /// This variable holds the state that the [WatchValue] widget will be observing.
   /// It's the core element that integrates the state management functionality of [Watcher]
   /// into the Flutter widget tree.
-  final Watcher<T> watcher;
+  final ValueNotifier<T> watcher;
 
   /// [builder]
   ///
@@ -80,22 +82,57 @@ class ValueWatch<T> extends StatefulWidget {
   /// If left null, the widget rebuilds on every value change of the [watcher].
   final bool Function(T previous, T current)? watchWhen;
 
+  /// [threshold]
+  ///
+  /// An optional duration to delay the rebuild of the widget after state changes.
+  /// If set, the widget will only consider rebuilding after this duration has elapsed since the last rebuild,
+  /// providing a way to limit the frequency of rebuilds during rapid state changes.
+  final Duration? threshold;
+
   @override
-  State<ValueWatch<T>> createState() => _ValueWatchState<T>();
+  State<WatchValue<T>> createState() => _WatchValueState<T>();
 }
 
-class _ValueWatchState<T> extends State<ValueWatch<T>> {
+class _WatchValueState<T> extends State<WatchValue<T>> {
+  T? _prevValue;
+  DateTime? _lastBuildTime;
+
+  void _listener() {
+    final w = widget.watcher;
+    final previousValue = _prevValue;
+
+    // Check if the threshold has passed since the last rebuild
+    if (widget.threshold != null) {
+      final canRebuild = _lastBuildTime == null ||
+          DateTime.now().difference(_lastBuildTime!) > widget.threshold!;
+      if (canRebuild) _updateValue(previousValue, w.value);
+    } else {
+      _updateValue(previousValue, w.value);
+    }
+  }
+
+  void _updateValue(T? previous, T current) {
+    if (previous == null ||
+        (widget.watchWhen?.call(previous, current) ?? true)) {
+      if (mounted) {
+        setState(() {
+          _prevValue = current;
+          if (widget.threshold != null) _lastBuildTime = DateTime.now();
+        });
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     widget.watcher.addListener(_listener);
   }
 
-  void _listener() {
-    final w = widget.watcher;
-    if (widget.watchWhen?.call(w.prevValue, w.v) ?? true) {
-      setState(() {});
-    }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<T>('prevValue', _prevValue));
   }
 
   @override

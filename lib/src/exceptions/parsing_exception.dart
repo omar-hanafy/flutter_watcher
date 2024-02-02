@@ -7,9 +7,9 @@ class UnSupportedType implements Exception {
     StackTrace? stackTrace,
   }) : stackTrace = stackTrace ?? StackTrace.current;
 
-  final String errorMessage; // Detailed error message for developers
-  final String userMessage; // User-friendly error message
-  final String hint; // Additional hint or details for developers
+  final String errorMessage;
+  final String userMessage;
+  final String hint;
   final StackTrace stackTrace;
 
   @override

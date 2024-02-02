@@ -15,23 +15,35 @@ class CachedCounter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Watch Counter',
+      title: 'Cached Counter',
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Watch Counter'),
+          title: const Text('Cached Counter'),
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.delete_forever,
+                color: Colors.black,
+              ),
+              onPressed: () => counter.deleteCache(),
+              tooltip: 'Clear Counter Cache',
+            ),
+          ],
           leading: IconButton(
             icon: counter.watch(
-              (_) => Icon(
+              () => Icon(
                 counter.isCaching ? Icons.stop_circle : Icons.play_arrow,
               ),
             ),
             onPressed: () => counter.isCaching
                 ? counter.stopCaching()
                 : counter.startCaching(),
+            tooltip: counter.isCaching ? 'Stop Caching' : 'Start Caching',
           ),
         ),
         body: Center(
-          child: ValueWatch(
+          child: WatchValue(
             watchWhen: (prev, curr) => prev != curr,
             watcher: counter,
             builder: (context, value) {
@@ -41,6 +53,7 @@ class CachedCounter extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => counter.increment(),
+          tooltip: 'Increment',
           child: const Icon(Icons.add),
         ),
       ),

@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 ///
 /// Example:
 /// ```dart
-/// final numberWatcher = ValueNotifier<num>(10);
+/// final numberWatcher = 10.watcher;
 /// numberWatcher.increment(5); // Directly adds 5 to the value (now 15)
 /// numberWatcher.multiply(2);  // Directly multiplies the value by 2 (now 30)
 /// // These operations modify the numeric value within the ValueNotifier without accessing `.value`

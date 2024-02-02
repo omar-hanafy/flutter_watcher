@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import '../../watcher.dart';
 
 /// ListValueNotifierEx
 ///
@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 /// myListNotifier.remove('apple'); // Directly removes 'apple' from the list
 /// // These operations modify the list within the ValueNotifier without directly accessing `.value`
 /// ```
-extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
+extension ListValueNotifierEx<E> on Watcher<List<E>> {
   /// Returns a view of this list as a list of [R] instances.
   ///
   /// If this list contains only instances of [R], all read operations
@@ -53,7 +53,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// The [index] must be a valid index of this list,
   /// which means that `index` must be non-negative and
   /// less than [length].
-  void operator []=(int index, E value) => this.value[index] = value;
+  void operator []=(int index, E value) {
+    updateOnAction(() => this.value[index] = value);
+  }
 
   /// The first element of the list.
   ///
@@ -71,7 +73,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// numbers.clear();
   /// numbers.first; // Throws.
   /// ```
-  set first(E value) => this.value.first = value;
+  set first(E value) {
+    updateOnAction(() => this.value.first = value);
+  }
 
   /// The last element of the list.
   ///
@@ -89,7 +93,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// numbers.clear();
   /// numbers.last; // Throws.
   /// ```
-  set last(E value) => this.value.last = value;
+  set last(E value) {
+    updateOnAction(() => this.value.last = value);
+  }
 
   /// The number of objects in this list.
   ///
@@ -120,7 +126,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// print(numbers); // [1]
   /// numbers.length = 5; // Throws, cannot add `null`s.
   /// ```
-  set length(int newLength) => value.length;
+  set length(int newLength) {
+    updateOnAction(() => value.length);
+  }
 
   /// Adds [value] to the end of this list,
   /// extending the length by one.
@@ -132,7 +140,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// numbers.add(4);
   /// print(numbers); // [1, 2, 3, 4]
   /// ```
-  void add(E value) => this.value.add(value);
+  void add(E value, {bool refresh = true}) {
+    updateOnAction(() => this.value.add(value), refresh: refresh);
+  }
 
   /// Appends all objects of [iterable] to the end of this list.
   ///
@@ -144,7 +154,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// numbers.addAll([4, 5, 6]);
   /// print(numbers); // [1, 2, 3, 4, 5, 6]
   /// ```
-  void addAll(Iterable<E> iterable) => value.addAll(iterable);
+  void addAll(Iterable<E> iterable, {bool refresh = true}) {
+    updateOnAction(() => value.addAll(iterable), refresh: refresh);
+  }
 
   /// An [Iterable] of the objects in this list in reverse order.
   /// ```dart
@@ -182,7 +194,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// numbers.sort((a, b) => a.length.compareTo(b.length));
   /// print(numbers); // [one, two, four, three] OR [two, one, four, three]
   /// ```
-  void sort([int Function(E a, E b)? compare]) => value.sort(compare);
+  void sort([int Function(E a, E b)? compare, bool refresh = true]) {
+    updateOnAction(() => value.sort(compare), refresh: refresh);
+  }
 
   /// Shuffles the elements of this list randomly.
   /// ```dart
@@ -190,7 +204,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// numbers.shuffle();
   /// print(numbers); // [1, 3, 4, 5, 2] OR some other random result.
   /// ```
-  void shuffle([Random? random]) => value.shuffle(random);
+  void shuffle([Random? random, bool refresh = true]) {
+    updateOnAction(() => value.shuffle(random), refresh: refresh);
+  }
 
   /// The first index of [element] in this list.
   ///
@@ -287,7 +303,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// print(numbers.length); // 0
   /// print(numbers); // []
   /// ```
-  void clear() => value.clear();
+  void clear({bool refresh = true}) {
+    updateOnAction(() => value.clear(), refresh: refresh);
+  }
 
   /// Inserts [element] at position [index] in this list.
   ///
@@ -303,7 +321,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// numbers.insert(index, 10);
   /// print(numbers); // [1, 2, 10, 3, 4]
   /// ```
-  void insert(int index, E element) => value.insert(index, element);
+  void insert(int index, E element, {bool refresh = true}) {
+    updateOnAction(() => value.insert(index, element), refresh: refresh);
+  }
 
   /// Inserts all objects of [iterable] at position [index] in this list.
   ///
@@ -318,8 +338,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// numbers.insertAll(2, insertItems);
   /// print(numbers); // [1, 2, 10, 11, 3, 4]
   /// ```
-  void insertAll(int index, Iterable<E> iterable) =>
-      value.insertAll(index, iterable);
+  void insertAll(int index, Iterable<E> iterable, {bool refresh = true}) {
+    updateOnAction(() => value.insertAll(index, iterable), refresh: refresh);
+  }
 
   /// Overwrites elements with the objects of [iterable].
   ///
@@ -339,7 +360,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// list.setAll(1, ['bee', 'sea']);
   /// print(list); // [a, bee, sea, d]
   /// ```
-  void setAll(int index, Iterable<E> iterable) => value.setAll(index, iterable);
+  void setAll(int index, Iterable<E> iterable, {bool refresh = true}) {
+    updateOnAction(() => value.setAll(index, iterable), refresh: refresh);
+  }
 
   /// Removes the first occurrence of [value] from this list.
   ///
@@ -358,7 +381,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// final retVal = parts.remove('head'); // false
   /// print(parts); // [shoulders, knees, toes]
   /// ```
-  bool remove(Object? value) => this.value.remove(value);
+  bool remove(Object? value, {bool refresh = true}) {
+    return updateOnAction(() => this.value.remove(value), refresh: refresh);
+  }
 
   /// Removes the object at position [index] from this list.
   ///
@@ -374,7 +399,8 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// final retVal = parts.removeAt(2); // knees
   /// print(parts); // [head, shoulder, toes]
   /// ```
-  E removeAt(int index) => value.removeAt(index);
+  E removeLast({bool refresh = true}) =>
+      updateOnAction(() => value.removeLast(), refresh: refresh);
 
   /// Removes and returns the last object in this list.
   ///
@@ -384,7 +410,8 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// final retVal = parts.removeLast(); // toes
   /// print(parts); // [head, shoulder, knees]
   /// ```
-  E removeLast() => value.removeLast();
+  E removeAt(int index, {bool refresh = true}) =>
+      updateOnAction(() => value.removeAt(index), refresh: refresh);
 
   /// Removes all objects from this list that satisfy [test].
   ///
@@ -395,7 +422,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// print(numbers); // [three, four]
   /// ```
   /// The list must be growable.
-  void removeWhere(bool Function(E element) test) => value.removeWhere(test);
+  void removeWhere(bool Function(E element) test, {bool refresh = true}) {
+    updateOnAction(() => value.removeWhere(test), refresh: refresh);
+  }
 
   /// Removes all objects from this list that fail to satisfy [test].
   ///
@@ -406,7 +435,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// print(numbers); // [one, two]
   /// ```
   /// The list must be growable.
-  void retainWhere(bool Function(E element) test) => value.retainWhere(test);
+  void retainWhere(bool Function(E element) test, {bool refresh = true}) {
+    updateOnAction(() => value.retainWhere(test), refresh: refresh);
+  }
 
   /// Returns the concatenation of this list and [other].
   ///
@@ -492,8 +523,10 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// If `iterable` depends on this list in some other way, no guarantees are
   /// made.
   void setRange(int start, int end, Iterable<E> iterable,
-          [int skipCount = 0]) =>
-      value.setRange(start, end, iterable);
+      [int skipCount = 0, bool refresh = true]) {
+    updateOnAction(() => value.setRange(start, end, iterable, skipCount),
+        refresh: refresh);
+  }
 
   /// Removes a range of elements from the list.
   ///
@@ -511,7 +544,9 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// numbers.removeRange(1, 4);
   /// print(numbers); // [1, 5]
   /// ```
-  void removeRange(int start, int end) => value.removeRange(start, end);
+  void removeRange(int start, int end, {bool refresh = true}) {
+    updateOnAction(() => value.removeRange(start, end), refresh: refresh);
+  }
 
   /// Overwrites a range of elements with [fillValue].
   ///
@@ -532,8 +567,10 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// words.fillRange(1, 3, 'new');
   /// print(words); // [old, new, new, old, old]
   /// ```
-  void fillRange(int start, int end, [E? fillValue]) =>
-      value.fillRange(start, end);
+  void fillRange(int start, int end, [E? fillValue, bool refresh = true]) {
+    updateOnAction(() => value.fillRange(start, end, fillValue),
+        refresh: refresh);
+  }
 
   /// Replaces a range of elements with the elements of [replacements].
   ///
@@ -564,8 +601,11 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// This method does not work on fixed-length lists, even when [replacements]
   /// has the same number of elements as the replaced range. In that case use
   /// [setRange] instead.
-  void replaceRange(int start, int end, Iterable<E> replacements) =>
-      value.replaceRange(start, end, replacements);
+  void replaceRange(int start, int end, Iterable<E> replacements,
+      {bool refresh = true}) {
+    updateOnAction(() => value.replaceRange(start, end, replacements),
+        refresh: refresh);
+  }
 
   /// An unmodifiable [Map] view of this list.
   ///
@@ -578,4 +618,516 @@ extension ListValueNotifierEx<E> on ValueNotifier<List<E>> {
   /// map.keys.toList(); // [0, 1, 2, 3]
   /// ```
   Map<int, E> asMap() => value.asMap();
+
+  /// A new `Iterator` that allows iterating the elements of this `Iterable`.
+  ///
+  /// Iterable classes may specify the iteration order of their elements
+  /// (for example [List] always iterate in index order),
+  /// or they may leave it unspecified (for example a hash-based [Set]
+  /// may iterate in any order).
+  ///
+  /// Each time `iterator` is read, it returns a new iterator,
+  /// which can be used to iterate through all the elements again.
+  /// The iterators of the same iterable can be stepped through independently,
+  /// but should return the same elements in the same order,
+  /// as long as the underlying collection isn't changed.
+  ///
+  /// Modifying the collection may cause new iterators to produce
+  /// different elements, and may change the order of existing elements.
+  /// A [List] specifies its iteration order precisely,
+  /// so modifying the list changes the iteration order predictably.
+  /// A hash-based [Set] may change its iteration order completely
+  /// when adding a new element to the set.
+  ///
+  /// Modifying the underlying collection after creating the new iterator
+  /// may cause an error the next time [Iterator.moveNext] is called
+  /// on that iterator.
+  /// Any *modifiable* iterable class should specify which operations will
+  /// break iteration.
+  Iterator<E> get iterator => value.iterator;
+
+  /// Creates the lazy concatenation of this iterable and [other].
+  ///
+  /// The returned iterable will provide the same elements as this iterable,
+  /// and, after that, the elements of [other], in the same order as in the
+  /// original iterables.
+  ///
+  /// Example:
+  /// ```dart
+  /// var planets = <String>['Earth', 'Jupiter'].watcher;
+  /// var updated = planets.followedBy(['Mars', 'Venus']);
+  /// print(updated); // (Earth, Jupiter, Mars, Venus)
+  /// ```
+  Iterable<E> followedBy(Iterable<E> other) => value.followedBy(other);
+
+  /// The current elements of this iterable modified by [toElement].
+  ///
+  /// Returns a new lazy [Iterable] with elements that are created by
+  /// calling `toElement` on each element of this `Iterable` in
+  /// iteration order.
+  ///
+  /// The returned iterable is lazy, so it won't iterate the elements of
+  /// this iterable until it is itself iterated, and then it will apply
+  /// [toElement] to create one element at a time.
+  /// The converted elements are not cached.
+  /// Iterating multiple times over the returned [Iterable]
+  /// will invoke the supplied [toElement] function once per element
+  /// for on each iteration.
+  ///
+  /// Methods on the returned iterable are allowed to omit calling `toElement`
+  /// on any element where the result isn't needed.
+  /// For example, [elementAt] may call `toElement` only once.
+  ///
+  /// Equivalent to:
+  /// ```
+  /// Iterable<T> map<T>(T toElement(E e)) sync* {
+  ///   for (var value in this) {
+  ///     yield toElement(value);
+  ///   }
+  /// }
+  /// ```
+  /// Example:
+  /// ```dart import:convert
+  /// var products = jsonDecode('''
+  /// [
+  ///   {"name": "Screwdriver", "price": 42.00},
+  ///   {"name": "Wingnut", "price": 0.50}
+  /// ]
+  /// ''');
+  /// var values = products.map((product) => product['price'] as double);
+  /// var totalPrice = values.fold(0.0, (a, b) => a + b); // 42.5.
+  /// ```
+  Iterable<T> map<T>(T Function(E e) toElement) => value.map(toElement);
+
+  /// Creates a new lazy [Iterable] with all elements that satisfy the
+  /// predicate [test].
+  ///
+  /// The matching elements have the same order in the returned iterable
+  /// as they have in [iterator].
+  ///
+  /// This method returns a view of the mapped elements.
+  /// As long as the returned [Iterable] is not iterated over,
+  /// the supplied function [test] will not be invoked.
+  /// Iterating will not cache results, and thus iterating multiple times over
+  /// the returned [Iterable] may invoke the supplied
+  /// function [test] multiple times on the same element.
+  ///
+  /// Example:
+  /// ```dart
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
+  /// var result = numbers.where((x) => x < 5); // (1, 2, 3)
+  /// result = numbers.where((x) => x > 5); // (6, 7)
+  /// result = numbers.where((x) => x.isEven); // (2, 6)
+  /// ```
+  Iterable<E> where(bool Function(E element) test) => value.where(test);
+
+  /// Creates a new lazy [Iterable] with all elements that have type [T].
+  ///
+  /// The matching elements have the same order in the returned iterable
+  /// as they have in [iterator].
+  ///
+  /// This method returns a view of the mapped elements.
+  /// Iterating will not cache results, and thus iterating multiple times over
+  /// the returned [Iterable] may yield different results,
+  /// if the underlying elements change between iterations.
+  Iterable<T> whereType<T>() => value.whereType();
+
+  /// Expands each element of this [Iterable] into zero or more elements.
+  ///
+  /// The resulting Iterable runs through the elements returned
+  /// by [toElements] for each element of this, in iteration order.
+  ///
+  /// The returned [Iterable] is lazy, and calls [toElements] for each element
+  /// of this iterable every time the returned iterable is iterated.
+  ///
+  /// Example:
+  /// ```dart
+  /// Iterable<int> count(int n) sync* {
+  ///   for (var i = 1; i <= n; i++) {
+  ///     yield i;
+  ///    }
+  ///  }
+  ///
+  /// var numbers = [1, 3, 0, 2];
+  /// print(numbers.expand(count)); // (1, 1, 2, 3, 1, 2)
+  /// ```
+  ///
+  /// Equivalent to:
+  /// ```
+  /// Iterable<T> expand<T>(Iterable<T> toElements(E e)) sync* {
+  ///   for (var value in this) {
+  ///     yield* toElements(value);
+  ///   }
+  /// }
+  /// ```
+  Iterable<T> expand<T>(Iterable<T> Function(E element) toElements) =>
+      value.expand(toElements);
+
+  /// Whether the collection contains an element equal to [element].
+  ///
+  /// This operation will check each element in order for being equal to
+  /// [element], unless it has a more efficient way to find an element
+  /// equal to [element].
+  /// Stops iterating on the first equal element.
+  ///
+  /// The equality used to determine whether [element] is equal to an element of
+  /// the iterable defaults to the [Object.==] of the element.
+  ///
+  /// Some types of iterable may have a different equality used for its elements.
+  /// For example, a [Set] may have a custom equality
+  /// (see [Set.identity]) that its `contains` uses.
+  /// Likewise the `Iterable` returned by a [Map.keys] call
+  /// should use the same equality that the `Map` uses for keys.
+  ///
+  /// Example:
+  /// ```dart
+  /// final gasPlanets = <int, String>{1: 'Jupiter', 2: 'Saturn'};
+  /// final containsOne = gasPlanets.keys.contains(1); // true
+  /// final containsFive = gasPlanets.keys.contains(5); // false
+  /// final containsJupiter = gasPlanets.values.contains('Jupiter'); // true
+  /// final containsMercury = gasPlanets.values.contains('Mercury'); // false
+  /// ```
+  bool contains(Object? element) => value.contains(element);
+
+  /// Invokes [action] on each element of this iterable in iteration order.
+  ///
+  /// Example:
+  /// ```dart
+  /// final numbers = <int>[1, 2, 6, 7].watcher;
+  /// numbers.forEach(print);
+  /// // 1
+  /// // 2
+  /// // 6
+  /// // 7
+  /// ```
+  void forEach(void Function(E element) action) {
+    updateOnAction(() => value.forEach(action));
+  }
+
+  /// Reduces a collection to a single value by iteratively combining elements
+  /// of the collection using the provided function.
+  ///
+  /// The iterable must have at least one element.
+  /// If it has only one element, that element is returned.
+  ///
+  /// Otherwise this method starts with the first element from the iterator,
+  /// and then combines it with the remaining elements in iteration order,
+  /// as if by:
+  /// ```
+  /// E value = iterable.first;
+  /// iterable.skip(1).forEach((element) {
+  ///   value = combine(value, element);
+  /// });
+  /// return value;
+  /// ```
+  /// Example of calculating the sum of an iterable:
+  /// ```dart
+  /// final numbers = <double>[10, 2, 5, 0.5].watcher;
+  /// final result = numbers.reduce((value, element) => value + element);
+  /// print(result); // 17.5
+  /// ```
+  E reduce(E Function(E value, E element) combine, {bool refresh = true}) {
+    return updateOnAction(() => value.reduce(combine), refresh: refresh);
+  }
+
+  /// Reduces a collection to a single value by iteratively combining each
+  /// element of the collection with an existing value
+  ///
+  /// Uses [initialValue] as the initial value,
+  /// then iterates through the elements and updates the value with
+  /// each element using the [combine] function, as if by:
+  /// ```
+  /// var value = initialValue;
+  /// for (E element in this) {
+  ///   value = combine(value, element);
+  /// }
+  /// return value;
+  /// ```
+  /// Example of calculating the sum of an iterable:
+  /// ```dart
+  /// final numbers = <double>[10, 2, 5, 0.5].watcher;
+  /// const initialValue = 100.0;
+  /// final result = numbers.fold<double>(
+  ///     initialValue, (previousValue, element) => previousValue + element);
+  /// print(result); // 117.5
+  /// ```
+  T fold<T>(T initialValue, T Function(T previousValue, E element) combine,
+      {bool refresh = true}) {
+    return updateOnAction(() => value.fold(initialValue, combine),
+        refresh: refresh);
+  }
+
+  /// Checks whether every element of this iterable satisfies [test].
+  ///
+  /// Checks every element in iteration order, and returns `false` if
+  /// any of them make [test] return `false`, otherwise returns `true`.
+  /// Returns `true` if the iterable is empty.
+  ///
+  /// Example:
+  /// ```dart
+  /// final planetsByMass = <double, String>{0.06: 'Mercury', 0.81: 'Venus',
+  ///   0.11: 'Mars'};
+  /// // Checks whether all keys are smaller than 1.
+  /// final every = planetsByMass.keys.every((key) => key < 1.0); // true
+  /// ```
+  bool every(bool Function(E element) test) => value.every(test);
+
+  /// Converts each element to a [String] and concatenates the strings.
+  ///
+  /// Iterates through elements of this iterable,
+  /// converts each one to a [String] by calling [Object.toString],
+  /// and then concatenates the strings, with the
+  /// [separator] string interleaved between the elements.
+  ///
+  /// Example:
+  /// ```dart
+  /// final planetsByMass = <double, String>{0.06: 'Mercury', 0.81: 'Venus',
+  ///   0.11: 'Mars'};
+  /// final joinedNames = planetsByMass.values.join('-'); // Mercury-Venus-Mars
+  /// ```
+  String join([String separator = '']) => value.join();
+
+  /// Checks whether any element of this iterable satisfies [test].
+  ///
+  /// Checks every element in iteration order, and returns `true` if
+  /// any of them make [test] return `true`, otherwise returns false.
+  /// Returns `false` if the iterable is empty.
+  ///
+  /// Example:
+  /// ```dart
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
+  /// var result = numbers.any((element) => element >= 5); // true;
+  /// result = numbers.any((element) => element >= 10); // false;
+  /// ```
+  bool any(bool Function(E element) test) => value.any(test);
+
+  /// Creates a [Set] containing the same elements as this iterable.
+  ///
+  /// The set may contain fewer elements than the iterable,
+  /// if the iterable contains an element more than once,
+  /// or it contains one or more elements that are equal.
+  /// The order of the elements in the set is not guaranteed to be the same
+  /// as for the iterable.
+  ///
+  /// Example:
+  /// ```dart
+  /// final planets = <int, String>{1: 'Mercury', 2: 'Venus', 3: 'Mars'};
+  /// final valueSet = planets.values.toSet(); // {Mercury, Venus, Mars}
+  /// ```
+  Set<E> toSet() => value.toSet();
+
+  /// Whether this collection has no elements.
+  ///
+  /// May be computed by checking if `iterator.moveNext()` returns `false`.
+  ///
+  /// Example:
+  /// ```dart
+  /// final emptyList = <int>[].watcher;
+  /// print(emptyList.isEmpty); // true;
+  /// print(emptyList.iterator.moveNext()); // false
+  /// ```
+  bool get isEmpty => value.isEmpty;
+
+  /// Whether this collection has at least one element.
+  ///
+  /// May be computed by checking if `iterator.moveNext()` returns `true`.
+  ///
+  /// Example:
+  /// ```dart
+  /// final numbers = <int>{1, 2, 3};
+  /// print(numbers.isNotEmpty); // true;
+  /// print(numbers.iterator.moveNext()); // true
+  /// ```
+  bool get isNotEmpty => !isEmpty;
+
+  /// Creates a lazy iterable of the [count] first elements of this iterable.
+  ///
+  /// The returned `Iterable` may contain fewer than `count` elements, if `this`
+  /// contains fewer than `count` elements.
+  ///
+  /// The elements can be computed by stepping through [iterator] until [count]
+  /// elements have been seen.
+  ///
+  /// The `count` must not be negative.
+  ///
+  /// Example:
+  /// ```dart
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
+  /// final result = numbers.take(4); // (1, 2, 3, 5)
+  /// final takeAll = numbers.take(100); // (1, 2, 3, 5, 6, 7)
+  /// ```
+  Iterable<E> take(int count) => value.take(count);
+
+  /// Creates a lazy iterable of the leading elements satisfying [test].
+  ///
+  /// The filtering happens lazily. Every new iterator of the returned
+  /// iterable starts iterating over the elements of `this`.
+  ///
+  /// The elements can be computed by stepping through [iterator] until an
+  /// element is found where `test(element)` is false. At that point,
+  /// the returned iterable stops (its `moveNext()` returns false).
+  ///
+  /// Example:
+  /// ```dart
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
+  /// var result = numbers.takeWhile((x) => x < 5); // (1, 2, 3)
+  /// result = numbers.takeWhile((x) => x != 3); // (1, 2)
+  /// result = numbers.takeWhile((x) => x != 4); // (1, 2, 3, 5, 6, 7)
+  /// result = numbers.takeWhile((x) => x.isOdd); // (1)
+  /// ```
+  Iterable<E> takeWhile(bool Function(E value) test) => value.takeWhile(test);
+
+  /// Creates an [Iterable] that provides all but the first [count] elements.
+  ///
+  /// When the returned iterable is iterated, it starts iterating over `this`,
+  /// first skipping past the initial [count] elements.
+  /// If `this` has fewer than `count` elements, then the resulting Iterable is
+  /// empty.
+  /// After that, the remaining elements are iterated in the same order as
+  /// in this iterable.
+  ///
+  /// Some iterables may be able to find later elements without first iterating
+  /// through earlier elements, for example when iterating a [List].
+  /// Such iterables are allowed to ignore the initial skipped elements.
+  ///
+  /// Example:
+  /// ```dart
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
+  /// final result = numbers.skip(4); // (6, 7)
+  /// final skipAll = numbers.skip(100); // () - no elements.
+  /// ```
+  ///
+  /// The [count] must not be negative.
+  Iterable<E> skip(int count) => value.skip(count);
+
+  /// Creates an `Iterable` that skips leading elements while [test] is satisfied.
+  ///
+  /// The filtering happens lazily. Every new [Iterator] of the returned
+  /// iterable iterates over all elements of `this`.
+  ///
+  /// The returned iterable provides elements by iterating this iterable,
+  /// but skipping over all initial elements where `test(element)` returns
+  /// true. If all elements satisfy `test` the resulting iterable is empty,
+  /// otherwise it iterates the remaining elements in their original order,
+  /// starting with the first element for which `test(element)` returns `false`.
+  ///
+  /// Example:
+  /// ```dart
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
+  /// var result = numbers.skipWhile((x) => x < 5); // (5, 6, 7)
+  /// result = numbers.skipWhile((x) => x != 3); // (3, 5, 6, 7)
+  /// result = numbers.skipWhile((x) => x != 4); // ()
+  /// result = numbers.skipWhile((x) => x.isOdd); // (2, 3, 5, 6, 7)
+  /// ```
+  Iterable<E> skipWhile(bool Function(E value) test) => value.skipWhile(test);
+
+  /// The first element.
+  ///
+  /// Throws a [StateError] if `this` is empty.
+  /// Otherwise returns the first element in the iteration order,
+  /// equivalent to `this.elementAt(0)`.
+  E get first => value.first;
+
+  /// The last element.
+  ///
+  /// Throws a [StateError] if `this` is empty.
+  /// Otherwise may iterate through the elements and returns the last one
+  /// seen.
+  /// Some iterables may have more efficient ways to find the last element
+  /// (for example a list can directly access the last element,
+  /// without iterating through the previous ones).
+  E get last => value.last;
+
+  /// Checks that this iterable has only one element, and returns that element.
+  ///
+  /// Throws a [StateError] if `this` is empty or has more than one element.
+  /// This operation will not iterate past the second element.
+  E get single => value.single;
+
+  /// The first element that satisfies the given predicate [test].
+  ///
+  /// Iterates through elements and returns the first to satisfy [test].
+  ///
+  /// Example:
+  /// ```dart
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
+  /// var result = numbers.firstWhere((element) => element < 5); // 1
+  /// result = numbers.firstWhere((element) => element > 5); // 6
+  /// result =
+  ///     numbers.firstWhere((element) => element > 10, orElse: () => -1); // -1
+  /// ```
+  ///
+  /// If no element satisfies [test], the result of invoking the [orElse]
+  /// function is returned.
+  /// If [orElse] is omitted, it defaults to throwing a [StateError].
+  /// Stops iterating on the first matching element.
+  E firstWhere(bool Function(E element) test, {E Function()? orElse}) =>
+      value.firstWhere(test, orElse: orElse);
+
+  /// The last element that satisfies the given predicate [test].
+  ///
+  /// An iterable that can access its elements directly may check its
+  /// elements in any order (for example a list starts by checking the
+  /// last element and then moves towards the start of the list).
+  /// The default implementation iterates elements in iteration order,
+  /// checks `test(element)` for each,
+  /// and finally returns that last one that matched.
+  ///
+  /// Example:
+  /// ```dart
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
+  /// var result = numbers.lastWhere((element) => element < 5); // 3
+  /// result = numbers.lastWhere((element) => element > 5); // 7
+  /// result = numbers.lastWhere((element) => element > 10,
+  ///     orElse: () => -1); // -1
+  /// ```
+  ///
+  /// If no element satisfies [test], the result of invoking the [orElse]
+  /// function is returned.
+  /// If [orElse] is omitted, it defaults to throwing a [StateError].
+  E lastWhere(bool Function(E element) test, {E Function()? orElse}) =>
+      value.lastWhere(test, orElse: orElse);
+
+  /// The single element that satisfies [test].
+  ///
+  /// Checks elements to see if `test(element)` returns true.
+  /// If exactly one element satisfies [test], that element is returned.
+  /// If more than one matching element is found, throws [StateError].
+  /// If no matching element is found, returns the result of [orElse].
+  /// If [orElse] is omitted, it defaults to throwing a [StateError].
+  ///
+  /// Example:
+  /// ```dart
+  /// final numbers = <int>[2, 2, 10].watcher;
+  /// var result = numbers.singleWhere((element) => element > 5); // 10
+  /// ```
+  /// When no matching element is found, the result of calling [orElse] is
+  /// returned instead.
+  /// ```dart continued
+  /// result = numbers.singleWhere((element) => element == 1,
+  ///     orElse: () => -1); // -1
+  /// ```
+  /// There must not be more than one matching element.
+  /// ```dart continued
+  /// result = numbers.singleWhere((element) => element == 2); // Throws Error.
+  /// ```
+  E singleWhere(bool Function(E element) test, {E Function()? orElse}) =>
+      value.singleWhere(test, orElse: orElse);
+
+  /// Returns the [index]th element.
+  ///
+  /// The [index] must be non-negative and less than [length].
+  /// Index zero represents the first element (so `iterable.elementAt(0)` is
+  /// equivalent to `iterable.first`).
+  ///
+  /// May iterate through the elements in iteration order, ignoring the
+  /// first [index] elements and then returning the next.
+  /// Some iterables may have a more efficient way to find the element.
+  ///
+  /// Example:
+  /// ```dart
+  /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
+  /// final elementAt = numbers.elementAt(4); // 6
+  /// ```
+  E elementAt(int index) => value.elementAt(index);
 }

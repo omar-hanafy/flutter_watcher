@@ -8,7 +8,7 @@ extension ValueNotifierEx<T> on ValueNotifier<T> {
   ///
   /// Example:
   /// ```dart
-  /// final counter = ValueNotifier<int>(0);
+  /// final counter = 0.watcher;
   /// counter.updateIf((val) => val < 10, 10);
   /// // This will set the counter's value to 10 if it's currently less than 10.
   /// ```
@@ -22,7 +22,7 @@ extension ValueNotifierEx<T> on ValueNotifier<T> {
   ///
   /// Example:
   /// ```dart
-  /// final counter = ValueNotifier<int>(0);
+  /// final counter = 0.watcher;
   /// final unsubscribe = counter.onChange((val) {
   ///   print("Counter changed: $val");
   /// });
@@ -41,7 +41,7 @@ extension ValueNotifierEx<T> on ValueNotifier<T> {
   ///
   /// Example:
   /// ```dart
-  /// final searchInput = ValueNotifier<String>("");
+  /// final searchInput = "".watcher;
   /// final unsubscribe = searchInput.debounce(Duration(seconds: 1), (val) {
   ///   print("Search for: $val");
   /// });
