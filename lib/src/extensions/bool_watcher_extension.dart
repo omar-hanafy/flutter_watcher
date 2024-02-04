@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
-/// BoolValueNotifierEx
+/// BoolWatcherExtension
 ///
-/// Extension on `ValueNotifier<bool>` providing additional boolean-specific functionalities.
+/// Extension on `Watcher<bool>` providing additional boolean-specific functionalities.
 /// This extension simplifies toggling and other boolean operations directly on the notifier.
 ///
 /// Example:
@@ -12,7 +12,7 @@ import 'package:flutter_watcher/flutter_watcher.dart';
 /// final boolWatcher = true.watcher;
 /// boolWatcher.toggle(); // Toggles the boolean value.
 /// ```
-extension BoolValueNotifierEx on ValueNotifier<bool> {
+extension BoolWatcherExtension on ValueNotifier<bool> {
   /// toggle the value of the [Watcher]
   void toggle() => value = !value;
 

@@ -1,3 +1,12 @@
-export 'value_listenable_extension.dart';
-export 'value_notifier_extensions/value_notifier_extensions.dart';
+export 'T_watcher_extension.dart';
+export 'bool_watcher_extension.dart';
+export 'double_watcher_extension.dart';
+export 'int_watcher_extension.dart';
+export 'list_watcher_extension.dart';
+export 'listenable_extensions.dart';
+export 'map_watcher_extension.dart';
+export 'numeric_watcher_extension.dart';
+export 'stream_to_watcher.dart';
+export 'string_watcher_extension.dart';
+export 'uri_watcher_extension.dart';
 export 'watcher_extensions.dart';

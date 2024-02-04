@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// IntValueNotifierEx
+/// IntWatcherExtension
 ///
-/// Extension on `ValueNotifier<int>` for direct manipulation of integer values.
+/// Extension on `Watcher<int>` for direct manipulation of integer values.
 /// This extension augments the ValueNotifier with methods tailored for integer operations.
 /// It allows for straightforward arithmetic operations and transformations on the int value,
 /// such as incrementing, decrementing, or toggling between values, without explicitly
@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 /// intWatcher.toggleBetween(11, 5); // Toggles the value to 5 as current is 11
 /// // These operations directly modify the int value within the ValueNotifier without accessing `.value`
 /// ```
-extension IntValueNotifierEx on ValueNotifier<int> {
+extension IntWatcherExtension on ValueNotifier<int> {
   /// Bit-wise and operator.
   ///
   /// Treating both `this` and [other] as sufficiently large two's component

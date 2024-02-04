@@ -2,8 +2,39 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_watcher/flutter_watcher.dart';
 
-extension ValueListenableBuilderExtension<T> on ValueListenable<T> {
+extension WatcherListenableExtension on Listenable {
+  Widget watch(
+    Widget Function() builder, {
+    bool Function()? watchWhen,
+    Duration? threshold,
+  }) {
+    return Watch(
+      watcher: this,
+      watchWhen: watchWhen,
+      threshold: threshold,
+      builder: (_) => builder(),
+    );
+  }
+}
+
+extension WatcherListenablesExtension on List<Listenable?> {
+  Widget watchAll(
+    Widget Function() builder, {
+    bool Function()? watchWhen,
+    Duration? threshold,
+  }) {
+    return WatchAll(
+      watchers: this,
+      watchWhen: watchWhen,
+      threshold: threshold,
+      builder: (_) => builder(),
+    );
+  }
+}
+
+extension ValueListenableBuilderExtension<T> on ValueNotifier<T> {
   /// [stream]
   ///
   /// Converts the [ValueListenable] into a [Stream]. This stream emits values whenever the
@@ -16,8 +47,8 @@ extension ValueListenableBuilderExtension<T> on ValueListenable<T> {
   ///
   /// Example:
   /// ```dart
-  /// final myValueListenable = ValueNotifier<int>(0);
-  /// final myValueStream = myValueListenable.stream;
+  /// final myWatcher = 0.watcher;
+  /// final myWatcherStream = myWatcher.stream;
   /// myValueStream.listen((value) {
   ///   // Handle the stream of changes here
   /// });
@@ -25,9 +56,9 @@ extension ValueListenableBuilderExtension<T> on ValueListenable<T> {
   Stream<T> get stream =>
       Stream.periodic(Duration.zero, (_) => value).distinct();
 
-  /// [watch]
+  /// [watchValue]
   ///
-  /// A convenience method that wraps the current [ValueListenable] with a [ValueListenableBuilder],
+  /// A convenience method that wraps the current [Watcher] or any [ValueListenable] type with a [WatchValue],
   /// providing a straightforward way to build a widget in response to changes in the listenable's value.
   ///
   /// This method simplifies the creation of reactive UI components, where the UI needs to update whenever
@@ -36,16 +67,22 @@ extension ValueListenableBuilderExtension<T> on ValueListenable<T> {
   ///
   /// Example:
   /// ```dart
-  /// final myValueListenable = ValueNotifier<int>(0);
-  /// final myWidget = myValueListenable.watch(
+  /// final myWatcher = 0.watcher;
+  /// final myWidget = myWatcher.watchValue(
   ///   (value) => Text('Value is $value'),
   /// );
-  /// // The Text widget will update whenever [myValueListenable] changes.
+  /// // The Text widget will update whenever [myWatcher] changes.
   /// ```
-  Widget watch(Widget Function(T v) builder) {
-    return ValueListenableBuilder<T>(
-      valueListenable: this,
-      builder: (_, v, __) => builder(v),
+  Widget watchValue(
+    Widget Function(T v) builder, {
+    bool Function(T previous, T current)? watchWhen,
+    Duration? threshold,
+  }) {
+    return WatchValue(
+      watcher: this,
+      watchWhen: watchWhen,
+      threshold: threshold,
+      builder: (_, v) => builder(v),
     );
   }
 }

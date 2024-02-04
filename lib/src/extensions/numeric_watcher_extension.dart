@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// NumericValueNotifierEx
+/// NumericWatcherExtension
 ///
-/// Extension on `ValueNotifier<num>` to enable direct numerical manipulations.
+/// Extension on `Watcher<num>` to enable direct numerical manipulations.
 /// This extension enriches the ValueNotifier with methods specifically tailored for
 /// handling numerical data. It allows for direct mathematical operations on the numeric
 /// value contained within the ValueNotifier, without the need to explicitly access the `.value` property.
@@ -13,12 +13,12 @@ import 'package:flutter/material.dart';
 ///
 /// Example:
 /// ```dart
-/// final numberWatcher = ValueNotifier<num>(10);
+/// final numberWatcher = 10.watcher;
 /// numberWatcher.increment(5); // Directly adds 5 to the value (now 15)
 /// numberWatcher.multiply(2);  // Directly multiplies the value by 2 (now 30)
 /// // These operations modify the numeric value within the ValueNotifier without accessing `.value`
 /// ```
-extension NumericValueNotifierEx on ValueNotifier<num> {
+extension NumericWatcherExtension on ValueNotifier<num> {
   /// Compares this to `other`.
   ///
   /// Returns a negative number if `this` is less than `other`, zero if they are

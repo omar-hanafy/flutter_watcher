@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// DoubleValueNotifierEx
+/// DoubleWatcherExtension
 ///
-/// Extension on `ValueNotifier<double>` to enable direct manipulation of double values.
+/// Extension on `Watcher<double>` to enable direct manipulation of double values.
 /// This extension provides convenient methods for handling double precision floating-point
 /// numbers within a ValueNotifier. It simplifies arithmetic and other operations on double
 /// values, such as rounding, scaling, or clamping, without the need to explicitly access the
@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 /// doubleWatcher.round(); // Directly rounds the value (now 13.0)
 /// // These operations modify the double value within the ValueNotifier without accessing `.value`
 /// ```
-extension DoubleValueNotifierEx on ValueNotifier<double> {
+extension DoubleWatcherExtension on ValueNotifier<double> {
   /// The remainder of the truncating division of `this` by [other].
   double remainder(num other) => value.remainder(other);
 

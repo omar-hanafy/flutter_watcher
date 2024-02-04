@@ -1,5 +1,20 @@
 # Watcher State Management
 
+* [Watcher State Management](#watcher-state-management)
+  * [Overview](#overview)
+  * [Initialization](#initialization)
+  * [Using ValueWatch Widget and .watch](#using-valuewatch-widget-and-watch)
+  * [watchWhen](#watchwhen)
+  * [CachedWatcher](#cachedwatcher)
+  * [Utilities and Handling Changes](#utilities-and-handling-changes)
+  * [Other Useful Helpers](#other-useful-helpers)
+  * [Flutter Controllers With Watcher.](#flutter-controllers-with-watcher)
+    * [TextEditingController](#texteditingcontroller)
+    * [AnimationController](#animationcontroller)
+  * [Full Counter Example](#full-counter-example)
+  * [Contributions](#contributions)
+  * [License](#license)
+
 ## Overview
 
 `flutter_watcher` is an intuitive and efficient state management package for Flutter. Acting as a wrapper around Flutter's `ValueNotifier` and `ValueListenableBuilder`, it offers a more user-friendly syntax, including the `CachedWatcher` for persistent state management, transforming the complexity of state management into a simpler, cleaner, and more maintainable approach.
@@ -15,6 +30,9 @@ final boolValue = false.watcher;
 
 // Or use the original Watchers.
 final listWatcher = ListWatcher<int>([1, 2, 3]);
+
+// All custom types are also supported.
+final userWatcher = User().watcher; // creates a Watcher<User>
 ```
 
 ## Using `ValueWatch` Widget and `.watch`
@@ -26,7 +44,7 @@ final isLoading = false.watcher;
 Widget build(BuildContext context) {
   ...
   ValueWatch<bool>(
-    builder: (context, value) => MyWidget(value), // Builder function
+    builder: (context, value) => MyWidget(value),
     watcher: isLoading, // Your watcher instance.
   ),
   ...
@@ -45,6 +63,7 @@ Widget build(BuildContext context) {
 ```
 
 ## `watchWhen`
+
 The `watchWhen` feature in the `ValueWatch` widget provides a way
 to conditionally rebuild a widget based on specific criteria.
 It Allows defining custom conditions under which the widget should update,
@@ -64,65 +83,50 @@ ValueWatch<int>(
 
 ## CachedWatcher
 
-CachedWatcher is a wrapper around the standard Watcher, with local caching capabilities, Ideal for persisting state between app sessions. This feature allows efficient storage and retrieval of data, thereby optimizing app performance and user experience.
+`CachedWatcher` is an abstract class extending the standard `Watcher` with added local caching capabilities. it is designed to be subclassed for specific data types.
 
-### Usage
+### Simple Usage
 
-CachedWatcher is straightforward to use. Here's a basic example:
+In this package there is a good set of extensions and classes that help you create a `CachedWatcher<T>` in a simple way.
 
 ```dart
-  // Initialize a CachedWatcher with a key.
-  final counter = 0.cachedWatcher('counter_key');
+// Example: Using a subclass for integers
+final counter = IntCachedWatcher(0, 'counter_key'); // with class.
+final counter = 0.cachedWatcher('counter_key'); // with extension.
 
-	// use it just like any watcher 
+// BoolCachedWatcher, ListCachedWatcher, DateTimeCachedWatcher, and so on for premitive types are supported
+// in simple usage.
+```
+
+### Advanced Usage (Custom Types) 
+
+Subclasses can be created for any custom type, providing tailored serialization and deserialization strategies for different kinds of data stored in local cache.
+
+```dart
+class AuthService extends CachedWatcher<AuthState> {
+  AuthService() : super(AuthState.initial, key: 'AuthServiceKey'); // Default key is the type name 'AuthState'
+
   @override
-  Widget build(BuildContext context) {
-    ...
-     Center(
-        child: counter.watch(
-          (value) => Text('Counter: $value'),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-				// the incremented counter is automatically cached.
-        // when the app restarts it will be back (as long as the key is the same).
-        onPressed: () => counter.increment(), 
-        child: const Icon(Icons.add),
-      ),
-    );
-    ...
+  AuthState? read(dynamic data) {
+    // Implement logic to deserialize data from cache
+    // for example return success and assign data to ur token.
+  }
+
+  @override
+  dynamic write(AuthState value) {
+    // Implement logic to serialize value to cache
+    // for example write the token when AuthState is success. 
+  }
 }
 ```
 
-### CachedWatcher (Advanced Use Cases)
-
-CachedWatcher's flexibility allows it to handle a variety of advanced scenarios, making it a versatile tool for state management. Here's a deeper look into its initialization properties and how they can be leveraged:
-
 ### Initialization Properties
 
-- **`initialValue`**: The initial value of the watcher. It's the starting point for your CachedWatcher's state.
-- **`key`**: A unique identifier for the CachedWatcher's stored data. This key is used to save and retrieve the cached value from local storage.
-- **`read`**: A callback function that provides the nullable value of the type of creation allowing to manipulate the stored value back to the expected type when initializing the CachedWatcher. **(uses the default value if not defined or returns null).**
-- **`write`**: A callback function that specifies how to convert and store the value in local storage, which will be returned later in the `read` function.
+- **`initialValue`**: The starting value for the watcher.
+- **`key` (Optional)**: A unique identifier for the `CachedWatcher`'s stored data, used to save and retrieve the cached
+  value from local storage. Default is the type name
 
-### Custom Data Handling
-
-Using `read` and `write`, you can manage how data is transformed and stored. For instance, if you are working with a custom object, you might want to convert it to a JSON string before writing to local storage and then parse it back to the object when reading, for example.
-
-```dart
-// Using CachedWatcher with a custom object e.g. Singleton
-final loadState = LoadState.initial.cachedWatcher(
-  'user_key',
-  read: (dynamic json) {
-    if(json != null) {
-      return LoadState.loaded(user: User.fromJson(toMap(json)));
-    }
-    return null; // uses the default state. LoadState.initial()
-  }
-  write: (state) => state is Loaded ? state.user.toJson() : null,
-);
-// where LoadState is a custom state object defined in your app.
-```
+Any CachedWatcher instance can be used with the `ValueWatch` widget and `.watch` extension.
 
 ## Utilities and Handling Changes
 
@@ -130,7 +134,7 @@ final loadState = LoadState.initial.cachedWatcher(
 
 Extensions such as `updateIf`, `onChange`, `debounce`, `map`, and `combineWith` provide powerful utilities for responding to changes, debouncing actions, transforming, or combining multiple `Watcher` instances.
 
-### Usage Examples
+### Examples
 
 - **updateIf**: Update the value conditionally.
 
@@ -181,6 +185,8 @@ perform on the data types themselves. Here are some samples:
 
 - **toggle**: Toggle the value of `Watcher<bool>`.
 
+- **symbols**: The built in `|` `&` `^` are supported.
+
   ```dart
   boolWatcher.toggle(); // Toggles the boolean value
   ```
@@ -192,6 +198,8 @@ perform on the data types themselves. Here are some samples:
 - **remove**: Remove an item from the list.
 
 - **clear**: Clear all items in the list.
+
+- and all `List` built-in functions are supported
 
   ```dart
   listWatcher.addAll([4, 5]); // Adds items to the list
@@ -206,6 +214,8 @@ perform on the data types themselves. Here are some samples:
 
 - **decrement**: Decrement the value.
 
+- and all `Num` built-in functions are supported
+
   ```dart
   numWatcher.increment(); // Increments the number
   numWatcher.decrement(); // Decrements the number
@@ -217,6 +227,8 @@ perform on the data types themselves. Here are some samples:
 - **putIfAbsent**: Add a key-value pair if the key is not already in the map.
 
 - **remove**: Remove a key-value pair.
+
+- and all `Map` built-in functions are supported
 
   ```dart
   mapWatcher.putIfAbsent(key, () => value); // Adds key-value pair if absent
@@ -230,6 +242,8 @@ perform on the data types themselves. Here are some samples:
 
 - **removeAll**: Remove all items from the set.
 
+- and all `Set` built-in functions are supported
+
   ```dart
   setWatcher.add(item);       // Adds an item
   setWatcher.removeAll(items); // Removes all specified items
@@ -240,14 +254,16 @@ perform on the data types themselves. Here are some samples:
 
 - **updatePath**: Update the path of `Watcher<Uri>`.
 
+- and all `Uri` built-in functions are supported
+
   ```dart
   uriWatcher.updatePath(newPath); // Updates the URI path
   // and more
   ```
 
-## Flutter Controllers With .watch widget.
+## Flutter Controllers With Watcher.
 
-The `.watch` provides seamless integration with various native Flutter controllers, enhancing the development of reactive UIs. Below are examples demonstrating how Watcher can be utilized with common Flutter controllers:
+The `Watcher` and  `.watch` extension provides seamless integration with various native Flutter controllers, enhancing the development of reactive UIs. Below are examples demonstrating how Watcher can be utilized with common Flutter controllers:
 
 ### TextEditingController
 

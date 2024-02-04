@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_watcher/src/watcher.dart';
 
-/// UriValueNotifierEx
+/// UriWatcherExtension
 ///
-/// Extension on `ValueNotifier<Uri>` to enable direct manipulation and handling of Uri objects.
+/// Extension on `Watcher<Uri>` to enable direct manipulation and handling of Uri objects.
 /// This extension provides methods to easily modify and interact with Uri data encapsulated in a
 /// ValueNotifier. It allows for direct operations on the Uri object, such as updating query
 /// parameters or altering path segments, without needing to access the `.value` property explicitly.
@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 /// uriWatcher.addQueryParam("key", "value"); // Directly adds a query parameter to the Uri
 /// // These operations modify the Uri within the ValueNotifier without directly accessing `.value`
 /// ```
-extension UriValueNotifierEx on ValueNotifier<Uri> {
+extension UriWatcherExtension on Watcher<Uri> {
   /// The scheme component of the URI.
   ///
   /// The value is the empty string if there is no scheme component.
@@ -262,8 +262,6 @@ extension UriValueNotifierEx on ValueNotifier<Uri> {
   ///
   /// If the URI cannot be converted to a file path, calling this throws
   /// [UnsupportedError].
-  // TODO(lrn): Deprecate and move functionality to File class or similar.
-  // The core libraries should not worry about the platform.
   String toFilePath({bool? windows}) => value.toFilePath(windows: windows);
 
   /// Access the structure of a `data:` URI.
@@ -326,19 +324,22 @@ extension UriValueNotifierEx on ValueNotifier<Uri> {
     String? query,
     Map<String, dynamic /*String?|Iterable<String>*/ >? queryParameters,
     String? fragment,
-  }) {
-    return value.replace(
-      scheme: scheme,
-      userInfo: userInfo,
-      host: host,
-      port: port,
-      path: path,
-      pathSegments: pathSegments,
-      query: query,
-      queryParameters: queryParameters,
-      fragment: fragment,
-    );
-  }
+    bool forceRefresh = false,
+  }) =>
+      updateOnAction(
+        () => value.replace(
+          scheme: scheme,
+          userInfo: userInfo,
+          host: host,
+          port: port,
+          path: path,
+          pathSegments: pathSegments,
+          query: query,
+          queryParameters: queryParameters,
+          fragment: fragment,
+        ),
+        forceRefresh: forceRefresh,
+      );
 
   /// Creates a `Uri` that differs from this only in not having a fragment.
   ///
@@ -350,7 +351,10 @@ extension UriValueNotifierEx on ValueNotifier<Uri> {
   ///     Uri.parse('https://example.org:8080/foo/bar#frag').removeFragment();
   /// print(uri); // https://example.org:8080/foo/bar
   /// ```
-  Uri removeFragment() => value.removeFragment();
+  Uri removeFragment({bool forceRefresh = false}) => updateOnAction(
+        () => value.removeFragment(),
+        forceRefresh: forceRefresh,
+      );
 
   /// Resolve [reference] as an URI relative to `this`.
   ///
@@ -360,7 +364,10 @@ extension UriValueNotifierEx on ValueNotifier<Uri> {
   /// Returns the resolved URI.
   ///
   /// See [resolveUri] for details.
-  Uri resolve(String reference) => value.resolve(reference);
+  Uri resolve(String reference, {bool forceRefresh = false}) => updateOnAction(
+        () => value.resolve(reference),
+        forceRefresh: forceRefresh,
+      );
 
   /// Resolve [reference] as a URI relative to `this`.
   ///
@@ -375,7 +382,10 @@ extension UriValueNotifierEx on ValueNotifier<Uri> {
   /// start with a slash.
   /// In that case, the paths are combined without removing leading "..", and
   /// an empty path is not converted to "/".
-  Uri resolveUri(Uri reference) => value.resolveUri(reference);
+  Uri resolveUri(Uri reference, {bool forceRefresh = false}) => updateOnAction(
+        () => value.resolveUri(reference),
+        forceRefresh: forceRefresh,
+      );
 
   /// Returns a URI where the path has been normalized.
   ///
@@ -391,5 +401,8 @@ extension UriValueNotifierEx on ValueNotifier<Uri> {
   ///
   /// The default implementation of `Uri` always normalizes paths, so calling
   /// this function has no effect.
-  Uri normalizePath() => value.normalizePath();
+  Uri normalizePath({bool forceRefresh = false}) => updateOnAction(
+        () => value.normalizePath(),
+        forceRefresh: forceRefresh,
+      );
 }

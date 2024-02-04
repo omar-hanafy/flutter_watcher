@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 
-/// MapValueNotifierEx
+import '../../flutter_watcher.dart';
+
+/// MapWatcherExtension
 ///
-/// Extension on `ValueNotifier<Map<K, V>>` to enable direct manipulation of map data.
+/// Extension on `Watcher<Map<K, V>>` to enable direct manipulation of map data.
 /// This extension facilitates operations on the map contained within the ValueNotifier
 /// as if operating on a regular map, without the need to access the `.value` property.
 /// It simplifies the syntax for modifying map data, making your code cleaner and more concise.
@@ -18,7 +20,7 @@ import 'package:flutter/material.dart';
 /// mapWatcher.remove("apple");  // Directly removes an entry from the map
 /// // These operations modify the map within the ValueNotifier without directly accessing `.value`
 /// ```
-extension MapValueNotifierEx<K, V> on ValueNotifier<Map<K, V>> {
+extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// Provides a view of this map as having [RK] keys and [RV] instances,
   /// if necessary.
   ///
@@ -38,7 +40,10 @@ extension MapValueNotifierEx<K, V> on ValueNotifier<Map<K, V>> {
   /// without any checks.
   /// That means that you can do `mapWithStringKeys.cast<int,int>().remove("a")`
   /// successfully, even if it looks like it shouldn't have any effect.
-  Map<RK, RV> cast<RK, RV>() => value.cast();
+  Map<RK, RV> cast<RK, RV>({bool forceRefresh = false}) => updateOnAction(
+        () => value.cast<RK, RV>(),
+        forceRefresh: forceRefresh,
+      );
 
   /// Whether this map contains the given [value].
   ///
@@ -84,8 +89,12 @@ extension MapValueNotifierEx<K, V> on ValueNotifier<Map<K, V>> {
 
   /// Returns a new map where all entries of this map are transformed by
   /// the given [convert] function.
-  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> Function(K key, V value) convert) =>
-      value.map(convert);
+  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> Function(K key, V value) convert,
+          {bool forceRefresh = false}) =>
+      updateOnAction(
+        () => value.map(convert),
+        forceRefresh: forceRefresh,
+      );
 
   /// Adds all key/value pairs of [newEntries] to this map.
   ///
@@ -105,8 +114,12 @@ extension MapValueNotifierEx<K, V> on ValueNotifier<Map<K, V>> {
   /// // {1: Mercury, 2: Venus, 3: Earth, 4: Mars, 5: Jupiter, 6: Saturn,
   /// //  7: Uranus, 8: Neptune}
   /// ```
-  void addEntries(Iterable<MapEntry<K, V>> newEntries) =>
-      value.addEntries(newEntries);
+  void addEntries(Iterable<MapEntry<K, V>> newEntries,
+          {bool forceRefresh = false}) =>
+      updateOnAction(
+        () => value.addEntries(newEntries),
+        forceRefresh: forceRefresh,
+      );
 
   /// Updates the value for the provided [key].
   ///
@@ -132,8 +145,12 @@ extension MapValueNotifierEx<K, V> on ValueNotifier<Map<K, V>> {
   /// largestPlanets.update(8, (value) => 'New', ifAbsent: () => 'Mercury');
   /// print(largestPlanets); // {1: Jupiter, 2: Saturn, 3: Neptune, 8: Mercury}
   /// ```
-  V update(K key, V Function(V value) update, {V Function()? ifAbsent}) =>
-      value.update(key, update);
+  V update(K key, V Function(V value) update,
+          {V Function()? ifAbsent, bool forceRefresh = false}) =>
+      updateOnAction(
+        () => value.update(key, update, ifAbsent: ifAbsent),
+        forceRefresh: forceRefresh,
+      );
 
   /// Updates all values.
   ///
@@ -144,7 +161,12 @@ extension MapValueNotifierEx<K, V> on ValueNotifier<Map<K, V>> {
   /// terrestrial.updateAll((key, value) => value.toUpperCase());
   /// print(terrestrial); // {1: MERCURY, 2: VENUS, 3: EARTH}
   /// ```
-  void updateAll(V Function(K key, V value) update) => value.updateAll(update);
+  void updateAll(V Function(K key, V value) update,
+          {bool forceRefresh = false}) =>
+      updateOnAction(
+        () => value.updateAll(update),
+        forceRefresh: forceRefresh,
+      );
 
   /// Removes all entries of this map that satisfy the given [test].
   /// ```dart
@@ -152,8 +174,12 @@ extension MapValueNotifierEx<K, V> on ValueNotifier<Map<K, V>> {
   /// terrestrial.removeWhere((key, value) => value.startsWith('E'));
   /// print(terrestrial); // {1: Mercury, 2: Venus}
   /// ```
-  void removeWhere(bool Function(K key, V value) test) =>
-      value.removeWhere(test);
+  void removeWhere(bool Function(K key, V value) test,
+          {bool forceRefresh = false}) =>
+      updateOnAction(
+        () => value.removeWhere(test),
+        forceRefresh: forceRefresh,
+      );
 
   /// Look up the value of [key], or add a new entry if it isn't there.
   ///
@@ -175,8 +201,11 @@ extension MapValueNotifierEx<K, V> on ValueNotifier<Map<K, V>> {
   /// print(diameters); // {1.0: Earth, 0.383: Mercury, 0.949: Venus}
   /// ```
   /// Calling [ifAbsent] must not add or remove keys from the map.
-  V putIfAbsent(K key, V Function() ifAbsent) =>
-      value.putIfAbsent(key, ifAbsent);
+  V putIfAbsent(K key, V Function() ifAbsent, {bool forceRefresh = false}) =>
+      updateOnAction(
+        () => value.putIfAbsent(key, ifAbsent),
+        forceRefresh: forceRefresh,
+      );
 
   /// Adds all key/value pairs of [other] to this map.
   ///
@@ -190,7 +219,10 @@ extension MapValueNotifierEx<K, V> on ValueNotifier<Map<K, V>> {
   /// planets.addAll({5: 'Jupiter', 6: 'Saturn'});
   /// print(planets); // {1: Mercury, 2: Earth, 5: Jupiter, 6: Saturn}
   /// ```
-  void addAll(Map<K, V> other) => value.addAll(other);
+  void addAll(Map<K, V> other, {bool forceRefresh = false}) => updateOnAction(
+        () => value.addAll(other),
+        forceRefresh: forceRefresh,
+      );
 
   /// Removes [key] and its associated value, if present, from the map.
   ///
@@ -204,7 +236,10 @@ extension MapValueNotifierEx<K, V> on ValueNotifier<Map<K, V>> {
   /// final removedValue = terrestrial.remove(2); // Venus
   /// print(terrestrial); // {1: Mercury, 3: Earth}
   /// ```
-  V? remove(Object? key) => value.remove(key);
+  V? remove(Object? key, {bool forceRefresh = false}) => updateOnAction(
+        () => value.remove(key),
+        forceRefresh: forceRefresh,
+      );
 
   /// Removes all entries from the map.
   ///
@@ -213,7 +248,10 @@ extension MapValueNotifierEx<K, V> on ValueNotifier<Map<K, V>> {
   /// final planets = <int, String>{1: 'Mercury', 2: 'Venus', 3: 'Earth'};
   /// planets.clear(); // {}
   /// ```
-  void clear() => value.clear();
+  void clear({bool forceRefresh = false}) => updateOnAction(
+        () => value.clear(),
+        forceRefresh: forceRefresh,
+      );
 
   /// Applies [action] to each key/value pair of the map.
   ///
@@ -230,7 +268,12 @@ extension MapValueNotifierEx<K, V> on ValueNotifier<Map<K, V>> {
   ///   // 17.15: Neptune
   /// });
   /// ```
-  void forEach(void Function(K key, V value) action) => value.forEach(action);
+  void forEach(void Function(K key, V value) action,
+          {bool forceRefresh = false}) =>
+      updateOnAction(
+        () => value.forEach(action),
+        forceRefresh: forceRefresh,
+      );
 
   /// The keys of [this].
   ///
@@ -264,4 +307,16 @@ extension MapValueNotifierEx<K, V> on ValueNotifier<Map<K, V>> {
 
   /// Whether there is at least one key/value pair in the map.
   bool get isNotEmpty => value.isNotEmpty;
+
+  /// Compares two maps for element-by-element equality.
+  ///
+  /// Returns true if the maps are both null, or if they are both non-null, have
+  /// the same length, and contain the same keys associated with the same values.
+  /// Returns false otherwise.
+  ///
+  /// If the elements are maps, lists, sets, or other collections/composite
+  /// objects, then the contents of those elements are not compared element by
+  /// element unless their equality operators ([Object.==]) do so. For checking
+  /// deep equality, consider using the [DeepCollectionEquality] class.
+  bool isEqual(Map<K, V> other) => value.isEqual(other);
 }
