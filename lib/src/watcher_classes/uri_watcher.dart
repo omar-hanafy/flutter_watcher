@@ -1,30 +1,16 @@
-import 'package:flutter_watcher/src/watcher.dart';
+import 'package:flutter_watcher/flutter_watcher.dart';
 
-/// UriWatcherExtension
-///
-/// Extension on `Watcher<Uri>` to enable direct manipulation and handling of Uri objects.
-/// This extension provides methods to easily modify and interact with Uri data encapsulated in a
-/// ValueNotifier. It allows for direct operations on the Uri object, such as updating query
-/// parameters or altering path segments, without needing to access the `.value` property explicitly.
-///
-/// This extension enhances usability when working with reactive Uri data, allowing for more
-/// readable and concise code when performing typical Uri operations like modifying paths, query
-/// parameters, or rebuilding the Uri.
-///
-/// Example:
-/// ```dart
-/// final uriWatcher = Uri.parse("https://example.com/page").watcher;
-/// uriWatcher.updatePath("/newpage"); // Directly updates the path of the Uri
-/// uriWatcher.addQueryParam("key", "value"); // Directly adds a query parameter to the Uri
-/// // These operations modify the Uri within the ValueNotifier without directly accessing `.value`
-/// ```
-extension UriWatcherExtension on Watcher<Uri> {
+/// allows to quickly create a Watcher of type Uri.
+class UriWatcher extends Watcher<Uri> implements Uri {
+  UriWatcher(super.initial);
+
   /// The scheme component of the URI.
   ///
   /// The value is the empty string if there is no scheme component.
   ///
   /// A URI scheme is case insensitive.
   /// The returned scheme is canonicalized to lowercase letters.
+  @override
   String get scheme => value.scheme;
 
   /// The authority component.
@@ -33,12 +19,14 @@ extension UriWatcherExtension on Watcher<Uri> {
   /// parts.
   ///
   /// The value is the empty string if there is no authority component.
+  @override
   String get authority => value.authority;
 
   /// The user info part of the authority component.
   ///
   /// The value is the empty string if there is no user info in the
   /// authority component.
+  @override
   String get userInfo => value.userInfo;
 
   /// The host part of the authority component.
@@ -52,12 +40,14 @@ extension UriWatcherExtension on Watcher<Uri> {
   /// The host string is case-insensitive.
   /// The returned host name is canonicalized to lower-case
   /// with upper-case percent-escapes.
+  @override
   String get host => value.host;
 
   /// The port part of the authority component.
   ///
   /// The value is the default port if there is no port number in the authority
   /// component. That's 80 for http, 443 for https, and 0 for everything else.
+  @override
   int get port => value.port;
 
   /// The path component.
@@ -67,6 +57,7 @@ extension UriWatcherExtension on Watcher<Uri> {
   /// path, use [pathSegments].
   ///
   /// The path value is the empty string if there is no path component.
+  @override
   String get path => value.path;
 
   /// The query component.
@@ -76,12 +67,14 @@ extension UriWatcherExtension on Watcher<Uri> {
   /// To get direct access to the decoded query, use [queryParameters].
   ///
   /// The value is the empty string if there is no query component.
+  @override
   String get query => value.query;
 
   /// The fragment identifier component.
   ///
   /// The value is the empty string if there is no fragment identifier
   /// component.
+  @override
   String get fragment => value.fragment;
 
   /// The URI path split into its segments.
@@ -92,6 +85,7 @@ extension UriWatcherExtension on Watcher<Uri> {
   ///
   /// The list is unmodifiable and will throw [UnsupportedError] on any
   /// calls that would mutate it.
+  @override
   List<String> get pathSegments => value.pathSegments;
 
   /// The URI query split into a map according to the rules
@@ -118,6 +112,7 @@ extension UriWatcherExtension on Watcher<Uri> {
   /// ```
   ///
   /// The map is unmodifiable.
+  @override
   Map<String, String> get queryParameters => value.queryParameters;
 
   /// Returns the URI query split into a map according to the rules
@@ -140,18 +135,22 @@ extension UriWatcherExtension on Watcher<Uri> {
   /// ```
   ///
   /// The map and the lists it contains are unmodifiable.
+  @override
   Map<String, List<String>> get queryParametersAll => value.queryParametersAll;
 
   /// Whether the URI is absolute.
   ///
   /// A URI is an absolute URI in the sense of RFC 3986 if it has a scheme
   /// and no fragment.
+  @override
   bool get isAbsolute => value.isAbsolute;
 
   /// Whether the URI has a [scheme] component.
+  @override
   bool get hasScheme => value.hasScheme;
 
   /// Whether the URI has an [authority] component.
+  @override
   bool get hasAuthority => value.hasAuthority;
 
   /// Whether the URI has an explicit port.
@@ -160,18 +159,23 @@ extension UriWatcherExtension on Watcher<Uri> {
   /// (zero for unrecognized schemes, with http (80) and https (443) being
   /// recognized),
   /// then the port is made implicit and omitted from the URI.
+  @override
   bool get hasPort => value.hasPort;
 
   /// Whether the URI has a query part.
+  @override
   bool get hasQuery => value.hasQuery;
 
   /// Whether the URI has a fragment part.
+  @override
   bool get hasFragment => value.hasFragment;
 
   /// Whether the URI has an empty path.
+  @override
   bool get hasEmptyPath => value.hasEmptyPath;
 
   /// Whether the URI has an absolute path (starting with '/').
+  @override
   bool get hasAbsolutePath => value.hasAbsolutePath;
 
   /// Returns the origin of the URI in the form scheme://host:port for the
@@ -181,6 +185,7 @@ extension UriWatcherExtension on Watcher<Uri> {
   /// is missing or empty.
   ///
   /// See: https://www.w3.org/TR/2011/WD-html5-20110405/origin-0.html#origin
+  @override
   String get origin => value.origin;
 
   /// Whether the scheme of this [Uri] is [scheme].
@@ -199,6 +204,7 @@ extension UriWatcherExtension on Watcher<Uri> {
   ///
   /// An empty [scheme] string matches a URI with no scheme
   /// (one where [hasScheme] returns false).
+  @override
   bool isScheme(String scheme) => value.isScheme(scheme);
 
   /// Creates a file path from a file URI.
@@ -262,6 +268,7 @@ extension UriWatcherExtension on Watcher<Uri> {
   ///
   /// If the URI cannot be converted to a file path, calling this throws
   /// [UnsupportedError].
+  @override
   String toFilePath({bool? windows}) => value.toFilePath(windows: windows);
 
   /// Access the structure of a `data:` URI.
@@ -270,6 +277,7 @@ extension UriWatcherExtension on Watcher<Uri> {
   /// URIs.
   /// The [UriData] object can be used to access the media type and data
   /// of a `data:` URI.
+  @override
   UriData? get data => value.data;
 
   /// Creates a new `Uri` based on this one, but with some parts replaced.
@@ -314,6 +322,7 @@ extension UriWatcherExtension on Watcher<Uri> {
   /// Using this method can be seen as shorthand for the `Uri` constructor
   /// call above, but may also be slightly faster because the parts taken
   /// from this `Uri` need not be checked for validity again.
+  @override
   Uri replace({
     String? scheme,
     String? userInfo,
@@ -348,6 +357,7 @@ extension UriWatcherExtension on Watcher<Uri> {
   ///     Uri.parse('https://example.org:8080/foo/bar#frag').removeFragment();
   /// print(uri); // https://example.org:8080/foo/bar
   /// ```
+  @override
   Uri removeFragment() => updateOnAction(() => value.removeFragment());
 
   /// Resolve [reference] as an URI relative to `this`.
@@ -358,6 +368,7 @@ extension UriWatcherExtension on Watcher<Uri> {
   /// Returns the resolved URI.
   ///
   /// See [resolveUri] for details.
+  @override
   Uri resolve(String reference) =>
       updateOnAction(() => value.resolve(reference));
 
@@ -374,6 +385,7 @@ extension UriWatcherExtension on Watcher<Uri> {
   /// start with a slash.
   /// In that case, the paths are combined without removing leading "..", and
   /// an empty path is not converted to "/".
+  @override
   Uri resolveUri(Uri reference) =>
       updateOnAction(() => value.resolveUri(reference));
 
@@ -391,5 +403,6 @@ extension UriWatcherExtension on Watcher<Uri> {
   ///
   /// The default implementation of `Uri` always normalizes paths, so calling
   /// this function has no effect.
+  @override
   Uri normalizePath() => updateOnAction(() => value.normalizePath());
 }

@@ -1,4 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_watcher/flutter_watcher.dart';
+
+/// allows to quickly create a Watcher of type double.
+class DoubleWatcher extends Watcher<double> {
+  DoubleWatcher(super.initial);
+
+  @override
+  String toString() => value.toStringAsFixed(2);
+}
 
 /// DoubleWatcherExtension
 ///

@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_watcher/flutter_watcher.dart';
+
+/// allows to quickly create a Watcher of type num.
+class NumWatcher extends Watcher<num> {
+  NumWatcher(super.initial);
+}
 
 /// NumericWatcherExtension
 ///

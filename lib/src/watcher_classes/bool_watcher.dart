@@ -1,6 +1,12 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
+
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
+
+/// allows to quickly create a Watcher of type bool.
+class BoolWatcher extends Watcher<bool> {
+  BoolWatcher(super.initial);
+}
 
 /// BoolWatcherExtension
 ///
@@ -12,7 +18,7 @@ import 'package:flutter_watcher/flutter_watcher.dart';
 /// final boolWatcher = true.watcher;
 /// boolWatcher.toggle(); // Toggles the boolean value.
 /// ```
-extension BoolWatcherExtension on ValueNotifier<bool> {
+extension BoolWatcherExtension on Watcher<bool> {
   /// toggle the value of the [Watcher]
   void toggle() => value = !value;
 

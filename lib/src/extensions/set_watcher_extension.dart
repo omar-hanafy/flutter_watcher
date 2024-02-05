@@ -19,10 +19,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// without any checks.
   /// That means that you can do `setOfStrings.cast<int>().remove("a")`
   /// successfully, even if it looks like it shouldn't have any effect.
-  Set<R> cast<R>({bool forceRefresh = false}) => updateOnAction(
-        () => value.cast(),
-        forceRefresh: forceRefresh,
-      );
+  Set<R> cast<R>() => updateOnAction(() => value.cast());
 
   /// An iterator that iterates over the elements of this [Watcher]'s value.
   ///
@@ -36,10 +33,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final containsB = characters.contains('B'); // true
   /// final containsD = characters.contains('D'); // false
   /// ```
-  bool contains(Object? value, {bool forceRefresh = false}) => updateOnAction(
-        () => this.value.contains(value),
-        forceRefresh: forceRefresh,
-      );
+  bool contains(Object? value) =>
+      updateOnAction(() => this.value.contains(value));
 
   /// Adds [value] to this [Watcher]'s value.
   ///
@@ -66,10 +61,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// assert(identical(time1, dateTimes.first));
   /// print(dateTimes.length);
   /// ```
-  bool add(E value, {bool forceRefresh = false}) => updateOnAction(
-        () => this.value.add(value),
-        forceRefresh: forceRefresh,
-      );
+  bool add(E value) => updateOnAction(() => this.value.add(value));
 
   /// Adds all [elements] to this [Watcher]'s value.
   ///
@@ -80,10 +72,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// characters.addAll({'A', 'B', 'C'});
   /// print(characters); // {A, B, C}
   /// ```
-  void addAll(Set<E> elements, {bool forceRefresh = false}) => updateOnAction(
-        () => value.addAll(elements),
-        forceRefresh: forceRefresh,
-      );
+  void addAll(Set<E> elements) => updateOnAction(() => value.addAll(elements));
 
   /// Removes [value] from this [Watcher]'s value.
   ///
@@ -95,10 +84,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final didRemoveD = characters.remove('D'); // false
   /// print(characters); // {A, C}
   /// ```
-  bool remove(Object? value, {bool forceRefresh = false}) => updateOnAction(
-        () => this.value.remove(value),
-        forceRefresh: forceRefresh,
-      );
+  bool remove(Object? value) => updateOnAction(() => this.value.remove(value));
 
   /// If an object equal to [object] is in this [Watcher]'s value, return it.
   ///
@@ -119,10 +105,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final containsD = characters.lookup('D');
   /// print(containsD); // null
   /// ```
-  E? lookup(Object? object, {bool forceRefresh = false}) => updateOnAction(
-        () => value.lookup(object),
-        forceRefresh: forceRefresh,
-      );
+  E? lookup(Object? object) => updateOnAction(() => value.lookup(object));
 
   /// Removes each element of [elements] from this [Watcher]'s value.
   /// ```dart
@@ -130,11 +113,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// characters.removeAll({'A', 'B', 'X'});
   /// print(characters); // {C}
   /// ```
-  void removeAll(Iterable<Object?> elements, {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.removeAll(elements),
-        forceRefresh: forceRefresh,
-      );
+  void removeAll(Iterable<Object?> elements) =>
+      updateOnAction(() => value.removeAll(elements));
 
   /// Removes all elements of this [Watcher]'s value that are not elements in [elements].
   ///
@@ -147,11 +127,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// characters.retainAll({'A', 'B', 'X'});
   /// print(characters); // {A, B}
   /// ```
-  void retainAll(Iterable<Object?> elements, {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.retainAll(elements),
-        forceRefresh: forceRefresh,
-      );
+  void retainAll(Iterable<Object?> elements) =>
+      updateOnAction(() => value.retainAll(elements));
 
   /// Removes all elements of this [Watcher]'s value that satisfy [test].
   /// ```dart
@@ -159,12 +136,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// characters.removeWhere((element) => element.startsWith('B'));
   /// print(characters); // {A, C}
   /// ```
-  void removeWhere(bool Function(E element) test,
-          {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.removeWhere(test),
-        forceRefresh: forceRefresh,
-      );
+  void removeWhere(bool Function(E element) test) =>
+      updateOnAction(() => value.removeWhere(test));
 
   /// Removes all elements of this [Watcher]'s value that fail to satisfy [test].
   /// ```dart
@@ -173,12 +146,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   ///     (element) => element.startsWith('B') || element.startsWith('C'));
   /// print(characters); // {B, C}
   /// ```
-  void retainWhere(bool Function(E element) test,
-          {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.retainWhere(test),
-        forceRefresh: forceRefresh,
-      );
+  void retainWhere(bool Function(E element) test) =>
+      updateOnAction(() => value.retainWhere(test));
 
   /// Whether this [Watcher]'s value contains all the elements of [other].
   /// ```dart
@@ -188,11 +157,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final containsAD = characters.containsAll({'A', 'D'});
   /// print(containsAD); // false
   /// ```
-  bool containsAll(Iterable<Object?> other, {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.containsAll(other),
-        forceRefresh: forceRefresh,
-      );
+  bool containsAll(Iterable<Object?> other) =>
+      updateOnAction(() => value.containsAll(other));
 
   /// Creates a new set which is the intersection between this [Watcher]'s value and [other].
   ///
@@ -204,11 +170,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final intersectionSet = characters1.intersection(characters2);
   /// print(intersectionSet); // {A}
   /// ```
-  Set<E> intersection(Set<Object?> other, {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.intersection(other),
-        forceRefresh: forceRefresh,
-      );
+  Set<E> intersection(Set<Object?> other) =>
+      updateOnAction(() => value.intersection(other));
 
   /// Creates a new set which contains all the elements of this [Watcher]'s value and [other].
   ///
@@ -222,16 +185,10 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final unionSet2 = characters2.union(characters1);
   /// print(unionSet2); // {A, E, F, B, C}
   /// ```
-  Set<E> union(Set<E> other, {bool forceRefresh = false}) => updateOnAction(
-        () => value.union(other),
-        forceRefresh: forceRefresh,
-      );
+  Set<E> union(Set<E> other) => updateOnAction(() => value.union(other));
 
-  Set<E> difference(Set<Object?> other, {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.difference(other),
-        forceRefresh: forceRefresh,
-      );
+  Set<E> difference(Set<Object?> other) =>
+      updateOnAction(() => value.difference(other));
 
   /// Creates a new set with the elements of this that are not in [other].
   ///
@@ -245,20 +202,14 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final differenceSet2 = characters2.difference(characters1);
   /// print(differenceSet2); // {E, F}
   /// ```
-  void clear({bool forceRefresh = false}) => updateOnAction(
-        () => value.clear(),
-        forceRefresh: forceRefresh,
-      );
+  void clear() => updateOnAction(() => value.clear());
 
   /// Removes all elements from this [Watcher]'s value.
   /// ```dart
   /// final charactersWatcher = <String>{'A', 'B', 'C'}.watcher;
   /// characters.clear(); // {}
   /// ```
-  Set<E> toSet({bool forceRefresh = false}) => updateOnAction(
-        () => value.toSet(),
-        forceRefresh: forceRefresh,
-      );
+  Set<E> toSet() => updateOnAction(() => value.toSet());
 
   /// Creates the lazy concatenation of this iterable and [other].
   ///
@@ -272,11 +223,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// var updated = planets.followedBy({'Mars', 'Venus'});
   /// print(updated); // (Earth, Jupiter, Mars, Venus)
   /// ```
-  Iterable<E> followedBy(Set<E> other, {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.followedBy(other),
-        forceRefresh: forceRefresh,
-      );
+  Iterable<E> followedBy(Set<E> other) =>
+      updateOnAction(() => value.followedBy(other));
 
   /// The current elements of this iterable modified by [toElement].
   ///
@@ -315,11 +263,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// var values = products.map((product) => product['price'] as double);
   /// var totalPrice = values.fold(0.0, (a, b) => a + b); // 42.5.
   /// ```
-  Iterable<T> map<T>(T Function(E e) toElement, {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.map(toElement),
-        forceRefresh: forceRefresh,
-      );
+  Iterable<T> map<T>(T Function(E e) toElement) =>
+      updateOnAction(() => value.map(toElement));
 
   /// Creates a new lazy [Iterable] with all elements that satisfy the
   /// predicate [test].
@@ -341,12 +286,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// result = numbers.where((x) => x > 5); // (6, 7)
   /// result = numbers.where((x) => x.isEven); // (2, 6)
   /// ```
-  Iterable<E> where(bool Function(E element) test,
-          {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.where(test),
-        forceRefresh: forceRefresh,
-      );
+  Iterable<E> where(bool Function(E element) test) =>
+      updateOnAction(() => value.where(test));
 
   /// Creates a new lazy [Iterable] with all elements that have type [T].
   ///
@@ -357,10 +298,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// Iterating will not cache results, and thus iterating multiple times over
   /// the returned [Iterable] may yield different results,
   /// if the underlying elements change between iterations.
-  Iterable<T> whereType<T>({bool forceRefresh = false}) => updateOnAction(
-        () => value.whereType<T>(),
-        forceRefresh: forceRefresh,
-      );
+  Iterable<T> whereType<T>() => updateOnAction(() => value.whereType<T>());
 
   /// Expands each element of this [Iterable] into zero or more elements.
   ///
@@ -390,12 +328,10 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   ///   }
   /// }
   /// ```
-  Iterable<T> expand<T>(Iterable<T> Function(E element) toElements,
-          {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.expand(toElements),
-        forceRefresh: forceRefresh,
-      );
+  Iterable<T> expand<T>(
+    Iterable<T> Function(E element) toElements,
+  ) =>
+      updateOnAction(() => value.expand(toElements));
 
   /// Whether the collection contains an element equal to [element].
   ///
@@ -421,18 +357,11 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final containsJupiter = gasPlanets.values.contains('Jupiter'); // true
   /// final containsMercury = gasPlanets.values.contains('Mercury'); // false
   /// ```
-  void forEach(void Function(E element) action, {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.forEach(action),
-        forceRefresh: forceRefresh,
-      );
+  void forEach(void Function(E element) action) =>
+      updateOnAction(() => value.forEach(action));
 
-  E reduce(E Function(E value, E element) combine,
-          {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.reduce(combine),
-        forceRefresh: forceRefresh,
-      );
+  E reduce(E Function(E value, E element) combine) =>
+      updateOnAction(() => value.reduce(combine));
 
   /// Reduces a collection to a single value by iteratively combining elements
   /// of the collection using the provided function.
@@ -456,12 +385,11 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final result = numbers.reduce((value, element) => value + element);
   /// print(result); // 17.5
   /// ```
-  T fold<T>(T initialValue, T Function(T previousValue, E element) combine,
-          {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.fold<T>(initialValue, combine),
-        forceRefresh: forceRefresh,
-      );
+  T fold<T>(
+    T initialValue,
+    T Function(T previousValue, E element) combine,
+  ) =>
+      updateOnAction(() => value.fold<T>(initialValue, combine));
 
   /// Reduces a collection to a single value by iteratively combining each
   /// element of the collection with an existing value
@@ -484,11 +412,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   ///     initialValue, (previousValue, element) => previousValue + element);
   /// print(result); // 117.5
   /// ```
-  bool every(bool Function(E element) test, {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.every(test),
-        forceRefresh: forceRefresh,
-      );
+  bool every(bool Function(E element) test) =>
+      updateOnAction(() => value.every(test));
 
   /// Checks whether every element of this iterable satisfies [test].
   ///
@@ -503,10 +428,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// // Checks whether all keys are smaller than 1.
   /// final every = planetsByMass.keys.every((key) => key < 1.0); // true
   /// ```
-  String join(String? separator, {bool forceRefresh = false}) => updateOnAction(
-        () => value.join(separator ?? ''),
-        forceRefresh: forceRefresh,
-      );
+  String join(String? separator) =>
+      updateOnAction(() => value.join(separator ?? ''));
 
   /// Converts each element to a [String] and concatenates the strings.
   ///
@@ -521,11 +444,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   ///   0.11: 'Mars'};
   /// final joinedNames = planetsByMass.values.join('-'); // Mercury-Venus-Mars
   /// ```
-  bool any(bool Function(E element) test, {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.any(test),
-        forceRefresh: forceRefresh,
-      );
+  bool any(bool Function(E element) test) =>
+      updateOnAction(() => value.any(test));
 
   /// Checks whether any element of this iterable satisfies [test].
   ///
@@ -539,11 +459,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// var result = numbers.any((element) => element >= 5); // true;
   /// result = numbers.any((element) => element >= 10); // false;
   /// ```
-  List<E> toList({bool growable = true, bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.toList(growable: growable),
-        forceRefresh: forceRefresh,
-      );
+  List<E> toList({bool growable = true, bool refresh = true}) =>
+      updateOnAction(() => value.toList(growable: growable));
 
   int get length => value.length;
 
@@ -551,10 +468,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
 
   bool get isNotEmpty => value.isNotEmpty;
 
-  Iterable<E> take(int count, {bool forceRefresh = false}) => updateOnAction(
-        () => value.take(count),
-        forceRefresh: forceRefresh,
-      );
+  Iterable<E> take(int count) => updateOnAction(() => value.take(count));
 
   /// Reduces a collection to a single value by iteratively combining elements
   /// of the collection using the provided function.
@@ -578,12 +492,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final result = numbers.reduce((value, element) => value + element);
   /// print(result); // 17.5
   /// ```
-  Iterable<E> takeWhile(bool Function(E value) test,
-          {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.takeWhile(test),
-        forceRefresh: forceRefresh,
-      );
+  Iterable<E> takeWhile(bool Function(E value) test) =>
+      updateOnAction(() => value.takeWhile(test));
 
   /// Reduces a collection to a single value by iteratively combining each
   /// element of the collection with an existing value
@@ -606,10 +516,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   ///     initialValue, (previousValue, element) => previousValue + element);
   /// print(result); // 117.5
   /// ```
-  Iterable<E> skip(int count, {bool forceRefresh = false}) => updateOnAction(
-        () => value.skip(count),
-        forceRefresh: forceRefresh,
-      );
+  Iterable<E> skip(int count) => updateOnAction(() => value.skip(count));
 
   /// Checks whether every element of this iterable satisfies [test].
   ///
@@ -624,12 +531,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// // Checks whether all keys are smaller than 1.
   /// final every = planetsByMass.keys.every((key) => key < 1.0); // true
   /// ```
-  Iterable<E> skipWhile(bool Function(E value) test,
-          {bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.skipWhile(test),
-        forceRefresh: forceRefresh,
-      );
+  Iterable<E> skipWhile(bool Function(E value) test) =>
+      updateOnAction(() => value.skipWhile(test));
 
   E get first => value.first;
 
@@ -655,11 +558,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// If [orElse] is omitted, it defaults to throwing a [StateError].
   /// Stops iterating on the first matching element.
   E firstWhere(bool Function(E element) test,
-          {E Function()? orElse, bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.firstWhere(test, orElse: orElse),
-        forceRefresh: forceRefresh,
-      );
+          {E Function()? orElse, bool refresh = true}) =>
+      updateOnAction(() => value.firstWhere(test, orElse: orElse));
 
   /// The last element that satisfies the given predicate [test].
   ///
@@ -683,11 +583,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// function is returned.
   /// If [orElse] is omitted, it defaults to throwing a [StateError].
   E lastWhere(bool Function(E element) test,
-          {E Function()? orElse, bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.lastWhere(test, orElse: orElse),
-        forceRefresh: forceRefresh,
-      );
+          {E Function()? orElse, bool refresh = true}) =>
+      updateOnAction(() => value.lastWhere(test, orElse: orElse));
 
   /// The single element that satisfies [test].
   ///
@@ -713,11 +610,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// result = numbers.singleWhere((element) => element == 2); // Throws Error.
   /// ```
   E singleWhere(bool Function(E element) test,
-          {E Function()? orElse, bool forceRefresh = false}) =>
-      updateOnAction(
-        () => value.singleWhere(test, orElse: orElse),
-        forceRefresh: forceRefresh,
-      );
+          {E Function()? orElse, bool refresh = true}) =>
+      updateOnAction(() => value.singleWhere(test, orElse: orElse));
 
   /// Returns the [index]th element.
   ///
@@ -734,10 +628,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final numbers = <int>[1, 2, 3, 5, 6, 7];
   /// final elementAt = numbers.elementAt(4); // 6
   /// ```
-  E elementAt(int index, {bool forceRefresh = false}) => updateOnAction(
-        () => value.elementAt(index),
-        forceRefresh: forceRefresh,
-      );
+  E elementAt(int index) => updateOnAction(() => value.elementAt(index));
 
   /// Compares two sets for element-by-element equality.
   ///

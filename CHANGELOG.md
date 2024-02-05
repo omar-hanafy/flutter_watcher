@@ -1,3 +1,11 @@
+### 2.0.1
+
+- **CHORE**: Upgrade `flutter_helper_utils` to version [3.0.6](https://pub.dev/packages/flutter_helper_utils)
+
+- **Enhancements**: Enhanced all the watcher classes with some helper utils for each.
+
+- **Breaking Change**: the `prevValue` prop is now available only through the watchWhen in the all watcher widgets.
+
 ### 2.0.0
 
 #### New Features

@@ -58,7 +58,7 @@ extension WatchExtension<T extends Object> on T {
 /// Extension on boolean values to provide easy access to creating a [Watcher] and [CachedWatcher] for booleans.
 extension BoolWatcherEx on bool {
   /// directly make [Watcher] instance from [bool].
-  Watcher<bool> get watcher => Watcher(this);
+  BoolWatcher get watcher => BoolWatcher(this);
 
   /// directly make [CachedWatcher] instance from [bool].
   CachedWatcher<bool> cachedWatcher(String key) => BoolCachedWatcher(
@@ -72,7 +72,7 @@ extension BoolWatcherEx on bool {
 /// Extension on numeric values to provide easy access to creating a [Watcher] and [CachedWatcher] for numeric types.
 extension NumWatcherEx on num {
   /// directly make [Watcher] instance from [num].
-  Watcher<num> get watcher => Watcher(this);
+  NumWatcher get watcher => NumWatcher(this);
 
   /// directly make [CachedWatcher] instance from [num].
   CachedWatcher<num> cachedWatcher(String key) => NumCachedWatcher(
@@ -86,7 +86,7 @@ extension NumWatcherEx on num {
 /// Extension on double values to provide easy access to creating a [Watcher] and [CachedWatcher] for double types.
 extension DoubleWatcherEx on double {
   /// directly make [Watcher] instance from [double].
-  Watcher<double> get watcher => Watcher(this);
+  DoubleWatcher get watcher => DoubleWatcher(this);
 
   /// directly make [CachedWatcher] instance from [double].
   CachedWatcher<double> cachedWatcher(String key) => DoubleCachedWatcher(
@@ -100,7 +100,7 @@ extension DoubleWatcherEx on double {
 /// Extension on integer values to provide easy access to creating a [Watcher] and [CachedWatcher] for integers.
 extension IntWatcherEx on int {
   /// directly make [Watcher] instance from [int].
-  Watcher<int> get watcher => Watcher(this);
+  IntWatcher get watcher => IntWatcher(this);
 
   /// directly make [CachedWatcher] instance from [int].
   CachedWatcher<int> cachedWatcher(String key) => IntCachedWatcher(
@@ -114,7 +114,7 @@ extension IntWatcherEx on int {
 /// Extension on DateTime to provide easy access to creating a [Watcher] and [CachedWatcher] for DateTime objects.
 extension DateTimeWatcherEx on DateTime {
   /// directly make [Watcher] instance from [DateTime].
-  Watcher<DateTime> get watcher => Watcher(this);
+  DateWatcher get watcher => DateWatcher(this);
 
   /// directly make [CachedWatcher] instance from [DateTime].
   CachedWatcher<DateTime> cachedWatcher(String key) =>
@@ -126,7 +126,7 @@ extension DateTimeWatcherEx on DateTime {
 /// Extension on String to provide easy access to creating a [Watcher] and [CachedWatcher] for String values.
 extension StringWatcherEx on String {
   /// directly make [Watcher] instance from [String].
-  Watcher<String> get watcher => Watcher(this);
+  StringWatcher get watcher => StringWatcher(this);
 
   /// directly make [CachedWatcher] instance from [String].
   CachedWatcher<String> cachedWatcher(String key) => StringCachedWatcher(
@@ -140,7 +140,7 @@ extension StringWatcherEx on String {
 /// Extension on Color to provide easy access to creating a [Watcher] and [CachedWatcher] for Color objects.
 extension ColorWatcherEx on Color {
   /// directly make [Watcher] instance from [Color].
-  Watcher<Color> get watcher => Watcher(this);
+  ColorWatcher get watcher => ColorWatcher(this);
 
   /// directly make [CachedWatcher] instance from [Color].
   CachedWatcher<Color> cachedWatcher(String key) => ColorCachedWatcher(
@@ -154,7 +154,7 @@ extension ColorWatcherEx on Color {
 /// Extension on Uri to provide easy access to creating a [Watcher] and [CachedWatcher] for Uri objects.
 extension UriWatcherEx on Uri {
   /// directly make [Watcher] instance from [Uri].
-  Watcher<Uri> get watcher => Watcher(this);
+  UriWatcher get watcher => UriWatcher(this);
 
   /// directly make [CachedWatcher] instance from [Uri].
   CachedWatcher<Uri> cachedWatcher(String key) => UriCachedWatcher(
@@ -168,7 +168,7 @@ extension UriWatcherEx on Uri {
 /// Extension on List<T> to provide easy access to creating a [Watcher] and [CachedWatcher] for lists of any (primitive types)[https://dart.dev/language/built-in-types].
 extension ListWatcherEx<T> on List<T> {
   /// directly make [Watcher] instance from [List].
-  Watcher<List<T>> get watcher => Watcher(this);
+  ListWatcher<T> get watcher => ListWatcher(this);
 
   /// directly make [CachedWatcher] instance from [List].
   CachedWatcher<List<T>> cachedWatcher(String key) => ListCachedWatcher(
@@ -182,7 +182,7 @@ extension ListWatcherEx<T> on List<T> {
 /// Extension on Map<K, V> to provide easy access to creating a [Watcher] and [CachedWatcher] for maps of any key-value (primitive types)[https://dart.dev/language/built-in-types].
 extension MapWatcherEx<K, V> on Map<K, V> {
   /// directly make [Watcher] instance from [Map].
-  Watcher<Map<K, V>> get watcher => Watcher(this);
+  MapWatcher<K, V> get watcher => MapWatcher(this);
 
   /// directly make [CachedWatcher] instance from [Map].
   CachedWatcher<Map<K, V>> cachedWatcher(String key) => MapCachedWatcher(

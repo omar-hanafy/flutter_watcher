@@ -1,26 +1,10 @@
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
+import 'package:flutter_watcher/flutter_watcher.dart';
 
-import '../../flutter_watcher.dart';
+/// allows to quickly create a Watcher of type Map<K, V>.
+class MapWatcher<K, V> extends Watcher<Map<K, V>> implements Map<K, V> {
+  MapWatcher(super.initial);
 
-/// MapWatcherExtension
-///
-/// Extension on `Watcher<Map<K, V>>` to enable direct manipulation of map data.
-/// This extension facilitates operations on the map contained within the ValueNotifier
-/// as if operating on a regular map, without the need to access the `.value` property.
-/// It simplifies the syntax for modifying map data, making your code cleaner and more concise.
-///
-/// With this extension, you can directly invoke map actions like adding, updating, or
-/// removing key-value pairs. This enhances the usability and readability of the code
-/// when working with reactive map data structures.
-///
-/// Example:
-/// ```dart
-/// final mapWatcher = {"apple": 5, "banana": 3}.watcher;
-/// mapWatcher.add("orange", 4); // Directly adds an entry to the map
-/// mapWatcher.remove("apple");  // Directly removes an entry from the map
-/// // These operations modify the map within the ValueNotifier without directly accessing `.value`
-/// ```
-extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// Provides a view of this map as having [RK] keys and [RV] instances,
   /// if necessary.
   ///
@@ -40,6 +24,7 @@ extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// without any checks.
   /// That means that you can do `mapWithStringKeys.cast<int,int>().remove("a")`
   /// successfully, even if it looks like it shouldn't have any effect.
+  @override
   Map<RK, RV> cast<RK, RV>() => updateOnAction(() => value.cast<RK, RV>());
 
   /// Whether this map contains the given [value].
@@ -52,6 +37,7 @@ extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// final moons3 = moonCount.containsValue(3); // false
   /// final moons82 = moonCount.containsValue(82); // true
   /// ```
+  @override
   bool containsValue(Object? value) => this.value.containsValue(value);
 
   /// Whether this map contains the given [key].
@@ -64,6 +50,7 @@ extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// final containsUranus = moonCount.containsKey('Uranus'); // true
   /// final containsPluto = moonCount.containsKey('Pluto'); // false
   /// ```
+  @override
   bool containsKey(Object? key) => value.containsKey(key);
 
   /// The value for the given [key], or `null` if [key] is not in the map.
@@ -73,19 +60,23 @@ extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// key not being in the map, and the key being there with a `null` value.
   /// Methods like [containsKey] or [putIfAbsent] can be used if the distinction
   /// is important.
+  @override
   V? operator [](Object? key) => value[key];
 
   /// Associates the [key] with the given [value].
   ///
   /// If the key was already in the map, its associated value is changed.
   /// Otherwise the key/value pair is added to the map.
+  @override
   void operator []=(K key, V value) => this.value[key] = value;
 
   /// The map entries of [this].
+  @override
   Iterable<MapEntry<K, V>> get entries => value.entries;
 
   /// Returns a new map where all entries of this map are transformed by
   /// the given [convert] function.
+  @override
   Map<K2, V2> map<K2, V2>(
     MapEntry<K2, V2> Function(K key, V value) convert,
   ) =>
@@ -109,6 +100,7 @@ extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// // {1: Mercury, 2: Venus, 3: Earth, 4: Mars, 5: Jupiter, 6: Saturn,
   /// //  7: Uranus, 8: Neptune}
   /// ```
+  @override
   void addEntries(Iterable<MapEntry<K, V>> newEntries) =>
       updateOnAction(() => value.addEntries(newEntries));
 
@@ -136,6 +128,7 @@ extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// largestPlanets.update(8, (value) => 'New', ifAbsent: () => 'Mercury');
   /// print(largestPlanets); // {1: Jupiter, 2: Saturn, 3: Neptune, 8: Mercury}
   /// ```
+  @override
   V update(K key, V Function(V value) update,
           {V Function()? ifAbsent, bool refresh = true}) =>
       updateOnAction(() => value.update(key, update, ifAbsent: ifAbsent));
@@ -149,6 +142,7 @@ extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// terrestrial.updateAll((key, value) => value.toUpperCase());
   /// print(terrestrial); // {1: MERCURY, 2: VENUS, 3: EARTH}
   /// ```
+  @override
   void updateAll(V Function(K key, V value) update) =>
       updateOnAction(() => value.updateAll(update));
 
@@ -158,6 +152,7 @@ extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// terrestrial.removeWhere((key, value) => value.startsWith('E'));
   /// print(terrestrial); // {1: Mercury, 2: Venus}
   /// ```
+  @override
   void removeWhere(bool Function(K key, V value) test) =>
       updateOnAction(() => value.removeWhere(test));
 
@@ -181,6 +176,7 @@ extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// print(diameters); // {1.0: Earth, 0.383: Mercury, 0.949: Venus}
   /// ```
   /// Calling [ifAbsent] must not add or remove keys from the map.
+  @override
   V putIfAbsent(K key, V Function() ifAbsent) =>
       updateOnAction(() => value.putIfAbsent(key, ifAbsent));
 
@@ -196,6 +192,7 @@ extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// planets.addAll({5: 'Jupiter', 6: 'Saturn'});
   /// print(planets); // {1: Mercury, 2: Earth, 5: Jupiter, 6: Saturn}
   /// ```
+  @override
   void addAll(Map<K, V> other) => updateOnAction(() => value.addAll(other));
 
   /// Removes [key] and its associated value, if present, from the map.
@@ -210,6 +207,7 @@ extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// final removedValue = terrestrial.remove(2); // Venus
   /// print(terrestrial); // {1: Mercury, 3: Earth}
   /// ```
+  @override
   V? remove(Object? key) => updateOnAction(() => value.remove(key));
 
   /// Removes all entries from the map.
@@ -219,6 +217,7 @@ extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// final planets = <int, String>{1: 'Mercury', 2: 'Venus', 3: 'Earth'};
   /// planets.clear(); // {}
   /// ```
+  @override
   void clear() => updateOnAction(() => value.clear());
 
   /// Applies [action] to each key/value pair of the map.
@@ -236,6 +235,7 @@ extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   ///   // 17.15: Neptune
   /// });
   /// ```
+  @override
   void forEach(void Function(K key, V value) action) =>
       updateOnAction(() => value.forEach(action));
 
@@ -248,6 +248,7 @@ extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// but must be consistent between changes to the map.
   ///
   /// Modifying the map while iterating the keys may break the iteration.
+  @override
   Iterable<K> get keys => value.keys;
 
   /// The values of [this].
@@ -261,15 +262,19 @@ extension MapWatcherExtension<K, V> on Watcher<Map<K, V>> {
   /// `==` comparison.
   ///
   /// Modifying the map while iterating the values may break the iteration.
+  @override
   Iterable<V> get values => value.values;
 
   /// The number of key/value pairs in the map.
+  @override
   int get length => value.length;
 
   /// Whether there is no key/value pair in the map.
+  @override
   bool get isEmpty => value.isEmpty;
 
   /// Whether there is at least one key/value pair in the map.
+  @override
   bool get isNotEmpty => value.isNotEmpty;
 
   /// Compares two maps for element-by-element equality.
