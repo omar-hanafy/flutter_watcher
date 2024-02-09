@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
@@ -18,7 +19,7 @@ class BoolWatcher extends Watcher<bool> {
 /// final boolWatcher = true.watcher;
 /// boolWatcher.toggle(); // Toggles the boolean value.
 /// ```
-extension BoolWatcherExtension on Watcher<bool> {
+extension BoolWatcherExtension on ValueNotifier<bool> {
   /// toggle the value of the [Watcher]
   void toggle() => value = !value;
 

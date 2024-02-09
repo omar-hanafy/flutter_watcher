@@ -127,7 +127,7 @@ class ListWatcher<E> extends Watcher<List<E>> implements List<E> {
   /// ```
   @override
   set length(int newLength) {
-    updateOnAction(() => value.length);
+    updateOnAction(() => value.length = newLength);
   }
 
   /// Adds [value] to the end of this list,

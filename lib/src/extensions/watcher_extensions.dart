@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
+import '../cached_watcher_classes/cached_watcher_classes.dart';
+
 /// This file contains a collection of extensions for [ValueNotifier<T>] in Flutter.
 /// These extensions are designed to enhance the usability of [ValueNotifier<T>] by
 /// providing direct manipulation capabilities. The goal is to allow developers to work
@@ -61,7 +63,7 @@ extension BoolWatcherEx on bool {
   BoolWatcher get watcher => BoolWatcher(this);
 
   /// directly make [CachedWatcher] instance from [bool].
-  CachedWatcher<bool> cachedWatcher(String key) => BoolCachedWatcher(
+  BoolCachedWatcher cachedWatcher(String key) => BoolCachedWatcher(
         this,
         key,
       );
@@ -75,7 +77,7 @@ extension NumWatcherEx on num {
   NumWatcher get watcher => NumWatcher(this);
 
   /// directly make [CachedWatcher] instance from [num].
-  CachedWatcher<num> cachedWatcher(String key) => NumCachedWatcher(
+  NumCachedWatcher cachedWatcher(String key) => NumCachedWatcher(
         this,
         key,
       );
@@ -89,7 +91,7 @@ extension DoubleWatcherEx on double {
   DoubleWatcher get watcher => DoubleWatcher(this);
 
   /// directly make [CachedWatcher] instance from [double].
-  CachedWatcher<double> cachedWatcher(String key) => DoubleCachedWatcher(
+  DoubleCachedWatcher cachedWatcher(String key) => DoubleCachedWatcher(
         this,
         key,
       );
@@ -103,7 +105,7 @@ extension IntWatcherEx on int {
   IntWatcher get watcher => IntWatcher(this);
 
   /// directly make [CachedWatcher] instance from [int].
-  CachedWatcher<int> cachedWatcher(String key) => IntCachedWatcher(
+  IntCachedWatcher cachedWatcher(String key) => IntCachedWatcher(
         this,
         key,
       );
@@ -114,10 +116,10 @@ extension IntWatcherEx on int {
 /// Extension on DateTime to provide easy access to creating a [Watcher] and [CachedWatcher] for DateTime objects.
 extension DateTimeWatcherEx on DateTime {
   /// directly make [Watcher] instance from [DateTime].
-  DateWatcher get watcher => DateWatcher(this);
+  DateTimeWatcher get watcher => DateTimeWatcher(this);
 
   /// directly make [CachedWatcher] instance from [DateTime].
-  CachedWatcher<DateTime> cachedWatcher(String key) =>
+  DateTimeCachedWatcher cachedWatcher(String key) =>
       DateTimeCachedWatcher(this, key);
 }
 
@@ -129,7 +131,7 @@ extension StringWatcherEx on String {
   StringWatcher get watcher => StringWatcher(this);
 
   /// directly make [CachedWatcher] instance from [String].
-  CachedWatcher<String> cachedWatcher(String key) => StringCachedWatcher(
+  StringCachedWatcher cachedWatcher(String key) => StringCachedWatcher(
         this,
         key,
       );
@@ -143,7 +145,7 @@ extension ColorWatcherEx on Color {
   ColorWatcher get watcher => ColorWatcher(this);
 
   /// directly make [CachedWatcher] instance from [Color].
-  CachedWatcher<Color> cachedWatcher(String key) => ColorCachedWatcher(
+  ColorCachedWatcher cachedWatcher(String key) => ColorCachedWatcher(
         this,
         key,
       );
@@ -157,7 +159,7 @@ extension UriWatcherEx on Uri {
   UriWatcher get watcher => UriWatcher(this);
 
   /// directly make [CachedWatcher] instance from [Uri].
-  CachedWatcher<Uri> cachedWatcher(String key) => UriCachedWatcher(
+  UriCachedWatcher cachedWatcher(String key) => UriCachedWatcher(
         this,
         key,
       );
@@ -166,12 +168,26 @@ extension UriWatcherEx on Uri {
 /// ListWatcherEx<T>
 ///
 /// Extension on List<T> to provide easy access to creating a [Watcher] and [CachedWatcher] for lists of any (primitive types)[https://dart.dev/language/built-in-types].
-extension ListWatcherEx<T> on List<T> {
+extension ListWatcherEx<E> on List<E> {
   /// directly make [Watcher] instance from [List].
-  ListWatcher<T> get watcher => ListWatcher(this);
+  ListWatcher<E> get watcher => ListWatcher(this);
 
   /// directly make [CachedWatcher] instance from [List].
-  CachedWatcher<List<T>> cachedWatcher(String key) => ListCachedWatcher(
+  ListCachedWatcher<E> cachedWatcher(String key) => ListCachedWatcher(
+        this,
+        key,
+      );
+}
+
+/// ListWatcherEx<T>
+///
+/// Extension on List<T> to provide easy access to creating a [Watcher] and [CachedWatcher] for lists of any (primitive types)[https://dart.dev/language/built-in-types].
+extension SetWatcherEx<E> on Set<E> {
+  /// directly make [Watcher] instance from [List].
+  SetWatcher<E> get watcher => SetWatcher(this);
+
+  /// directly make [CachedWatcher] instance from [List].
+  SetCachedWatcher<E> cachedWatcher(String key) => SetCachedWatcher(
         this,
         key,
       );
@@ -185,7 +201,7 @@ extension MapWatcherEx<K, V> on Map<K, V> {
   MapWatcher<K, V> get watcher => MapWatcher(this);
 
   /// directly make [CachedWatcher] instance from [Map].
-  CachedWatcher<Map<K, V>> cachedWatcher(String key) => MapCachedWatcher(
+  MapCachedWatcher<K, V> cachedWatcher(String key) => MapCachedWatcher(
         this,
         key,
       );
@@ -197,9 +213,9 @@ extension MapWatcherEx<K, V> on Map<K, V> {
 extension BoolWatcherExNullable on bool? {
   Watcher<bool?> get watcher => Watcher(this);
 
-  CachedWatcher<bool?> cachedWatcher(String key) => BoolCachedWatcherNullable(
-        this,
+  CachedWatcher<bool?> cachedWatcher(String key) => BoolCachedWatcherN(
         key,
+        initialValue: this,
       );
 }
 
@@ -209,9 +225,9 @@ extension BoolWatcherExNullable on bool? {
 extension NumWatcherExNullable on num? {
   Watcher<num?> get watcher => Watcher(this);
 
-  CachedWatcher<num?> cachedWatcher(String key) => NumCachedWatcherNullable(
-        this,
+  CachedWatcher<num?> cachedWatcher(String key) => NumCachedWatcherN(
         key,
+        initialValue: this,
       );
 }
 
@@ -222,9 +238,9 @@ extension DoubleWatcherExNullable on double? {
   Watcher<double?> get watcher => Watcher(this);
 
   CachedWatcher<double?> cachedWatcher(String key) =>
-      DoubleCachedWatcherNullable(
-        this,
+      DoubleCachedWatcherN(
         key,
+        initialValue: this,
       );
 }
 
@@ -234,20 +250,10 @@ extension DoubleWatcherExNullable on double? {
 extension IntWatcherExNullable on int? {
   Watcher<int?> get watcher => Watcher(this);
 
-  CachedWatcher<int?> cachedWatcher(String key) => IntCachedWatcherNullable(
-        this,
+  CachedWatcher<int?> cachedWatcher(String key) => IntCachedWatcherN(
         key,
+        initialValue: this,
       );
-}
-
-/// DateTimeWatcherExNullable
-///
-/// Extension that provide easy access to create a [Watcher] and [CachedWatcher] for nullable DateTime objects.
-extension DateTimeWatcherExNullable on DateTime? {
-  Watcher<DateTime?> get watcher => Watcher(this);
-
-  CachedWatcher<DateTime?> cachedWatcher(String key) =>
-      DateTimeCachedWatcherNullable(this, key);
 }
 
 /// StringWatcherExNullable
@@ -257,9 +263,9 @@ extension StringWatcherExNullable on String? {
   Watcher<String?> get watcher => Watcher(this);
 
   CachedWatcher<String?> cachedWatcher(String key) =>
-      StringCachedWatcherNullable(
-        this,
+      StringCachedWatcherN(
         key,
+        initialValue: this,
       );
 }
 
@@ -269,9 +275,9 @@ extension StringWatcherExNullable on String? {
 extension ColorWatcherExNullable on Color? {
   Watcher<Color?> get watcher => Watcher(this);
 
-  CachedWatcher<Color?> cachedWatcher(String key) => ColorCachedWatcherNullable(
-        this,
+  CachedWatcher<Color?> cachedWatcher(String key) => ColorCachedWatcherN(
         key,
+        initialValue: this,
       );
 }
 
@@ -281,9 +287,9 @@ extension ColorWatcherExNullable on Color? {
 extension UriWatcherExNullable on Uri? {
   Watcher<Uri?> get watcher => Watcher(this);
 
-  CachedWatcher<Uri?> cachedWatcher(String key) => UriCachedWatcherNullable(
-        this,
+  CachedWatcher<Uri?> cachedWatcher(String key) => UriCachedWatcherN(
         key,
+        initialValue: this,
       );
 }
 
@@ -292,12 +298,6 @@ extension UriWatcherExNullable on Uri? {
 /// Extension that provide easy access to create a [Watcher] and [CachedWatcher] for nullable List<T> objects.
 extension ListWatcherExNullable<T> on List<T>? {
   Watcher<List<T>?> get watcher => Watcher(this);
-
-  CachedWatcher<List<T>?> cachedWatcher(String key) =>
-      ListCachedWatcherNullable(
-        this,
-        key,
-      );
 }
 
 /// MapWatcherExNullable<K, V>
@@ -305,10 +305,4 @@ extension ListWatcherExNullable<T> on List<T>? {
 /// Extension that provide easy access to create a [Watcher] and [CachedWatcher] for nullable Map<K, V> objects.
 extension MapWatcherExNullable<K, V> on Map<K, V>? {
   Watcher<Map<K, V>?> get watcher => Watcher(this);
-
-  CachedWatcher<Map<K, V>?> cachedWatcher(String key) =>
-      MapCachedWatcherNullable(
-        this,
-        key,
-      );
 }

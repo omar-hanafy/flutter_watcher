@@ -7,5 +7,6 @@ export 'int_watcher.dart';
 export 'list_watcher.dart';
 export 'map_watcher.dart';
 export 'num_watcher.dart';
+export 'set_watcher.dart';
 export 'string_watcher.dart';
 export 'uri_watcher.dart';

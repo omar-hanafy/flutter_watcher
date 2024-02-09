@@ -1,7 +1,26 @@
+import 'dart:async';
+
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
-extension SetWatcherExtension<E> on Watcher<Set<E>> {
+/// SetCachedWatcher<T>
+///
+/// A generic [CachedWatcher] for Set<T> values. Allows caching of lists of any (primitive types)[https://dart.dev/language/built-in-types], making it versatile for a wide range of use cases like caching collections, arrays, etc.
+class SetCachedWatcher<E> extends BaseSetCachedWatcher<E> {
+  SetCachedWatcher(super.initialValue, super.key);
+
+  @override
+  Set<E>? read(dynamic data) => tryToSet<E>(data);
+
+  @override
+  dynamic write(Set<E> value) => value;
+}
+
+/// allows to quickly create a Watcher of type Set<T>.
+abstract class BaseSetCachedWatcher<E> extends CachedWatcher<Set<E>>
+    implements Set<E> {
+  BaseSetCachedWatcher(super.initialValue, String key) : super(key: key);
+
   /// Provides a view of this [Watcher]'s value as a set of [R] instances.
   ///
   /// If this [Watcher]'s value contains only instances of [R], all read operations
@@ -19,12 +38,14 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// without any checks.
   /// That means that you can do `setOfStrings.cast<int>().remove("a")`
   /// successfully, even if it looks like it shouldn't have any effect.
+  @override
   Set<R> cast<R>() => updateOnAction(() => value.cast());
 
   /// An iterator that iterates over the elements of this [Watcher]'s value.
   ///
   /// The order of iteration is defined by the individual `Set` implementation,
   /// but must be consistent between changes to this [Watcher]'s value.
+  @override
   Iterator<E> get iterator => value.iterator;
 
   /// Whether [value] is in this [Watcher]'s value.
@@ -33,6 +54,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final containsB = characters.contains('B'); // true
   /// final containsD = characters.contains('D'); // false
   /// ```
+  @override
   bool contains(Object? value) =>
       updateOnAction(() => this.value.contains(value));
 
@@ -61,6 +83,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// assert(identical(time1, dateTimes.first));
   /// print(dateTimes.length);
   /// ```
+  @override
   bool add(E value) => updateOnAction(() => this.value.add(value));
 
   /// Adds all [elements] to this [Watcher]'s value.
@@ -72,7 +95,9 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// characters.addAll({'A', 'B', 'C'});
   /// print(characters); // {A, B, C}
   /// ```
-  void addAll(Set<E> elements) => updateOnAction(() => value.addAll(elements));
+  @override
+  void addAll(Iterable<E> elements) =>
+      updateOnAction(() => value.addAll(elements));
 
   /// Removes [value] from this [Watcher]'s value.
   ///
@@ -84,6 +109,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final didRemoveD = characters.remove('D'); // false
   /// print(characters); // {A, C}
   /// ```
+  @override
   bool remove(Object? value) => updateOnAction(() => this.value.remove(value));
 
   /// If an object equal to [object] is in this [Watcher]'s value, return it.
@@ -105,6 +131,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final containsD = characters.lookup('D');
   /// print(containsD); // null
   /// ```
+  @override
   E? lookup(Object? object) => updateOnAction(() => value.lookup(object));
 
   /// Removes each element of [elements] from this [Watcher]'s value.
@@ -113,6 +140,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// characters.removeAll({'A', 'B', 'X'});
   /// print(characters); // {C}
   /// ```
+  @override
   void removeAll(Iterable<Object?> elements) =>
       updateOnAction(() => value.removeAll(elements));
 
@@ -127,6 +155,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// characters.retainAll({'A', 'B', 'X'});
   /// print(characters); // {A, B}
   /// ```
+  @override
   void retainAll(Iterable<Object?> elements) =>
       updateOnAction(() => value.retainAll(elements));
 
@@ -136,6 +165,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// characters.removeWhere((element) => element.startsWith('B'));
   /// print(characters); // {A, C}
   /// ```
+  @override
   void removeWhere(bool Function(E element) test) =>
       updateOnAction(() => value.removeWhere(test));
 
@@ -146,6 +176,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   ///     (element) => element.startsWith('B') || element.startsWith('C'));
   /// print(characters); // {B, C}
   /// ```
+  @override
   void retainWhere(bool Function(E element) test) =>
       updateOnAction(() => value.retainWhere(test));
 
@@ -157,6 +188,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final containsAD = characters.containsAll({'A', 'D'});
   /// print(containsAD); // false
   /// ```
+  @override
   bool containsAll(Iterable<Object?> other) =>
       updateOnAction(() => value.containsAll(other));
 
@@ -170,6 +202,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final intersectionSet = characters1.intersection(characters2);
   /// print(intersectionSet); // {A}
   /// ```
+  @override
   Set<E> intersection(Set<Object?> other) =>
       updateOnAction(() => value.intersection(other));
 
@@ -185,8 +218,10 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final unionSet2 = characters2.union(characters1);
   /// print(unionSet2); // {A, E, F, B, C}
   /// ```
+  @override
   Set<E> union(Set<E> other) => updateOnAction(() => value.union(other));
 
+  @override
   Set<E> difference(Set<Object?> other) =>
       updateOnAction(() => value.difference(other));
 
@@ -202,6 +237,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final differenceSet2 = characters2.difference(characters1);
   /// print(differenceSet2); // {E, F}
   /// ```
+  @override
   void clear() => updateOnAction(() => value.clear());
 
   /// Removes all elements from this [Watcher]'s value.
@@ -209,6 +245,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final charactersWatcher = <String>{'A', 'B', 'C'}.watcher;
   /// characters.clear(); // {}
   /// ```
+  @override
   Set<E> toSet() => updateOnAction(() => value.toSet());
 
   /// Creates the lazy concatenation of this iterable and [other].
@@ -223,7 +260,8 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// var updated = planets.followedBy({'Mars', 'Venus'});
   /// print(updated); // (Earth, Jupiter, Mars, Venus)
   /// ```
-  Iterable<E> followedBy(Set<E> other) =>
+  @override
+  Iterable<E> followedBy(Iterable<E> other) =>
       updateOnAction(() => value.followedBy(other));
 
   /// The current elements of this iterable modified by [toElement].
@@ -263,6 +301,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// var values = products.map((product) => product['price'] as double);
   /// var totalPrice = values.fold(0.0, (a, b) => a + b); // 42.5.
   /// ```
+  @override
   Iterable<T> map<T>(T Function(E e) toElement) =>
       updateOnAction(() => value.map(toElement));
 
@@ -286,6 +325,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// result = numbers.where((x) => x > 5); // (6, 7)
   /// result = numbers.where((x) => x.isEven); // (2, 6)
   /// ```
+  @override
   Iterable<E> where(bool Function(E element) test) =>
       updateOnAction(() => value.where(test));
 
@@ -298,6 +338,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// Iterating will not cache results, and thus iterating multiple times over
   /// the returned [Iterable] may yield different results,
   /// if the underlying elements change between iterations.
+  @override
   Iterable<T> whereType<T>() => updateOnAction(() => value.whereType<T>());
 
   /// Expands each element of this [Iterable] into zero or more elements.
@@ -328,6 +369,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   ///   }
   /// }
   /// ```
+  @override
   Iterable<T> expand<T>(
     Iterable<T> Function(E element) toElements,
   ) =>
@@ -357,9 +399,11 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final containsJupiter = gasPlanets.values.contains('Jupiter'); // true
   /// final containsMercury = gasPlanets.values.contains('Mercury'); // false
   /// ```
+  @override
   void forEach(void Function(E element) action) =>
       updateOnAction(() => value.forEach(action));
 
+  @override
   E reduce(E Function(E value, E element) combine) =>
       updateOnAction(() => value.reduce(combine));
 
@@ -385,6 +429,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final result = numbers.reduce((value, element) => value + element);
   /// print(result); // 17.5
   /// ```
+  @override
   T fold<T>(
     T initialValue,
     T Function(T previousValue, E element) combine,
@@ -412,6 +457,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   ///     initialValue, (previousValue, element) => previousValue + element);
   /// print(result); // 117.5
   /// ```
+  @override
   bool every(bool Function(E element) test) =>
       updateOnAction(() => value.every(test));
 
@@ -428,8 +474,9 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// // Checks whether all keys are smaller than 1.
   /// final every = planetsByMass.keys.every((key) => key < 1.0); // true
   /// ```
-  String join(String? separator) =>
-      updateOnAction(() => value.join(separator ?? ''));
+  @override
+  String join([String separator = '']) =>
+      updateOnAction(() => value.join(separator));
 
   /// Converts each element to a [String] and concatenates the strings.
   ///
@@ -444,6 +491,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   ///   0.11: 'Mars'};
   /// final joinedNames = planetsByMass.values.join('-'); // Mercury-Venus-Mars
   /// ```
+  @override
   bool any(bool Function(E element) test) =>
       updateOnAction(() => value.any(test));
 
@@ -459,15 +507,20 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// var result = numbers.any((element) => element >= 5); // true;
   /// result = numbers.any((element) => element >= 10); // false;
   /// ```
+  @override
   List<E> toList({bool growable = true, bool refresh = true}) =>
       updateOnAction(() => value.toList(growable: growable));
 
+  @override
   int get length => value.length;
 
+  @override
   bool get isEmpty => value.isEmpty;
 
+  @override
   bool get isNotEmpty => value.isNotEmpty;
 
+  @override
   Iterable<E> take(int count) => updateOnAction(() => value.take(count));
 
   /// Reduces a collection to a single value by iteratively combining elements
@@ -492,6 +545,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final result = numbers.reduce((value, element) => value + element);
   /// print(result); // 17.5
   /// ```
+  @override
   Iterable<E> takeWhile(bool Function(E value) test) =>
       updateOnAction(() => value.takeWhile(test));
 
@@ -516,6 +570,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   ///     initialValue, (previousValue, element) => previousValue + element);
   /// print(result); // 117.5
   /// ```
+  @override
   Iterable<E> skip(int count) => updateOnAction(() => value.skip(count));
 
   /// Checks whether every element of this iterable satisfies [test].
@@ -531,13 +586,17 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// // Checks whether all keys are smaller than 1.
   /// final every = planetsByMass.keys.every((key) => key < 1.0); // true
   /// ```
+  @override
   Iterable<E> skipWhile(bool Function(E value) test) =>
       updateOnAction(() => value.skipWhile(test));
 
+  @override
   E get first => value.first;
 
+  @override
   E get last => value.last;
 
+  @override
   E get single => value.single;
 
   /// The first element that satisfies the given predicate [test].
@@ -557,6 +616,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// function is returned.
   /// If [orElse] is omitted, it defaults to throwing a [StateError].
   /// Stops iterating on the first matching element.
+  @override
   E firstWhere(bool Function(E element) test,
           {E Function()? orElse, bool refresh = true}) =>
       updateOnAction(() => value.firstWhere(test, orElse: orElse));
@@ -582,6 +642,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// If no element satisfies [test], the result of invoking the [orElse]
   /// function is returned.
   /// If [orElse] is omitted, it defaults to throwing a [StateError].
+  @override
   E lastWhere(bool Function(E element) test,
           {E Function()? orElse, bool refresh = true}) =>
       updateOnAction(() => value.lastWhere(test, orElse: orElse));
@@ -609,6 +670,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// ```dart continued
   /// result = numbers.singleWhere((element) => element == 2); // Throws Error.
   /// ```
+  @override
   E singleWhere(bool Function(E element) test,
           {E Function()? orElse, bool refresh = true}) =>
       updateOnAction(() => value.singleWhere(test, orElse: orElse));
@@ -628,6 +690,7 @@ extension SetWatcherExtension<E> on Watcher<Set<E>> {
   /// final numbers = <int>[1, 2, 3, 5, 6, 7];
   /// final elementAt = numbers.elementAt(4); // 6
   /// ```
+  @override
   E elementAt(int index) => updateOnAction(() => value.elementAt(index));
 
   /// Compares two sets for element-by-element equality.

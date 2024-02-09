@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
+import 'package:get/get.dart';
 
 main() async {
   runApp(CachedCounter());
@@ -9,6 +10,7 @@ class CachedCounter extends StatelessWidget {
   CachedCounter({super.key});
 
   final counter = 0.cachedWatcher('counter');
+  
 
   @override
   Widget build(BuildContext context) {

@@ -4,8 +4,14 @@ import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
 /// allows to quickly create a Watcher of type DateTime.
-class DateTimeWatcher extends Watcher<DateTime> implements DateTime {
-  DateTimeWatcher(super.initial);
+class DateTimeCachedWatcher extends CachedWatcher<DateTime> implements DateTime {
+  DateTimeCachedWatcher(super.initialValue, String key) : super(key: key);
+
+  @override
+  DateTime? read(dynamic data) => tryToDateTime(data);
+
+  @override
+  dynamic write(DateTime value) => value;
 
   /// Returns true if [other] is a [DateTime] at the same moment and in the
   /// same time zone (UTC or local).

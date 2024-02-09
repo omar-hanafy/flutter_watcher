@@ -1,29 +1,28 @@
+// ignore_for_file: unnecessary_cast
+
+import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
+import 'package:flutter_watcher/flutter_watcher.dart';
 
-import '../watcher.dart';
+/// ListCachedWatcher<T>
+///
+/// A generic [CachedWatcher] for List<T> values. Allows caching of lists of any (primitive types)[https://dart.dev/language/built-in-types], making it versatile for a wide range of use cases like caching collections, arrays, etc.
+class ListCachedWatcher<E> extends BaseListCachedWatcher<E> {
+  ListCachedWatcher(super.initialValue, super.key);
 
-/// ListWatcherExtension
-///
-/// Extension on `Watcher<List<E>>` to enable direct manipulation of list data.
-/// This extension enriches the ValueNotifier with methods specifically tailored for handling
-/// list operations. It allows for direct actions such as adding, removing, or updating elements
-/// in the list contained within the ValueNotifier, without needing to explicitly access the `.value` property.
-///
-/// The extension simplifies common list operations and enhances readability and usability in a
-/// reactive programming context. This is particularly useful for scenarios where the list needs
-/// to be dynamically modified in response to user interactions or other changes in the application.
-///
-/// Example:
-/// ```dart
-/// final myListNotifier = ['apple', 'banana'].watcher;
-/// myListNotifier.add('orange'); // Directly adds 'orange' to the list
-/// myListNotifier.remove('apple'); // Directly removes 'apple' from the list
-/// // These operations modify the list within the ValueNotifier without directly accessing `.value`
-/// ```
-extension ListWatcherExtension<E> on Watcher<List<E>> {
+  @override
+  List<E>? read(dynamic data) => tryToList<E>(data);
+
+  @override
+  dynamic write(List<E> value) => value;
+}
+
+/// allows to quickly create a Watcher of type List<T>.
+abstract class BaseListCachedWatcher<E> extends CachedWatcher<List<E>> implements List<E> {
+  BaseListCachedWatcher(super.initialValue, String key) : super(key: key);
+
   /// Returns a view of this list as a list of [R] instances.
   ///
   /// If this list contains only instances of [R], all read operations
@@ -42,6 +41,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// successfully, even if it looks like it shouldn't have any effect.
   ///
   /// Typically implemented as `List.castFrom<E, R>(this)`.
+  @override
   List<R> cast<R>() => value.cast();
 
   /// The object at the given [index] in the list.
@@ -49,6 +49,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// The [index] must be a valid index of this list,
   /// which means that `index` must be non-negative and
   /// less than [length].
+  @override
   E operator [](int index) => value[index];
 
   /// Sets the value at the given [index] in the list to [value].
@@ -56,6 +57,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// The [index] must be a valid index of this list,
   /// which means that `index` must be non-negative and
   /// less than [length].
+  @override
   void operator []=(int index, E value) {
     updateOnAction(() => this.value[index] = value);
   }
@@ -76,6 +78,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// numbers.clear();
   /// numbers.first; // Throws.
   /// ```
+  @override
   set first(E value) {
     updateOnAction(() => this.value.first = value);
   }
@@ -96,6 +99,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// numbers.clear();
   /// numbers.last; // Throws.
   /// ```
+  @override
   set last(E value) {
     updateOnAction(() => this.value.last = value);
   }
@@ -107,6 +111,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// final numbers = [1, 2, 3].watcher;
   /// print(numbers.length); // 3
   /// ```
+  @override
   int get length => value.length;
 
   /// Setting the `length` changes the number of elements in the list.
@@ -129,6 +134,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// print(numbers); // [1]
   /// numbers.length = 5; // Throws, cannot add `null`s.
   /// ```
+  @override
   set length(int newLength) {
     updateOnAction(() => value.length = newLength);
   }
@@ -143,6 +149,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// numbers.add(4);
   /// print(numbers); // [1, 2, 3, 4]
   /// ```
+  @override
   void add(E value) {
     updateOnAction(() => this.value.add(value));
   }
@@ -157,6 +164,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// numbers.addAll([4, 5, 6]);
   /// print(numbers); // [1, 2, 3, 4, 5, 6]
   /// ```
+  @override
   void addAll(Iterable<E> iterable) {
     updateOnAction(() => value.addAll(iterable));
   }
@@ -167,6 +175,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// final reverseOrder = numbers.reversed;
   /// print(reverseOrder.toList()); // [four, three, two]
   /// ```
+  @override
   Iterable<E> get reversed => value.reversed;
 
   /// Sorts this list according to the order specified by the [compare] function.
@@ -197,6 +206,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// numbers.sort((a, b) => a.length.compareTo(b.length));
   /// print(numbers); // [one, two, four, three] OR [two, one, four, three]
   /// ```
+  @override
   void sort([int Function(E a, E b)? compare, bool refresh = true]) {
     updateOnAction(() => value.sort(compare));
   }
@@ -207,6 +217,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// numbers.shuffle();
   /// print(numbers); // [1, 3, 4, 5, 2] OR some other random result.
   /// ```
+  @override
   void shuffle([Random? random, bool refresh = true]) {
     updateOnAction(() => value.shuffle(random));
   }
@@ -227,6 +238,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// final notes = ['do', 're', 'mi', 're'].watcher;
   /// final index = notes.indexOf('fa'); // -1
   /// ```
+  @override
   int indexOf(E element, [int start = 0]) => value.indexOf(element, start);
 
   /// The first index in the list that satisfies the provided [test].
@@ -246,6 +258,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// final notes = ['do', 're', 'mi', 're'].watcher;
   /// final index = notes.indexWhere((note) => note.startsWith('k')); // -1
   /// ```
+  @override
   int indexWhere(bool Function(E element) test, [int start = 0]) =>
       value.indexWhere(test, start);
 
@@ -269,6 +282,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// final index = notes.lastIndexWhere((note) => note.startsWith('k'));
   /// print(index); // -1
   /// ```
+  @override
   int lastIndexWhere(bool Function(E element) test, [int? start]) =>
       value.lastIndexWhere(test, start);
 
@@ -294,6 +308,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// final notes = ['do', 're', 'mi', 're'].watcher;
   /// final index = notes.lastIndexOf('fa'); // -1
   /// ```
+  @override
   int lastIndexOf(E element, [int? start]) => value.lastIndexOf(element, start);
 
   /// Removes all objects from this list; the length of the list becomes zero.
@@ -306,6 +321,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// print(numbers.length); // 0
   /// print(numbers); // []
   /// ```
+  @override
   void clear() {
     updateOnAction(() => value.clear());
   }
@@ -324,6 +340,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// numbers.insert(index, 10);
   /// print(numbers); // [1, 2, 10, 3, 4]
   /// ```
+  @override
   void insert(int index, E element) {
     updateOnAction(() => value.insert(index, element));
   }
@@ -341,6 +358,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// numbers.insertAll(2, insertItems);
   /// print(numbers); // [1, 2, 10, 11, 3, 4]
   /// ```
+  @override
   void insertAll(int index, Iterable<E> iterable) {
     updateOnAction(() => value.insertAll(index, iterable));
   }
@@ -363,6 +381,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// list.setAll(1, ['bee', 'sea']);
   /// print(list); // [a, bee, sea, d]
   /// ```
+  @override
   void setAll(int index, Iterable<E> iterable) {
     updateOnAction(() => value.setAll(index, iterable));
   }
@@ -384,6 +403,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// final retVal = parts.remove('head'); // false
   /// print(parts); // [shoulders, knees, toes]
   /// ```
+  @override
   bool remove(Object? value) {
     return updateOnAction(() => this.value.remove(value));
   }
@@ -402,6 +422,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// final retVal = parts.removeAt(2); // knees
   /// print(parts); // [head, shoulder, toes]
   /// ```
+  @override
   E removeLast() => updateOnAction(() => value.removeLast());
 
   /// Removes and returns the last object in this list.
@@ -412,6 +433,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// final retVal = parts.removeLast(); // toes
   /// print(parts); // [head, shoulder, knees]
   /// ```
+  @override
   E removeAt(int index) => updateOnAction(() => value.removeAt(index));
 
   /// Removes all objects from this list that satisfy [test].
@@ -423,6 +445,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// print(numbers); // [three, four]
   /// ```
   /// The list must be growable.
+  @override
   void removeWhere(bool Function(E element) test) {
     updateOnAction(() => value.removeWhere(test));
   }
@@ -436,6 +459,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// print(numbers); // [one, two]
   /// ```
   /// The list must be growable.
+  @override
   void retainWhere(bool Function(E element) test) {
     updateOnAction(() => value.retainWhere(test));
   }
@@ -448,6 +472,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// The default behavior is to return a normal growable list.
   /// Some list types may choose to return a list of the same type as themselves
   /// (see [Uint8List.+]);
+  @override
   List<E> operator +(List<E> other) => value + other;
 
   /// Returns a new list containing the elements between [start] and [end].
@@ -471,6 +496,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// The `start` and `end` positions must satisfy the relations
   /// 0 ≤ `start` ≤ `end` ≤ [length].
   /// If `end` is equal to `start`, then the returned list is empty.
+  @override
   List<E> sublist(int start, [int? end]) => value.sublist(start, end);
 
   /// Creates an [Iterable] that iterates over a range of elements.
@@ -495,6 +521,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// final secondRange = colors.getRange(2, 5);
   /// print(secondRange.join(', ')); // blue, orange, pink
   /// ```
+  @override
   Iterable<E> getRange(int start, int end) => value.getRange(start, end);
 
   /// Writes some elements of [iterable] into a range of this list.
@@ -523,6 +550,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   ///
   /// If `iterable` depends on this list in some other way, no guarantees are
   /// made.
+  @override
   void setRange(int start, int end, Iterable<E> iterable,
       [int skipCount = 0, bool refresh = true]) {
     updateOnAction(() => value.setRange(start, end, iterable, skipCount));
@@ -544,6 +572,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// numbers.removeRange(1, 4);
   /// print(numbers); // [1, 5]
   /// ```
+  @override
   void removeRange(int start, int end) {
     updateOnAction(() => value.removeRange(start, end));
   }
@@ -567,6 +596,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// words.fillRange(1, 3, 'new');
   /// print(words); // [old, new, new, old, old]
   /// ```
+  @override
   void fillRange(int start, int end, [E? fillValue, bool refresh = true]) {
     updateOnAction(() => value.fillRange(start, end, fillValue));
   }
@@ -600,6 +630,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// This method does not work on fixed-length lists, even when [replacements]
   /// has the same number of elements as the replaced range. In that case use
   /// [setRange] instead.
+  @override
   void replaceRange(
     int start,
     int end,
@@ -618,6 +649,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// var map = words.asMap();  // {0: fee, 1: fi, 2: fo, 3: fum}
   /// map.keys.toList(); // [0, 1, 2, 3]
   /// ```
+  @override
   Map<int, E> asMap() => value.asMap();
 
   /// A new `Iterator` that allows iterating the elements of this `Iterable`.
@@ -645,6 +677,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// on that iterator.
   /// Any *modifiable* iterable class should specify which operations will
   /// break iteration.
+  @override
   Iterator<E> get iterator => value.iterator;
 
   /// Creates the lazy concatenation of this iterable and [other].
@@ -659,6 +692,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// var updated = planets.followedBy(['Mars', 'Venus']);
   /// print(updated); // (Earth, Jupiter, Mars, Venus)
   /// ```
+  @override
   Iterable<E> followedBy(Iterable<E> other) => value.followedBy(other);
 
   /// The current elements of this iterable modified by [toElement].
@@ -698,6 +732,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// var values = products.map((product) => product['price'] as double);
   /// var totalPrice = values.fold(0.0, (a, b) => a + b); // 42.5.
   /// ```
+  @override
   Iterable<T> map<T>(T Function(E e) toElement) => value.map(toElement);
 
   /// Creates a new lazy [Iterable] with all elements that satisfy the
@@ -720,6 +755,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// result = numbers.where((x) => x > 5); // (6, 7)
   /// result = numbers.where((x) => x.isEven); // (2, 6)
   /// ```
+  @override
   Iterable<E> where(bool Function(E element) test) => value.where(test);
 
   /// Creates a new lazy [Iterable] with all elements that have type [T].
@@ -731,6 +767,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// Iterating will not cache results, and thus iterating multiple times over
   /// the returned [Iterable] may yield different results,
   /// if the underlying elements change between iterations.
+  @override
   Iterable<T> whereType<T>() => value.whereType();
 
   /// Expands each element of this [Iterable] into zero or more elements.
@@ -761,6 +798,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   ///   }
   /// }
   /// ```
+  @override
   Iterable<T> expand<T>(Iterable<T> Function(E element) toElements) =>
       value.expand(toElements);
 
@@ -788,6 +826,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// final containsJupiter = gasPlanets.values.contains('Jupiter'); // true
   /// final containsMercury = gasPlanets.values.contains('Mercury'); // false
   /// ```
+  @override
   bool contains(Object? element) => value.contains(element);
 
   /// Invokes [action] on each element of this iterable in iteration order.
@@ -801,6 +840,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// // 6
   /// // 7
   /// ```
+  @override
   void forEach(void Function(E element) action) {
     updateOnAction(() => value.forEach(action));
   }
@@ -827,6 +867,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// final result = numbers.reduce((value, element) => value + element);
   /// print(result); // 17.5
   /// ```
+  @override
   E reduce(E Function(E value, E element) combine) {
     return updateOnAction(() => value.reduce(combine));
   }
@@ -852,6 +893,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   ///     initialValue, (previousValue, element) => previousValue + element);
   /// print(result); // 117.5
   /// ```
+  @override
   T fold<T>(
     T initialValue,
     T Function(T previousValue, E element) combine,
@@ -872,6 +914,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// // Checks whether all keys are smaller than 1.
   /// final every = planetsByMass.keys.every((key) => key < 1.0); // true
   /// ```
+  @override
   bool every(bool Function(E element) test) => value.every(test);
 
   /// Converts each element to a [String] and concatenates the strings.
@@ -887,6 +930,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   ///   0.11: 'Mars'};
   /// final joinedNames = planetsByMass.values.join('-'); // Mercury-Venus-Mars
   /// ```
+  @override
   String join([String separator = '']) => value.join();
 
   /// Checks whether any element of this iterable satisfies [test].
@@ -901,6 +945,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// var result = numbers.any((element) => element >= 5); // true;
   /// result = numbers.any((element) => element >= 10); // false;
   /// ```
+  @override
   bool any(bool Function(E element) test) => value.any(test);
 
   /// Creates a [Set] containing the same elements as this iterable.
@@ -916,6 +961,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// final planets = <int, String>{1: 'Mercury', 2: 'Venus', 3: 'Mars'};
   /// final valueSet = planets.values.toSet(); // {Mercury, Venus, Mars}
   /// ```
+  @override
   Set<E> toSet() => value.toSet();
 
   /// Whether this collection has no elements.
@@ -928,6 +974,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// print(emptyList.isEmpty); // true;
   /// print(emptyList.iterator.moveNext()); // false
   /// ```
+  @override
   bool get isEmpty => value.isEmpty;
 
   /// Whether this collection has at least one element.
@@ -940,6 +987,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// print(numbers.isNotEmpty); // true;
   /// print(numbers.iterator.moveNext()); // true
   /// ```
+  @override
   bool get isNotEmpty => !isEmpty;
 
   /// Creates a lazy iterable of the [count] first elements of this iterable.
@@ -958,6 +1006,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// final result = numbers.take(4); // (1, 2, 3, 5)
   /// final takeAll = numbers.take(100); // (1, 2, 3, 5, 6, 7)
   /// ```
+  @override
   Iterable<E> take(int count) => value.take(count);
 
   /// Creates a lazy iterable of the leading elements satisfying [test].
@@ -977,6 +1026,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// result = numbers.takeWhile((x) => x != 4); // (1, 2, 3, 5, 6, 7)
   /// result = numbers.takeWhile((x) => x.isOdd); // (1)
   /// ```
+  @override
   Iterable<E> takeWhile(bool Function(E value) test) => value.takeWhile(test);
 
   /// Creates an [Iterable] that provides all but the first [count] elements.
@@ -1000,6 +1050,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// ```
   ///
   /// The [count] must not be negative.
+  @override
   Iterable<E> skip(int count) => value.skip(count);
 
   /// Creates an `Iterable` that skips leading elements while [test] is satisfied.
@@ -1021,6 +1072,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// result = numbers.skipWhile((x) => x != 4); // ()
   /// result = numbers.skipWhile((x) => x.isOdd); // (2, 3, 5, 6, 7)
   /// ```
+  @override
   Iterable<E> skipWhile(bool Function(E value) test) => value.skipWhile(test);
 
   /// The first element.
@@ -1028,6 +1080,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// Throws a [StateError] if `this` is empty.
   /// Otherwise returns the first element in the iteration order,
   /// equivalent to `this.elementAt(0)`.
+  @override
   E get first => value.first;
 
   /// The last element.
@@ -1038,12 +1091,14 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// Some iterables may have more efficient ways to find the last element
   /// (for example a list can directly access the last element,
   /// without iterating through the previous ones).
+  @override
   E get last => value.last;
 
   /// Checks that this iterable has only one element, and returns that element.
   ///
   /// Throws a [StateError] if `this` is empty or has more than one element.
   /// This operation will not iterate past the second element.
+  @override
   E get single => value.single;
 
   /// The first element that satisfies the given predicate [test].
@@ -1063,6 +1118,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// function is returned.
   /// If [orElse] is omitted, it defaults to throwing a [StateError].
   /// Stops iterating on the first matching element.
+  @override
   E firstWhere(bool Function(E element) test, {E Function()? orElse}) =>
       value.firstWhere(test, orElse: orElse);
 
@@ -1087,6 +1143,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// If no element satisfies [test], the result of invoking the [orElse]
   /// function is returned.
   /// If [orElse] is omitted, it defaults to throwing a [StateError].
+  @override
   E lastWhere(bool Function(E element) test, {E Function()? orElse}) =>
       value.lastWhere(test, orElse: orElse);
 
@@ -1113,6 +1170,7 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// ```dart continued
   /// result = numbers.singleWhere((element) => element == 2); // Throws Error.
   /// ```
+  @override
   E singleWhere(bool Function(E element) test, {E Function()? orElse}) =>
       value.singleWhere(test, orElse: orElse);
 
@@ -1131,7 +1189,21 @@ extension ListWatcherExtension<E> on Watcher<List<E>> {
   /// final numbers = <int>[1, 2, 3, 5, 6, 7].watcher;
   /// final elementAt = numbers.elementAt(4); // 6
   /// ```
+  @override
   E elementAt(int index) => value.elementAt(index);
 
+  /// Compares two lists for element-by-element equality.
+  ///
+  /// Returns true if the lists are both null, or if they are both non-null, have
+  /// the same length, and contain the same members in the same order. Returns
+  /// false otherwise.
+  ///
+  /// If the elements are maps, lists, sets, or other collections/composite
+  /// objects, then the contents of those elements are not compared element by
+  /// element unless their equality operators ([Object.==]) do so. For checking
+  /// deep equality, consider using the [DeepCollectionEquality] class.
   bool isEqual(List<E> other) => value.isEqual(other);
+
+  @override
+  List<E> toList({bool growable = true}) => value.toList(growable: growable);
 }
