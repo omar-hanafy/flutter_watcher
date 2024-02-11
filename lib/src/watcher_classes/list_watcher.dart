@@ -5,7 +5,8 @@ import 'dart:math';
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
-/// allows to quickly create a Watcher of type List<T>.
+/// create a [Watcher] of type List<T>, which reacts just like normal [List],
+/// but with watcher capabilities.
 class ListWatcher<E> extends Watcher<List<E>> implements List<E> {
   ListWatcher(super.initial);
 
@@ -1183,6 +1184,21 @@ class ListWatcher<E> extends Watcher<List<E>> implements List<E> {
   @override
   E elementAt(int index) => value.elementAt(index);
 
+  /// Creates a [List] containing the elements of this [Iterable].
+  ///
+  /// The elements are in iteration order.
+  /// The list is fixed-length if [growable] is false.
+  ///
+  /// Example:
+  /// ```dart
+  /// final planets = <int, String>{1: 'Mercury', 2: 'Venus', 3: 'Mars'};
+  /// final keysList = planets.keys.toList(growable: false); // [1, 2, 3]
+  /// final valuesList =
+  ///     planets.values.toList(growable: false); // [Mercury, Venus, Mars]
+  /// ```
+  @override
+  List<E> toList({bool growable = true}) => value.toList(growable: growable);
+
   /// Compares two lists for element-by-element equality.
   ///
   /// Returns true if the lists are both null, or if they are both non-null, have
@@ -1194,7 +1210,4 @@ class ListWatcher<E> extends Watcher<List<E>> implements List<E> {
   /// element unless their equality operators ([Object.==]) do so. For checking
   /// deep equality, consider using the [DeepCollectionEquality] class.
   bool isEqual(List<E> other) => value.isEqual(other);
-
-  @override
-  List<E> toList({bool growable = true}) => value.toList(growable: growable);
 }

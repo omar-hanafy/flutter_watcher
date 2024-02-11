@@ -1,9 +1,10 @@
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
-/// allows to quickly create a Watcher of type List<T>.
+/// allows to quickly create a [Watcher] of type [Set].
 class SetWatcher<E> extends Watcher<Set<E>> implements Set<E> {
   SetWatcher(super.initial);
+
   /// Provides a view of this [Watcher]'s value as a set of [R] instances.
   ///
   /// If this [Watcher]'s value contains only instances of [R], all read operations
@@ -79,7 +80,8 @@ class SetWatcher<E> extends Watcher<Set<E>> implements Set<E> {
   /// print(characters); // {A, B, C}
   /// ```
   @override
-  void addAll(Iterable<E> elements) => updateOnAction(() => value.addAll(elements));
+  void addAll(Iterable<E> elements) =>
+      updateOnAction(() => value.addAll(elements));
 
   /// Removes [value] from this [Watcher]'s value.
   ///

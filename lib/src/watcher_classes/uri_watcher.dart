@@ -106,7 +106,7 @@ class UriWatcher extends Watcher<Uri> implements Uri {
   /// Example:
   /// ```dart import:convert
   /// final uri =
-  ///     Uri.parse('https://example.com/api/fetch?limit=10,20,30&max=100');
+  ///     Uri.parse('https://example.com/api/fetch?limit=10,20,30&max=100').watcher;
   /// print(jsonEncode(uri.queryParameters));
   /// // {"limit":"10,20,30","max":"100"}
   /// ```
@@ -130,7 +130,7 @@ class UriWatcher extends Watcher<Uri> implements Uri {
   /// Example:
   /// ```dart import:convert
   /// final uri =
-  ///     Uri.parse('https://example.com/api/fetch?limit=10&limit=20&limit=30&max=100');
+  ///     Uri.parse('https://example.com/api/fetch?limit=10&limit=20&limit=30&max=100').watcher;
   /// print(jsonEncode(uri.queryParametersAll)); // {"limit":["10","20","30"],"max":["100"]}
   /// ```
   ///
@@ -195,10 +195,10 @@ class UriWatcher extends Watcher<Uri> implements Uri {
   ///
   /// Example:
   /// ```dart
-  /// var uri = Uri.parse('http://example.com');
+  /// var uri = Uri.parse('http://example.com').watcher;
   /// print(uri.isScheme('HTTP')); // true
   ///
-  /// final uriNoScheme = Uri(host: 'example.com');
+  /// final uriNoScheme = Uri(host: 'example.com').watcher;
   /// print(uriNoScheme.isScheme('HTTP')); // false
   /// ```
   ///

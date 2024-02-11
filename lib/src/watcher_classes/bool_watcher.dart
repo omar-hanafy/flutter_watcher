@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
@@ -12,7 +10,8 @@ class BoolWatcher extends Watcher<bool> {
 /// BoolWatcherExtension
 ///
 /// Extension on `Watcher<bool>` providing additional boolean-specific functionalities.
-/// This extension simplifies toggling and other boolean operations directly on the notifier.
+/// This extension simplifies toggling and other boolean operations directly on
+/// the [Watcher] without the need to perform actions in the value itself.
 ///
 /// Example:
 /// ```dart

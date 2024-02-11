@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
@@ -7,6 +5,26 @@ import 'package:flutter_watcher/flutter_watcher.dart';
 class ColorWatcher extends Watcher<Color> {
   ColorWatcher(super.initial);
 }
+
+/// Extension: ColorWatcherExtension
+///
+/// Description:
+/// Adds convenience methods to `Watcher<Color>` for managing color state changes
+/// in a more intuitive and expressive manner.
+/// This extension leverages the `Watcher` functionality to make it easier to
+/// work with color animations, themes,
+/// and dynamic UI elements that depend on color changes.
+///
+/// Usage:
+/// This extension can be directly used on any `ValueNotifier<Color>` instance,
+/// providing additional methods specific to color manipulation and state management.
+/// It simplifies the process of updating and responding to color changes within the Flutter UI.
+///
+/// Example:
+/// ```dart
+/// final colorWatcher = Colors.blue.watcher;
+/// colorWatcher.withOpacity(0.5);
+///
 
 extension ColorWatcherExtension on ValueNotifier<Color> {
   int get alpha => value.alpha;

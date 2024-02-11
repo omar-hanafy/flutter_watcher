@@ -10,7 +10,7 @@ class CachedCounter extends StatelessWidget {
   CachedCounter({super.key});
 
   final counter = 0.cachedWatcher('counter');
-  
+  final list = [].obs;
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,7 @@
-import 'dart:async';
-
-import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
-/// allows to quickly create a Watcher of type DateTime.
+/// create a [Watcher] of type [DateTime], which reacts just like normal [DateTime],
+/// but with watcher capabilities.
 class DateTimeWatcher extends Watcher<DateTime> implements DateTime {
   DateTimeWatcher(super.initial);
 
@@ -15,8 +13,7 @@ class DateTimeWatcher extends Watcher<DateTime> implements DateTime {
   /// final dDayLocal = dDayUtc.toLocal();
   ///
   /// // These two dates are at the same moment, but are in different zones.
-  /// assert(dDayUtc != dDayLocal);
-  /// print(dDayUtc != dDayLocal); // true
+  /// print(dDayUtc.isEqual(dDayLocal)); // true
   /// ```
   ///
   /// See [isAtSameMomentAs] for a comparison that compares moments in time
@@ -29,7 +26,7 @@ class DateTimeWatcher extends Watcher<DateTime> implements DateTime {
   /// of whether the time is in UTC or in the local time zone.
   ///
   /// ```dart
-  /// final now = DateTime.now();
+  /// final now = DateTime.now().watcher.watcher;
   /// final earlier = now.subtract(const Duration(seconds: 5));
   /// print(earlier.isBefore(now)); // true
   /// print(!now.isBefore(now)); // true
@@ -50,7 +47,7 @@ class DateTimeWatcher extends Watcher<DateTime> implements DateTime {
   /// of whether the time is in UTC or in the local time zone.
   ///
   /// ```dart
-  /// final now = DateTime.now();
+  /// final now = DateTime.now().watcher;
   /// final later = now.add(const Duration(seconds: 5));
   /// print(later.isAfter(now)); // true
   /// print(!now.isBefore(now)); // true
@@ -71,7 +68,7 @@ class DateTimeWatcher extends Watcher<DateTime> implements DateTime {
   /// time zone.
   ///
   /// ```dart
-  /// final now = DateTime.now();
+  /// final now = DateTime.now().watcher;
   /// final later = now.add(const Duration(seconds: 5));
   /// print(!later.isAtSameMomentAs(now)); // true
   /// print(now.isAtSameMomentAs(now)); // true
@@ -95,7 +92,7 @@ class DateTimeWatcher extends Watcher<DateTime> implements DateTime {
   ///  * a positive value otherwise (when this DateTime [isAfter] [other]).
   ///
   /// ```dart
-  /// final now = DateTime.now();
+  /// final now = DateTime.now().watcher;
   /// final future = now.add(const Duration(days: 2));
   /// final past = now.subtract(const Duration(days: 2));
   /// final newDate = now.toUtc();
@@ -151,7 +148,7 @@ class DateTimeWatcher extends Watcher<DateTime> implements DateTime {
   ///
   /// The resulting string can be parsed back using [parse].
   /// ```dart
-  /// final moonLanding = DateTime.utc(1969, 7, 20, 20, 18, 04);
+  /// final moonLanding = DateTime.utc(1969, 7, 20, 20, 18, 04).watcher;
   /// final isoDate = moonLanding.toIso8601String();
   /// print(isoDate); // 1969-07-20T20:18:04.000Z
   /// ```
@@ -161,7 +158,7 @@ class DateTimeWatcher extends Watcher<DateTime> implements DateTime {
   /// Returns a new [DateTime] instance with [duration] added to [this].
   ///
   /// ```dart
-  /// final today = DateTime.now();
+  /// final today = DateTime.now().watcher;
   /// final fiftyDaysFromNow = today.add(const Duration(days: 50));
   /// ```
   ///
@@ -177,7 +174,7 @@ class DateTimeWatcher extends Watcher<DateTime> implements DateTime {
   /// Returns a new [DateTime] instance with [duration] subtracted from [this].
   ///
   /// ```dart
-  /// final today = DateTime.now();
+  /// final today = DateTime.now().watcher;
   /// final fiftyDaysAgo = today.subtract(const Duration(days: 50));
   /// ```
   ///
@@ -196,7 +193,7 @@ class DateTimeWatcher extends Watcher<DateTime> implements DateTime {
   /// The returned [Duration] will be negative if [other] occurs after [this].
   ///
   /// ```dart
-  /// final berlinWallFell = DateTime.utc(1989, DateTime.november, 9);
+  /// final berlinWallFell = DateTime.utc(1989, DateTime.november, 9).watcher;
   /// final dDay = DateTime.utc(1944, DateTime.june, 6);
   ///
   /// final difference = berlinWallFell.difference(dDay);
@@ -213,7 +210,7 @@ class DateTimeWatcher extends Watcher<DateTime> implements DateTime {
   /// For example, in Australia, similar code using local time instead of UTC:
   ///
   /// ```dart
-  /// final berlinWallFell = DateTime(1989, DateTime.november, 9);
+  /// final berlinWallFell = DateTime(1989, DateTime.november, 9).watcher;
   /// final dDay = DateTime(1944, DateTime.june, 6);
   /// final difference = berlinWallFell.difference(dDay);
   /// print(difference.inDays); // 16591
@@ -375,8 +372,17 @@ class DateTimeWatcher extends Watcher<DateTime> implements DateTime {
   @override
   int get weekday => value.weekday;
 
+  /// True if this [DateTime] is set to UTC time.
+  ///
+  /// ```dart
+  /// final dDay = DateTime.utc(1944, 6, 6).watcher;
+  /// print(dDay.isUtc); // true
+  ///
+  /// final local = DateTime(1944, 6, 6).watcher;
+  /// print(local.isUtc); // false
+  /// ```
   @override
-  bool get isUtc => v.isUtc;
+  bool get isUtc => value.isUtc;
 
   @override
   String toString() => value.toString();
