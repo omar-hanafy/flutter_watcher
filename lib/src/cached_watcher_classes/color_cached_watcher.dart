@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
@@ -18,8 +17,8 @@ class ColorCachedWatcher extends CachedWatcher<Color> {
 }
 
 /// [ColorCachedWatcher] with Null Safety
-class ColorCachedWatcherN extends CachedWatcher<Color?> {
-  ColorCachedWatcherN(String key, {Color? initialValue})
+class ColorNCachedWatcher extends CachedWatcher<Color?> {
+  ColorNCachedWatcher(String key, {Color? initialValue})
       : super(initialValue, key: key);
 
   @override

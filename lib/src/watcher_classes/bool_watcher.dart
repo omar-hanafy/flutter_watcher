@@ -18,7 +18,7 @@ class BoolWatcher extends Watcher<bool> {
 /// final boolWatcher = true.watcher;
 /// boolWatcher.toggle(); // Toggles the boolean value.
 /// ```
-extension BoolWatcherExtension on ValueNotifier<bool> {
+extension BoolWatcherExtension on Watcher<bool> {
   /// toggle the value of the [Watcher]
   void toggle() => value = !value;
 

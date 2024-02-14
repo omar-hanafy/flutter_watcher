@@ -24,7 +24,7 @@ class NumWatcher extends Watcher<num> {
 /// numberWatcher.multiply(2);  // Directly multiplies the value by 2 (now 30)
 /// // These operations modify the numeric value within the ValueNotifier without accessing `.value`
 /// ```
-extension NumericWatcherExtension on ValueNotifier<num> {
+extension NumericWatcherExtension on Watcher<num> {
   /// Compares this to `other`.
   ///
   /// Returns a negative number if `this` is less than `other`, zero if they are

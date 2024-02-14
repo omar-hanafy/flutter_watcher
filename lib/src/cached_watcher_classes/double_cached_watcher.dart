@@ -15,8 +15,8 @@ class DoubleCachedWatcher extends CachedWatcher<double> {
 }
 
 /// [DoubleCachedWatcher] with Null Safety
-class DoubleCachedWatcherN extends CachedWatcher<double?> {
-  DoubleCachedWatcherN(String key, {double? initialValue})
+class DoubleNCachedWatcher extends CachedWatcher<double?> {
+  DoubleNCachedWatcher(String key, {double? initialValue})
       : super(initialValue, key: key);
 
   @override
@@ -25,4 +25,3 @@ class DoubleCachedWatcherN extends CachedWatcher<double?> {
   @override
   dynamic write(double? value) => value;
 }
-

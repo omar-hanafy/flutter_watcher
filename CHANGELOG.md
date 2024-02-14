@@ -26,7 +26,7 @@
 
 #### Breaking Changes
 
-- **Widget Renaming**: Renamed `ValueWatch` Widget to `WatchValue`.
+- **Widget Renaming**: Renamed `WatchValue` Widget to `WatchValue`.
 
 - **Extension Modification**: Modified `.watch` extension; it no longer provides the value in the builder function.
   Use `.watchValue` instead.

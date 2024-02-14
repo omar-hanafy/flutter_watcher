@@ -9,19 +9,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MultiValueWatcher Example',
+      title: 'MultiWatchValueer Example',
       home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
-  final counterWatcher = Watcher<int>(0);
-  final stringWatcher = Watcher<String>('Hello World');
-
-  final scrollController = ScrollController();
-
-  final textCtrl = TextEditingController();
+  final counter = Watcher<int>(0);
+  final lastUpdated = Watcher<String>('Hello World');
 
   MyHomePage({super.key});
 
@@ -32,24 +28,22 @@ class MyHomePage extends StatelessWidget {
         title: Watch(
           watcher: scrollController,
           builder: (context) {
-            return const Text('MultiValueWatcher Example');
+            return const Text('MultiWatchValueer Example');
           },
         ),
       ),
       body: WatchAll(
         watchers: [
-          counterWatcher,
-          stringWatcher,
+          counter,
+          lastUpdated,
         ],
         builder: (context) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Counter value is $counterWatcher'),
-                Text('String message is $stringWatcher'),
-              ],
-            ),
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('Counter value is $counter'),
+              Text('String message is $lastUpdated'),
+            ],
           );
         },
       ),

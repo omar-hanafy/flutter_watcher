@@ -26,7 +26,7 @@ class ColorWatcher extends Watcher<Color> {
 /// colorWatcher.withOpacity(0.5);
 ///
 
-extension ColorWatcherExtension on ValueNotifier<Color> {
+extension ColorWatcherExtension on Watcher<Color> {
   int get alpha => value.alpha;
 
   int get blue => value.blue;

@@ -1,23 +1,27 @@
 # Watcher State Management
 
-* [Watcher State Management](#watcher-state-management)
-  * [Overview](#overview)
-  * [Initialization](#initialization)
-  * [Using ValueWatch Widget and .watch](#using-valuewatch-widget-and-watch)
-  * [watchWhen](#watchwhen)
-  * [CachedWatcher](#cachedwatcher)
-  * [Utilities and Handling Changes](#utilities-and-handling-changes)
-  * [Other Useful Helpers](#other-useful-helpers)
-  * [Flutter Controllers With Watcher.](#flutter-controllers-with-watcher)
-    * [TextEditingController](#texteditingcontroller)
-    * [AnimationController](#animationcontroller)
-  * [Full Counter Example](#full-counter-example)
-  * [Contributions](#contributions)
-  * [License](#license)
+- [Overview](#overview)
+- [Initialization](#initialization)
+- [Widgets](#widgets)
+  * [`WatchValue`](#-watchvalue-)
+  * [`Watch`](#-watch-)
+  * [`WatchAll`](#-watchall-)
+  * [Widgets Extensions](#widgets-extensions-)
+- [CachedWatcher](#cachedwatcher)
+  * [Simple Usage](#simple-usage)
+  * [Advanced Usage (Custom Types)](#advanced-usage--custom-types-)
+  * [Initialization Properties](#initialization-properties)
+- [Utilities](#utilities)
+- [Supports for built-in types](#supports-for-built-in-types)
+- [Full Counter Example](#full-counter-example)
+- [FAQ](#faq)
+- [Contributions](#contributions)
+- [License](#license)
+- [Support](#support)
 
 ## Overview
 
-`flutter_watcher` is an intuitive and efficient state management package for Flutter. Acting as a wrapper around Flutter's `ValueNotifier` and `ValueListenableBuilder`, it offers a more user-friendly syntax, including the `CachedWatcher` for persistent state management, transforming the complexity of state management into a simpler, cleaner, and more maintainable approach.
+Simple and efficient state management package for Flutter. Acting as a wrapper around Flutter's `ValueNotifier`, it offers a more user-friendly syntax, including the `CachedWatcher` used to cache watcher values, transforming the complexity of state management into a simpler, cleaner, and more maintainable approach.
 
 ## Initialization
 
@@ -28,14 +32,20 @@ final counter = Watcher<int>(0);
 final counter = 0.watcher;
 final boolValue = false.watcher;
 
-// Or use the original Watchers.
+// Or use the Watcher classes.
 final listWatcher = ListWatcher<int>([1, 2, 3]);
 
 // All custom types are also supported.
 final userWatcher = User().watcher; // creates a Watcher<User>
 ```
 
-## Using `ValueWatch` Widget and `.watch`
+## Widgets
+
+### `WatchValue`
+
+A widget that reacts to changes of value of  `Watcher` instance and any `ValueNotifier`.
+
+#### Usage
 
 ```dart
 final isLoading = false.watcher;
@@ -43,42 +53,93 @@ final isLoading = false.watcher;
 @override
 Widget build(BuildContext context) {
   ...
-  ValueWatch<bool>(
-    builder: (context, value) => MyWidget(value),
+  WatchValue<bool>(
     watcher: isLoading, // Your watcher instance.
+    threshold: Duration(milliseconds: 300), // (optional) rebuilds every specific duration.
+		watchWhen: (prev, curr) => prev != curr, // (optional) rebuilds only upon condition.
+    builder: (context, value) => MyWidget(value),
   ),
   ...
 }
+```
 
-// or with the `.watch` extension
+### `Watch`
+
+A widget that reacts to changes of  `Watcher`, `ValueNotifier` or any `Listenable` instance such as `ScrollController`, `AnimationController`, `TextEdititngController` etc.
+
+#### Usage
+
+```dart
+final scrollController = ScrollController();
+
 @override
 Widget build(BuildContext context) {
   ...
-  isLoading.watch(
-    (value) => MyWidget(value),
+  Watch(
+    watcher: scrollController, // any listener instance.
+    builder: (context) => MyWidget(isLoading.value), // the builder which reacts to listener changes.
+    // threshold and watchWhen named params are also available.
   ),
   ...
 }
-// MyWidget here will automatically update its value when isLoading.value changes.
 ```
 
-## `watchWhen`
+### `WatchAll`
 
-The `watchWhen` feature in the `ValueWatch` widget provides a way
-to conditionally rebuild a widget based on specific criteria.
-It Allows defining custom conditions under which the widget should update,
-offering more control and potentially improving performance by reducing unnecessary rebuilds.
+A widget that reacts to changes of values of  multpele instances of any `Listener` including `Watcher`.
+
+#### Usage
 
 ```dart
-final counter = Watcher<int>(0);
+  final counter = 0.watcher;
+  final lastUpdated = DateTime.now().watcher();
 
-ValueWatch<int>(
-  watcher: counter,
-  watchWhen: (previous, current) => current % 2 == 0, // Rebuild only when the current value is even
-  builder: (context, value) {
-    return Text('Even Counter: $value');
-  },
-);
+  @override
+  Widget build(BuildContext context) {
+    ...
+  WatchAll(
+        watchers: [
+          counter,
+          lastUpdated,
+        ],
+     	 // threshold and watchWhen named params are also available.
+	      builder: (context) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('Counter value is $counter'),
+              Text('String message is $lastUpdated'),
+            ],
+          );
+        },
+      ),
+    ...
+  }
+```
+
+### Widgets Extensions:
+
+You can use the extensions in the Watcher to create any of the `Watch` widgets quickly and in simpler syntax.
+
+* Use `watcher.watchValue(...)` to create `WatchValue` widget.
+* Use `watcher.watch(...)` to create `Watch` widget.
+* Use `<Watcher>[].watchAll(...)` to create `WatchAll` widget.
+
+**Note** that when you use the extension you no longer need to pass the `watcher` as parameter.
+
+**Sample:**
+
+```dart
+final isLoading = false.watcher;
+
+@override
+Widget build(BuildContext context) {
+  ...
+  isLoading.watchValue(
+    builder: (value) => MyWidget(value),
+  ),
+  ...
+}
 ```
 
 ## CachedWatcher
@@ -87,7 +148,7 @@ ValueWatch<int>(
 
 ### Simple Usage
 
-In this package there is a good set of extensions and classes that help you create a `CachedWatcher<T>` in a simple way.
+In this package there is a good set of extensions and classes that help you create a `CachedWatcher<T>` in a simple way with built-in types.
 
 ```dart
 // Example: Using a subclass for integers
@@ -95,7 +156,6 @@ final counter = IntCachedWatcher(0, 'counter_key'); // with class.
 final counter = 0.cachedWatcher('counter_key'); // with extension.
 
 // BoolCachedWatcher, ListCachedWatcher, DateTimeCachedWatcher, and so on for premitive types are supported
-// in simple usage.
 ```
 
 ### Advanced Usage (Custom Types) 
@@ -126,15 +186,9 @@ class AuthService extends CachedWatcher<AuthState> {
 - **`key` (Optional)**: A unique identifier for the `CachedWatcher`'s stored data, used to save and retrieve the cached
   value from local storage. Default is the type name
 
-Any CachedWatcher instance can be used with the `ValueWatch` widget and `.watch` extension.
+ The`CachedWatcher` instance can be used with all `Watch` [widgets](#widgets).
 
-## Utilities and Handling Changes
-
-### Description
-
-Extensions such as `updateIf`, `onChange`, `debounce`, `map`, and `combineWith` provide powerful utilities for responding to changes, debouncing actions, transforming, or combining multiple `Watcher` instances.
-
-### Examples
+## Utilities
 
 - **updateIf**: Update the value conditionally.
 
@@ -152,7 +206,7 @@ Extensions such as `updateIf`, `onChange`, `debounce`, `map`, and `combineWith` 
 - **stream**: Convert `Watcher` changes into a stream.
 
   ```dart
-  final streamWatcher = valueWatcher.stream;
+  final streamWatcher = watcherInstance.stream;
   streamWatcher.listen((value) {
     // Handle the stream of changes
   });
@@ -176,12 +230,12 @@ Extensions such as `updateIf`, `onChange`, `debounce`, `map`, and `combineWith` 
   final combinedWatcher = intWatcher.combineWith(stringWatcher, (int a, String b) => '$a and $b');
   ```
 
-## Other Useful Helpers
+## Supports for built-in types
 
-Allowing direct manipulation of values in a more natural and concise way, mirroring the operations you'd typically
+Watcher has built support for all built in types such is `IntWatcher` for `int` , `ListWatcher` for `List` , and `MapWatcher` for `Map`, etc... Allowing direct manipulation of values in a more natural and concise way, mirroring the operations you'd typically
 perform on the data types themselves. Here are some samples:
 
-### Bool
+### BoolWatcher
 
 - **toggle**: Toggle the value of `Watcher<bool>`.
 
@@ -191,7 +245,7 @@ perform on the data types themselves. Here are some samples:
   boolWatcher.toggle(); // Toggles the boolean value
   ```
 
-### List
+### ListWatcher, and SetWatcher
 
 - **addAll**: Add multiple items to `Watcher<List<E>>`.
 
@@ -202,13 +256,14 @@ perform on the data types themselves. Here are some samples:
 - and all `List` built-in functions are supported
 
   ```dart
-  listWatcher.addAll([4, 5]); // Adds items to the list
-  listWatcher.remove(item);   // Removes an item
-  listWatcher.clear();        // Clears the list
-  // and more
+  listWatcher.addAll([4, 5]);
+  listWatcher.remove(item);
+  listWatcher.clear();
+  for(final item in listWatcher)
+  // and so on.
   ```
 
-### Num/int/double
+### Num/Int/DoubleWatcher
 
 - **increment**: Increment the value of `Watcher<num>`.
 
@@ -217,12 +272,15 @@ perform on the data types themselves. Here are some samples:
 - and all `Num` built-in functions are supported
 
   ```dart
-  numWatcher.increment(); // Increments the number
-  numWatcher.decrement(); // Decrements the number
-  // and more
+  numWatcher.increment();
+  numWatcher.decrement();
+  numWatcher.abs();
+  numWatcher.toDouble();
+  numWatcher.toInt();
+  // and so on.
   ```
 
-### Map
+### MapWatcher
 
 - **putIfAbsent**: Add a key-value pair if the key is not already in the map.
 
@@ -231,26 +289,13 @@ perform on the data types themselves. Here are some samples:
 - and all `Map` built-in functions are supported
 
   ```dart
-  mapWatcher.putIfAbsent(key, () => value); // Adds key-value pair if absent
-  mapWatcher.remove(key);                  // Removes the key-value pair
-  // and more
+  mapWatcher.putIfAbsent(key, () => value);
+  mapWatcher.remove(key);
+  mapWathcer.keys.map((e) => ...);
+  // and so on.
   ```
 
-### Set
-
-- **add**: Add an item to `Watcher<Set<T>>`.
-
-- **removeAll**: Remove all items from the set.
-
-- and all `Set` built-in functions are supported
-
-  ```dart
-  setWatcher.add(item);       // Adds an item
-  setWatcher.removeAll(items); // Removes all specified items
-  // and more
-  ```
-
-### Uri
+### UriWatcher
 
 - **updatePath**: Update the path of `Watcher<Uri>`.
 
@@ -258,52 +303,9 @@ perform on the data types themselves. Here are some samples:
 
   ```dart
   uriWatcher.updatePath(newPath); // Updates the URI path
-  // and more
+  uriWatcher.replace(scheme: newScheme);
+  // and so on.
   ```
-
-## Flutter Controllers With Watcher.
-
-The `Watcher` and  `.watch` extension provides seamless integration with various native Flutter controllers, enhancing the development of reactive UIs. Below are examples demonstrating how Watcher can be utilized with common Flutter controllers:
-
-### TextEditingController
-
-Watcher can reactively handle text input changes, making it ideal for scenarios like live character counts or conditional UI updates based on user input.
-
-```dart
-final textEditingController = TextEditingController();
-
-textEditingController.watch(
-	(TextEditingValue value) {
-    return Column(
-      children: [
-        TextField(controller: textEditingController),
-        Text('Character Count: ${value.text.length}'),
-      ],
-    );
-  },
-);
-```
-
-### AnimationController
-
-Incorporate Watcher with AnimationController for dynamic UI elements that respond to animation state changes, enhancing the visual experience.
-
-```dart
-final animationController = AnimationController(
-  vsync: this,
-  duration: Duration(seconds: 2),
-)..repeat(reverse: true);
-
-animationController.watch(
-  (double value) {
-    double scale = 1 + value; // Adjust scale based on animation value
-    return Transform.scale(
-      scale: scale,
-      child: MyAnimatedWidget(),
-    );
-  },
-);
-```
 
 ## Full Counter Example
 
@@ -325,7 +327,7 @@ class MyCounter extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(title: const Text('Watch Counter')),
         body: Center(
-          child: ValueWatch<int>(
+          child: WatchValue<int>(
             watcher: counter,
             builder: (context, value) {
               return Text('Counter: $value');
@@ -342,6 +344,24 @@ class MyCounter extends StatelessWidget {
 }
 ```
 
+## FAQ
+
+**Why should I use Watcher:**
+
+While there is a greate state management available I can recommend to use watcher in some cases:
+
+- If your app is simple and wont require complex state management solution watcher is a good choice.
+- If you already use strong state management, but you want to manage a specific (simple) feature or component in your app `Watcher` can help with that. Sometimes when you use BLoC its just not convenient to `emit` new state for the sake to toggle a switcher in the screen.
+- If you want to use singletons, watcher instances in a singleton class is a greate choice, for example you can use CachedWatcher with user settings, or Themes, etc.
+
+**Does it offer any dependcy injection?**
+
+No, the flutter watcher package designed to be simple, you can use it with `Provider` if you wish to make your watcher instance available in your widget tree.
+
+**Is there any examples that demonstrate the use of the package?**
+
+I am planning to publish a documentation website soon with useful examples and detailed documentation.
+
 ## Contributions
 
 Contributions to this package are welcome. If you have any suggestions, issues, or feature requests, please create a pull request in the [repository](https://github.com/omar-hanafy/flutter_watcher).
@@ -349,5 +369,7 @@ Contributions to this package are welcome. If you have any suggestions, issues, 
 ## License
 
 `flutter_watcher` is available under the [BSD 3-Clause License.](https://opensource.org/license/bsd-3-clause/)
+
+## Support
 
 <a href="https://www.buymeacoffee.com/omar.hanafy" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>

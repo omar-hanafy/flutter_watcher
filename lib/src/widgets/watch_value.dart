@@ -2,11 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
-/// ValueWatch Widget
+/// WatchValue Widget
 ///
 /// A widget that simplifies the integration and usage of [Watcher] instances within the Flutter UI.
-/// It efficiently handles the rendering of widgets in response to state changes, utilizing
-/// Flutter's native [ValueListenableBuilder] and [ValueNotifier] for effective state management.
+/// It efficiently handles the rendering of widgets in response to state changes.
 ///
 /// The [WatchValue] widget takes a [Watcher] instance and a builder function. The builder function
 /// is responsible for returning the widget that should be rendered based on the current value of the [Watcher].
@@ -22,7 +21,7 @@ import 'package:flutter_watcher/flutter_watcher.dart';
 ///
 /// @override
 /// Widget build(BuildContext context) {
-///   return ValueWatch<bool>(
+///   return WatchValue<bool>(
 ///     builder: (context, value) => MyWidget(value), // Builder function
 ///     watcher: isLoading, // Watcher instance
 ///   );

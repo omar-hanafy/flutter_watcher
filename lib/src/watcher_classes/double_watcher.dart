@@ -27,7 +27,7 @@ class DoubleWatcher extends Watcher<double> {
 /// doubleWatcher.round(); // Directly rounds the value (now 13.0)
 /// // These operations modify the double value within the ValueNotifier without accessing `.value`
 /// ```
-extension DoubleWatcherExtension on ValueNotifier<double> {
+extension DoubleWatcherExtension on Watcher<double> {
   /// The remainder of the truncating division of `this` by [other].
   double remainder(num other) => value.remainder(other);
 

@@ -2,8 +2,9 @@ import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
 /// [UriCachedWatcher] with Null Safety
-class UriCachedWatcherN extends CachedWatcher<Uri?> {
-  UriCachedWatcherN(String key, {Uri? initialValue}) : super(initialValue, key: key);
+class UriNCachedWatcher extends CachedWatcher<Uri?> {
+  UriNCachedWatcher(String key, {Uri? initialValue})
+      : super(initialValue, key: key);
 
   @override
   Uri? read(dynamic data) => tryToUri(data);

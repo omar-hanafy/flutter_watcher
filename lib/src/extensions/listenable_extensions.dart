@@ -34,7 +34,7 @@ extension WatcherListenablesExtension on List<Listenable?> {
   }
 }
 
-extension ValueListenableBuilderExtension<T> on ValueNotifier<T> {
+extension ValueListenableBuilderExtension<T> on Watcher<T> {
   /// [stream]
   ///
   /// Converts the [ValueListenable] into a [Stream]. This stream emits values whenever the

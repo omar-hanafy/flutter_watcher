@@ -15,8 +15,8 @@ class IntCachedWatcher extends CachedWatcher<int> {
 }
 
 /// [IntCachedWatcher] with Null Safety
-class IntCachedWatcherN extends CachedWatcher<int?> {
-  IntCachedWatcherN(String key, {int? initialValue})
+class IntNCachedWatcher extends CachedWatcher<int?> {
+  IntNCachedWatcher(String key, {int? initialValue})
       : super(initialValue, key: key);
 
   @override

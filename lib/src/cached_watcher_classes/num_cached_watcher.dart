@@ -16,8 +16,8 @@ class NumCachedWatcher extends CachedWatcher<num> {
 }
 
 /// [NumCachedWatcher] with Null Safety
-class NumCachedWatcherN extends CachedWatcher<num?> {
-  NumCachedWatcherN(String key, {num? initialValue})
+class NumNCachedWatcher extends CachedWatcher<num?> {
+  NumNCachedWatcher(String key, {num? initialValue})
       : super(initialValue, key: key);
 
   @override
@@ -26,4 +26,3 @@ class NumCachedWatcherN extends CachedWatcher<num?> {
   @override
   dynamic write(num? value) => value;
 }
-

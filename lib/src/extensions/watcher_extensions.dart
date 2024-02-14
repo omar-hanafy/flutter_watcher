@@ -213,7 +213,7 @@ extension MapWatcherEx<K, V> on Map<K, V> {
 extension BoolWatcherExNullable on bool? {
   Watcher<bool?> get watcher => Watcher(this);
 
-  CachedWatcher<bool?> cachedWatcher(String key) => BoolCachedWatcherN(
+  CachedWatcher<bool?> cachedWatcher(String key) => BoolNCachedWatcher(
         key,
         initialValue: this,
       );
@@ -225,7 +225,7 @@ extension BoolWatcherExNullable on bool? {
 extension NumWatcherExNullable on num? {
   Watcher<num?> get watcher => Watcher(this);
 
-  CachedWatcher<num?> cachedWatcher(String key) => NumCachedWatcherN(
+  CachedWatcher<num?> cachedWatcher(String key) => NumNCachedWatcher(
         key,
         initialValue: this,
       );
@@ -237,8 +237,7 @@ extension NumWatcherExNullable on num? {
 extension DoubleWatcherExNullable on double? {
   Watcher<double?> get watcher => Watcher(this);
 
-  CachedWatcher<double?> cachedWatcher(String key) =>
-      DoubleCachedWatcherN(
+  CachedWatcher<double?> cachedWatcher(String key) => DoubleNCachedWatcher(
         key,
         initialValue: this,
       );
@@ -250,7 +249,7 @@ extension DoubleWatcherExNullable on double? {
 extension IntWatcherExNullable on int? {
   Watcher<int?> get watcher => Watcher(this);
 
-  CachedWatcher<int?> cachedWatcher(String key) => IntCachedWatcherN(
+  CachedWatcher<int?> cachedWatcher(String key) => IntNCachedWatcher(
         key,
         initialValue: this,
       );
@@ -262,8 +261,7 @@ extension IntWatcherExNullable on int? {
 extension StringWatcherExNullable on String? {
   Watcher<String?> get watcher => Watcher(this);
 
-  CachedWatcher<String?> cachedWatcher(String key) =>
-      StringCachedWatcherN(
+  CachedWatcher<String?> cachedWatcher(String key) => StringNCachedWatcher(
         key,
         initialValue: this,
       );
@@ -275,7 +273,7 @@ extension StringWatcherExNullable on String? {
 extension ColorWatcherExNullable on Color? {
   Watcher<Color?> get watcher => Watcher(this);
 
-  CachedWatcher<Color?> cachedWatcher(String key) => ColorCachedWatcherN(
+  CachedWatcher<Color?> cachedWatcher(String key) => ColorNCachedWatcher(
         key,
         initialValue: this,
       );
@@ -287,7 +285,7 @@ extension ColorWatcherExNullable on Color? {
 extension UriWatcherExNullable on Uri? {
   Watcher<Uri?> get watcher => Watcher(this);
 
-  CachedWatcher<Uri?> cachedWatcher(String key) => UriCachedWatcherN(
+  CachedWatcher<Uri?> cachedWatcher(String key) => UriNCachedWatcher(
         key,
         initialValue: this,
       );

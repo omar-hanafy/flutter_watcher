@@ -1,6 +1,5 @@
 // ignore_for_file: unnecessary_cast
 
-import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
@@ -20,7 +19,8 @@ class ListCachedWatcher<E> extends BaseListCachedWatcher<E> {
 }
 
 /// allows to quickly create a Watcher of type List<T>.
-abstract class BaseListCachedWatcher<E> extends CachedWatcher<List<E>> implements List<E> {
+abstract class BaseListCachedWatcher<E> extends CachedWatcher<List<E>>
+    implements List<E> {
   BaseListCachedWatcher(super.initialValue, String key) : super(key: key);
 
   /// Returns a view of this list as a list of [R] instances.

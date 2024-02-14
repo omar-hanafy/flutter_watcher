@@ -205,10 +205,6 @@ class SetWatcher<E> extends Watcher<Set<E>> implements Set<E> {
   @override
   Set<E> union(Set<E> other) => updateOnAction(() => value.union(other));
 
-  @override
-  Set<E> difference(Set<Object?> other) =>
-      updateOnAction(() => value.difference(other));
-
   /// Creates a new set with the elements of this that are not in [other].
   ///
   /// That is, the returned set contains all the elements of this [Set] that
@@ -222,13 +218,24 @@ class SetWatcher<E> extends Watcher<Set<E>> implements Set<E> {
   /// print(differenceSet2); // {E, F}
   /// ```
   @override
-  void clear() => updateOnAction(() => value.clear());
+  Set<E> difference(Set<Object?> other) =>
+      updateOnAction(() => value.difference(other));
 
   /// Removes all elements from this [Watcher]'s value.
   /// ```dart
   /// final charactersWatcher = <String>{'A', 'B', 'C'}.watcher;
   /// characters.clear(); // {}
   /// ```
+  @override
+  void clear() => updateOnAction(() => value.clear());
+
+  /// Creates a [Set] with the same elements and behavior as this `Set`.
+  ///
+  /// The returned set behaves the same as this set
+  /// with regard to adding and removing elements.
+  /// It initially contains the same elements.
+  /// If this set specifies an ordering of the elements,
+  /// the returned set will have the same order.
   @override
   Set<E> toSet() => updateOnAction(() => value.toSet());
 

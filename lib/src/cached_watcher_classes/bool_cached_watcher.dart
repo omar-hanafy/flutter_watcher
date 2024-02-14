@@ -16,8 +16,8 @@ class BoolCachedWatcher extends CachedWatcher<bool> {
 }
 
 /// [BoolCachedWatcher] with Null Safety
-class BoolCachedWatcherN extends CachedWatcher<bool?> {
-  BoolCachedWatcherN(String key, {bool? initialValue})
+class BoolNCachedWatcher extends CachedWatcher<bool?> {
+  BoolNCachedWatcher(String key, {bool? initialValue})
       : super(initialValue, key: key);
 
   @override
@@ -26,4 +26,3 @@ class BoolCachedWatcherN extends CachedWatcher<bool?> {
   @override
   dynamic write(bool? value) => value;
 }
-

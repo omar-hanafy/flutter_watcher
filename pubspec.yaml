@@ -1,5 +1,5 @@
 name: flutter_watcher
-description: "Streamlined state management in Flutter using ValueNotifier, with advanced features and helper functions."
+description: "Simple state management for Flutter, with caching capability"
 repository: https://github.com/omar-hanafy/flutter_watcher
 version: 2.0.1
 

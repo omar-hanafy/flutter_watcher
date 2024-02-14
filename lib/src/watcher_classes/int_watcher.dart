@@ -24,7 +24,7 @@ class IntWatcher extends Watcher<int> {
 /// intWatcher.toggleBetween(11, 5); // Toggles the value to 5 as current is 11
 /// // These operations directly modify the int value within the ValueNotifier without accessing `.value`
 /// ```
-extension IntWatcherExtension on ValueNotifier<int> {
+extension IntWatcherExtension on Watcher<int> {
   /// Bit-wise and operator.
   ///
   /// Treating both `this` and [other] as sufficiently large two's component
