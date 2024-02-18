@@ -1,5 +1,13 @@
 import 'package:flutter_watcher/flutter_watcher.dart';
 
+/// allows to quickly create a Watcher of type String.
+class StringWatcher extends Watcher<String> {
+  StringWatcher(super.initial);
+
+  @override
+  String toString() => value;
+}
+
 /// BoolWatcherExtension
 ///
 /// Extension on `Watcher<bool>` providing additional boolean-specific functionalities.
@@ -165,11 +173,8 @@ extension StringWatcherExtension on Watcher<String> {
   ///
   /// Both [start] and [end] must be non-negative and no greater than [length];
   /// [end], if provided, must be greater than or equal to [start].
-  String substring(int start, [int? end, bool forceRefresh = true]) =>
-      updateOnAction(
-        () => value.substring(start, end),
-        forceRefresh: forceRefresh,
-      );
+  String substring(int start, [int? end, bool refresh = true]) =>
+      updateOnAction(() => value.substring(start, end));
 
   /// The string without any leading and trailing whitespace.
   ///
@@ -207,10 +212,7 @@ extension StringWatcherExtension on Watcher<String> {
   /// Some later versions of Unicode do not include U+0085 as a whitespace
   /// character. Whether it is trimmed depends on the Unicode version
   /// used by the system.
-  String trim({bool forceRefresh = true}) => updateOnAction(
-        () => value.trim(),
-        forceRefresh: forceRefresh,
-      );
+  String trim() => updateOnAction(() => value.trim());
 
   /// The string without any leading whitespace.
   ///
@@ -219,10 +221,7 @@ extension StringWatcherExtension on Watcher<String> {
   /// final string = ' Dart '.trimLeft();
   /// print(string); // 'Dart '
   /// ```
-  String trimLeft({bool forceRefresh = true}) => updateOnAction(
-        () => value.trimLeft(),
-        forceRefresh: forceRefresh,
-      );
+  String trimLeft() => updateOnAction(() => value.trimLeft());
 
   /// The string without any trailing whitespace.
   ///
@@ -231,10 +230,7 @@ extension StringWatcherExtension on Watcher<String> {
   /// final string = ' Dart '.trimRight();
   /// print(string); // ' Dart'
   /// ```
-  String trimRight({bool forceRefresh = true}) => updateOnAction(
-        () => value.trimRight(),
-        forceRefresh: forceRefresh,
-      );
+  String trimRight() => updateOnAction(() => value.trimRight());
 
   /// Creates a new string by concatenating this string with itself a number
   /// of times.
@@ -274,11 +270,8 @@ extension StringWatcherExtension on Watcher<String> {
   /// `"&nbsp;"` or `"\u{10002}`".
   /// In that case, the user should make sure that `this.length` is
   /// the correct measure of the string's length.
-  String padLeft(int width, [String padding = ' ', bool forceRefresh = true]) =>
-      updateOnAction(
-        () => value.padLeft(width, padding),
-        forceRefresh: forceRefresh,
-      );
+  String padLeft(int width, [String padding = ' ', bool refresh = true]) =>
+      updateOnAction(() => value.padLeft(width, padding));
 
   /// Pads this string on the right if it is shorter than [width].
   ///
@@ -302,12 +295,8 @@ extension StringWatcherExtension on Watcher<String> {
   /// `"&nbsp;"` or `"\u{10002}`".
   /// In that case, the user should make sure that `this.length` is
   /// the correct measure of the string's length.
-  String padRight(int width,
-          [String padding = ' ', bool forceRefresh = true]) =>
-      updateOnAction(
-        () => value.padRight(width, padding),
-        forceRefresh: forceRefresh,
-      );
+  String padRight(int width, [String padding = ' ', bool refresh = true]) =>
+      updateOnAction(() => value.padRight(width, padding));
 
   /// Whether this string contains a match of [other].
   ///
@@ -339,11 +328,8 @@ extension StringWatcherExtension on Watcher<String> {
   /// '0.0001'.replaceFirst(RegExp(r'0'), '7', 1); // '0.7001'
   /// ```
   String replaceFirst(Pattern from, String to,
-          [int startIndex = 0, bool forceRefresh = true]) =>
-      updateOnAction(
-        () => value.replaceFirst(from, to, startIndex),
-        forceRefresh: forceRefresh,
-      );
+          [int startIndex = 0, bool refresh = true]) =>
+      updateOnAction(() => value.replaceFirst(from, to, startIndex));
 
   /// Replace the first occurrence of [from] in this string.
   ///
@@ -362,11 +348,8 @@ extension StringWatcherExtension on Watcher<String> {
   ///
   /// The [startIndex] must be non-negative and no greater than [length].
   String replaceFirstMapped(Pattern from, String Function(Match match) replace,
-          [int startIndex = 0, bool forceRefresh = true]) =>
-      updateOnAction(
-        () => value.replaceFirstMapped(from, replace, startIndex),
-        forceRefresh: forceRefresh,
-      );
+          [int startIndex = 0, bool refresh = true]) =>
+      updateOnAction(() => value.replaceFirstMapped(from, replace, startIndex));
 
   /// Replaces all substrings that match [from] with [replace].
   ///
@@ -379,11 +362,8 @@ extension StringWatcherExtension on Watcher<String> {
   /// Notice that the [replace] string is not interpreted. If the replacement
   /// depends on the match (for example, on a [RegExp]'s capture groups), use
   /// the [replaceAllMapped] method instead.
-  String replaceAll(Pattern from, String replace, {bool forceRefresh = true}) =>
-      updateOnAction(
-        () => value.replaceAll(from, replace),
-        forceRefresh: forceRefresh,
-      );
+  String replaceAll(Pattern from, String replace) =>
+      updateOnAction(() => value.replaceAll(from, replace));
 
   /// Replace all substrings that match [from] by a computed string.
   ///
@@ -407,12 +387,11 @@ extension StringWatcherExtension on Watcher<String> {
   /// final result = pigLatin('I have a secret now!');
   /// print(result); // 'Iway avehay away ecretsay ownay!'
   /// ```
-  String replaceAllMapped(Pattern from, String Function(Match match) replace,
-          {bool forceRefresh = true}) =>
-      updateOnAction(
-        () => value.replaceAllMapped(from, replace),
-        forceRefresh: forceRefresh,
-      );
+  String replaceAllMapped(
+    Pattern from,
+    String Function(Match match) replace,
+  ) =>
+      updateOnAction(() => value.replaceAllMapped(from, replace));
 
   /// Replaces the substring from [start] to [end] with [replacement].
   ///
@@ -429,12 +408,12 @@ extension StringWatcherExtension on Watcher<String> {
   /// The [start] and [end] indices must specify a valid range of this string.
   /// That is `0 <= start <= end <= this.length`.
   /// If [end] is `null`, it defaults to [length].
-  String replaceRange(int start, int? end, String replacement,
-          {bool forceRefresh = true}) =>
-      updateOnAction(
-        () => value.replaceRange(start, end, replacement),
-        forceRefresh: forceRefresh,
-      );
+  String replaceRange(
+    int start,
+    int? end,
+    String replacement,
+  ) =>
+      updateOnAction(() => value.replaceRange(start, end, replacement));
 
   /// Splits the string at matches of [pattern] and returns a list of substrings.
   ///
@@ -523,11 +502,8 @@ extension StringWatcherExtension on Watcher<String> {
   ///   print(String.fromCharCode(rune));
   /// }
   /// ```
-  List<String> split(Pattern pattern, {bool forceRefresh = true}) =>
-      updateOnAction(
-        () => value.split(pattern),
-        forceRefresh: forceRefresh,
-      );
+  List<String> split(Pattern pattern) =>
+      updateOnAction(() => value.split(pattern));
 
   /// Splits the string, converts its parts, and combines them into a new
   /// string.
@@ -558,13 +534,10 @@ extension StringWatcherExtension on Watcher<String> {
     Pattern pattern, {
     String Function(Match)? onMatch,
     String Function(String)? onNonMatch,
-    bool forceRefresh = true,
+    bool refresh = true,
   }) =>
-      updateOnAction(
-        () => value.splitMapJoin(pattern,
-            onMatch: onMatch, onNonMatch: onNonMatch),
-        forceRefresh: forceRefresh,
-      );
+      updateOnAction(() => value.splitMapJoin(pattern,
+          onMatch: onMatch, onNonMatch: onNonMatch));
 
   /// An unmodifiable list of the UTF-16 code units of this string.
   List<int> get codeUnits => value.codeUnits;
@@ -585,10 +558,7 @@ extension StringWatcherExtension on Watcher<String> {
   /// ```
   /// This function uses the language independent Unicode mapping and thus only
   /// works in some languages.
-  String toLowerCase({bool forceRefresh = true}) => updateOnAction(
-        () => value.toLowerCase(),
-        forceRefresh: forceRefresh,
-      );
+  String toLowerCase() => updateOnAction(() => value.toLowerCase());
 
   /// Converts all characters in this string to upper case.
   ///
@@ -599,8 +569,5 @@ extension StringWatcherExtension on Watcher<String> {
   /// ```
   /// This function uses the language independent Unicode mapping and thus only
   /// works in some languages.
-  String toUpperCase({bool forceRefresh = true}) => updateOnAction(
-        () => value.toUpperCase(),
-        forceRefresh: forceRefresh,
-      );
+  String toUpperCase() => updateOnAction(() => value.toUpperCase());
 }

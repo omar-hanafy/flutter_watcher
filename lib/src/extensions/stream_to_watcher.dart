@@ -1,10 +1,10 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
 extension StreamToWatcher<T> on Stream<T> {
-  ValueNotifier<T> toWatcher(
+  ValueListenable<T> toWatcher(
     T initialValue, {
     void Function(T)? onDone,
     void Function(Object, StackTrace)? onError,

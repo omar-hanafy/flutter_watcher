@@ -1,85 +1,194 @@
 # Watcher State Management
 
-* [Watcher State Management](#watcher-state-management)
-  * [Overview](#overview)
-  * [Initialization](#initialization)
-  * [Using ValueWatch Widget and .watch](#using-valuewatch-widget-and-watch)
-  * [watchWhen](#watchwhen)
-  * [CachedWatcher](#cachedwatcher)
-  * [Utilities and Handling Changes](#utilities-and-handling-changes)
-  * [Other Useful Helpers](#other-useful-helpers)
-  * [Flutter Controllers With Watcher.](#flutter-controllers-with-watcher)
-    * [TextEditingController](#texteditingcontroller)
-    * [AnimationController](#animationcontroller)
-  * [Full Counter Example](#full-counter-example)
-  * [Contributions](#contributions)
-  * [License](#license)
+* [Overview](#overview)
+* [Quick Sample](#quick-sample)
+* [The Watcher Class](#the-watcher-class)
+   * [Initialization](#initialization)
+   * [Modifying the Value](#modifying-the-value)
+* [Watcher Types](#watcher-types)
+   * [Native-like Watchers](#native-like-watchers)
+   * [Extension-based Watchers](#extension-based-watchers)
+   * [Quick Initialization](#quick-initialization)
+* [Watcher Widgets](#watcher-widgets)
+   * [WatchValue](#watchvalue)
+   * [Watch](#watch)
+   * [WatchAll](#watchall)
+   * [Widgets Extensions](#widgets-extensions)
+* [CachedWatcher](#cachedwatcher)
+   * [Simple Usage](#simple-usage)
+   * [Advanced Usage (Custom Types)](#advanced-usage-custom-types)
+   * [Initialization Properties](#initialization-properties)
+* [Utilities](#utilities)
+* [Full Counter Example](#full-counter-example)
+* [FAQ](#faq)
+* [Contributions](#contributions)
+* [License](#license)
+* [Support](#support)
 
 ## Overview
 
-`flutter_watcher` is an intuitive and efficient state management package for Flutter. Acting as a wrapper around Flutter's `ValueNotifier` and `ValueListenableBuilder`, it offers a more user-friendly syntax, including the `CachedWatcher` for persistent state management, transforming the complexity of state management into a simpler, cleaner, and more maintainable approach.
+Flutter Watcher is extremely lightweight, simple, and fast. it offers uncomplicated way to handle state management for simple components like switchers, checkboxes, etc. including the `CachedWatcher` used to cache watcher values.
 
-## Initialization
+## Quick Sample
 
 ```dart
-final counter = Watcher<int>(0);
-
-// also you can use the `.watcher` extension on any type.
+// create watcher instance
 final counter = 0.watcher;
-final boolValue = false.watcher;
 
-// Or use the original Watchers.
-final listWatcher = ListWatcher<int>([1, 2, 3]);
+// use it in the WatchValue widget.
+counter.watchValue(
+  builder: (value) => Text('Counter: $value'),
+),
 
-// All custom types are also supported.
-final userWatcher = User().watcher; // creates a Watcher<User>
+// manpulate the counter value anywhere
+onPress: () => counter.increment()
 ```
 
-## Using `ValueWatch` Widget and `.watch`
+## The Watcher Class
+
+The `Watcher<T>` class is a fundamental part of the package, designed to simplify state management in Flutter applications. It extends `ChangeNotifier` and implementing `ValueListenable<T>`.
+
+### Initialization
 
 ```dart
-final isLoading = false.watcher;
-
-@override
-Widget build(BuildContext context) {
-  ...
-  ValueWatch<bool>(
-    builder: (context, value) => MyWidget(value),
-    watcher: isLoading, // Your watcher instance.
-  ),
-  ...
-}
-
-// or with the `.watch` extension
-@override
-Widget build(BuildContext context) {
-  ...
-  isLoading.watch(
-    (value) => MyWidget(value),
-  ),
-  ...
-}
-// MyWidget here will automatically update its value when isLoading.value changes.
+final myWatcher = Watcher<int>(0);
 ```
 
-## `watchWhen`
+- This is the basic initialization of watcher, please see [watcher types](##watcher-types), and [quick initialization](##quick-initialization) for a recommended approach.
 
-The `watchWhen` feature in the `ValueWatch` widget provides a way
-to conditionally rebuild a widget based on specific criteria.
-It Allows defining custom conditions under which the widget should update,
-offering more control and potentially improving performance by reducing unnecessary rebuilds.
+### Modifying the Value
 
 ```dart
-final counter = Watcher<int>(0);
-
-ValueWatch<int>(
-  watcher: counter,
-  watchWhen: (previous, current) => current % 2 == 0, // Rebuild only when the current value is even
-  builder: (context, value) {
-    return Text('Even Counter: $value');
-  },
-);
+myWatcher.value = newValue; // Updates the value and notifies listeners
 ```
+
+## Watcher Types
+
+While you can basically create any watcher type using the default initializer `Watcher<T>()` , This package comes with a suite of `Watcher` types, each designed for specific data structures and primitives, providing a seamless and intuitive way to manage state that aligns closely with Dart's native types.
+
+### Native-like Watchers
+
+These watchers act like their native counterparts. directly implement their corresponding native types
+
+- **ListWatcher**: Implements `List<T>`, supporting all list operations.
+- **MapWatcher**: Implements `Map<K, V>`, with full `Map` functionality.
+- **SetWatcher**: Behaves like a native `Set`, supporting all set operations.
+- Additional types include **DateWatcher**, **DurationWatcher**, and **UriWatcher** for managing `DateTime`, `Duration`, and `Uri` types respectively.
+
+### Extension-based Watchers
+
+Due to the constraints of the Dart programming language, not all watchers can directly implement their corresponding native types. However, This package provides a set of extension-based watchers to bridge this gap.
+
+- **IntWatcher**: Facilitates integer operations.
+- **StringWatcher**: Enables string manipulations.
+- **BoolWatcher**: Simplifies boolean state management.
+- Others include **NumWatcher** for numeric values, **DoubleWatcher** for floating-point operations, and **ColorWatcher** for color management.
+
+### Quick Initialization
+
+The `Watcher` Package comes with a cool extension called `.watcher`, The `.watcher`  is assigned to any object/value in dart and automatically detects the type of the watcher for you, for example `12.watcher` creates an `IntWatcher`, `false.watcher`, creates a `BoolWatcher`, and for custom types it creates the default `Watcher<T>`.
+
+## Watcher Widgets
+
+Widgets designed to reacts to `Watcher` value changes.  These widgets, `WatchValue`, `Watch`, and `WatchAll`, along with their corresponding extensions, no only reacts to `Watcher` instances, but with any `ValueListenable` or `Listenable` instance. Below, we'll dive into each widget and understand when to use them.
+
+### WatchValue
+
+`WatchValue` is designed to rebuild its child widget in response to changes in a specific `ValueListenable` value, including `Watcher` instances. It's particularly useful for displaying or reacting to single data changes in your UI.
+
+**Parameters:**
+
+- **watcher:** The `ValueListenable` (or `Watcher`) instance you want to listen to.
+- **builder**: Builds the widget in response to changes
+- **threshold (optional)**: Limits rebuild frequency to improve performance.
+- **watchWhen (optional)**: Conditionally triggers rebuilds based on value changes.
+
+#### Usage
+
+```dart
+WatchValue<int>(
+  watcher: counter, // Your Watcher<int> instance
+  builder: (context, value) => Text('Counter: $value'),
+  watchWhem: (prev, curr) => prev != curr, // optional
+  threshold: Duration(milliseconds: 100), // optional
+),
+```
+
+### Watch
+
+Extends UI reactivity to any `Listenable` object, accommodating broader changes beyond value updates, such as animations or scroll positions.
+
+**Parameters:**
+
+- **watcher:** Any `Listenable` object, not limited to `ValueListenable` or `Watcher`.
+- **builder**: Builds the widget in response to changes. Does not receive value since listenable might not has value.
+- **threshold (optional)**: Limits rebuild frequency to improve performance.
+- **watchWhen (optional)**: Conditionally triggers rebuilds based on value changes.
+
+#### Usage
+
+```dart
+Watch(
+  watcher: scrollController, // Any Listenable object including watcher
+  builder: (context) => MyCustomScrollView(scrollController.offset),
+  watchWhen: () => scrollController.offset > 100,
+  threshold: Duration(milliseconds: 300),
+),
+```
+
+### WatchAll
+
+`WatchAll` is designed for scenarios where your UI depends on multiple `Listenable` objects. It rebuilds its child widget when any of the provided listenable change.
+
+**Parameters:**
+
+- **watchers:** A list of `Listenable` objects including watchers to observe.
+- **builder:** Builds the widget in response to changes. Does not receive value since listenable might not has value.
+- **threshold (optional)**: Limits rebuild frequency to improve performance.
+- **watchWhen (optional)**: Conditionally triggers rebuilds based on value changes.
+
+#### Usage
+
+```dart
+final scrollCotroller = ScrollController();
+final textCotroller = TextEditingController();
+final counter = 0.watcher;
+final listenables = <Listenable>[scrollCotroller, textCotroller, counter];
+
+WatchAll(
+  watchers: listenables,
+  builder: (context) => ContentWidget(),
+  watchWhen: () => scrollController.offset > 100,
+  threshold: Duration(milliseconds: 300),
+),
+```
+
+**WARNING:** The `Watch` and`WatchAll` widgets reacts to `Listenable` objects which might frequently change  their states and thus triggers a rebuild. which might lead to unnecessary rebuilds if not used wisely, so consider using the `watchWhen` and `threshold` to limit and avoid unnecessary rebuilds.
+
+### Widgets Extensions
+
+For a simpler syntax, you can use the `.watchValue`, `.watch`, and `.watchAll`  to create their corresponding Widget:
+
+```dart
+final counter = 0.watcher;
+final scrollCotroller = ScrollController();
+final listenables = <Listenable>[scrollCotroller, counter];
+
+// .watchValue
+counter.watchValue(
+  builder: (value) => Text('Counter: $value'),
+),
+// .watch
+scrollCotroller.watch(
+  builder: (context) => Text('Current Scroll Position: ${scrollCotroller.position}'),
+),
+// .watchAll
+listenables.watchAll(
+  builder: (context) => Text('Position: ${scrollCotroller.position}, Counter: $counter'),
+),
+```
+
+**Note** that each one does not need the watcher/s since they are already used in the context.
 
 ## CachedWatcher
 
@@ -87,18 +196,23 @@ ValueWatch<int>(
 
 ### Simple Usage
 
-In this package there is a good set of extensions and classes that help you create a `CachedWatcher<T>` in a simple way.
+In this package there is a good set of extensions and classes that help you create a `CachedWatcher<T>` in a simple way
+with built-in types.
 
 ```dart
 // Example: Using a subclass for integers
 final counter = IntCachedWatcher(0, 'counter_key'); // with class.
 final counter = 0.cachedWatcher('counter_key'); // with extension.
 
-// BoolCachedWatcher, ListCachedWatcher, DateTimeCachedWatcher, and so on for premitive types are supported
-// in simple usage.
+// BoolCachedWatcher, ListCachedWatcher, DateTimeCachedWatcher, and so on for premitive/built-in types are supported.
+
+// use it just like any watcher.
+counter.watchValue(
+  builder: (value) => Text('Counter: $value'),
+),
 ```
 
-### Advanced Usage (Custom Types) 
+### Advanced Usage (Custom Types)
 
 Subclasses can be created for any custom type, providing tailored serialization and deserialization strategies for different kinds of data stored in local cache.
 
@@ -114,8 +228,9 @@ class AuthService extends CachedWatcher<AuthState> {
 
   @override
   dynamic write(AuthState value) {
-    // Implement logic to serialize value to cache
-    // for example write the token when AuthState is success. 
+    // Implement logic to serialize value to be cached
+    // use premitive/built-in data types to avoid errors.
+    // for example write the token when `AuthState is success`. 
   }
 }
 ```
@@ -126,15 +241,9 @@ class AuthService extends CachedWatcher<AuthState> {
 - **`key` (Optional)**: A unique identifier for the `CachedWatcher`'s stored data, used to save and retrieve the cached
   value from local storage. Default is the type name
 
-Any CachedWatcher instance can be used with the `ValueWatch` widget and `.watch` extension.
+The `CachedWatcher` instance can be used with all [Watcher Widgets](##watcher-widgets).
 
-## Utilities and Handling Changes
-
-### Description
-
-Extensions such as `updateIf`, `onChange`, `debounce`, `map`, and `combineWith` provide powerful utilities for responding to changes, debouncing actions, transforming, or combining multiple `Watcher` instances.
-
-### Examples
+## Utilities
 
 - **updateIf**: Update the value conditionally.
 
@@ -152,7 +261,7 @@ Extensions such as `updateIf`, `onChange`, `debounce`, `map`, and `combineWith` 
 - **stream**: Convert `Watcher` changes into a stream.
 
   ```dart
-  final streamWatcher = valueWatcher.stream;
+  final streamWatcher = watcherInstance.stream;
   streamWatcher.listen((value) {
     // Handle the stream of changes
   });
@@ -176,134 +285,17 @@ Extensions such as `updateIf`, `onChange`, `debounce`, `map`, and `combineWith` 
   final combinedWatcher = intWatcher.combineWith(stringWatcher, (int a, String b) => '$a and $b');
   ```
 
-## Other Useful Helpers
-
-Allowing direct manipulation of values in a more natural and concise way, mirroring the operations you'd typically
-perform on the data types themselves. Here are some samples:
-
-### Bool
-
-- **toggle**: Toggle the value of `Watcher<bool>`.
-
-- **symbols**: The built in `|` `&` `^` are supported.
+- **refresh**: Notifies listeners to force UI refresh.
 
   ```dart
-  boolWatcher.toggle(); // Toggles the boolean value
+  myWatcher.refresh();
   ```
 
-### List
-
-- **addAll**: Add multiple items to `Watcher<List<E>>`.
-
-- **remove**: Remove an item from the list.
-
-- **clear**: Clear all items in the list.
-
-- and all `List` built-in functions are supported
+- **dispose**: disposes the watcher and closes all listeners.
 
   ```dart
-  listWatcher.addAll([4, 5]); // Adds items to the list
-  listWatcher.remove(item);   // Removes an item
-  listWatcher.clear();        // Clears the list
-  // and more
+  myWatcher.dispose();
   ```
-
-### Num/int/double
-
-- **increment**: Increment the value of `Watcher<num>`.
-
-- **decrement**: Decrement the value.
-
-- and all `Num` built-in functions are supported
-
-  ```dart
-  numWatcher.increment(); // Increments the number
-  numWatcher.decrement(); // Decrements the number
-  // and more
-  ```
-
-### Map
-
-- **putIfAbsent**: Add a key-value pair if the key is not already in the map.
-
-- **remove**: Remove a key-value pair.
-
-- and all `Map` built-in functions are supported
-
-  ```dart
-  mapWatcher.putIfAbsent(key, () => value); // Adds key-value pair if absent
-  mapWatcher.remove(key);                  // Removes the key-value pair
-  // and more
-  ```
-
-### Set
-
-- **add**: Add an item to `Watcher<Set<T>>`.
-
-- **removeAll**: Remove all items from the set.
-
-- and all `Set` built-in functions are supported
-
-  ```dart
-  setWatcher.add(item);       // Adds an item
-  setWatcher.removeAll(items); // Removes all specified items
-  // and more
-  ```
-
-### Uri
-
-- **updatePath**: Update the path of `Watcher<Uri>`.
-
-- and all `Uri` built-in functions are supported
-
-  ```dart
-  uriWatcher.updatePath(newPath); // Updates the URI path
-  // and more
-  ```
-
-## Flutter Controllers With Watcher.
-
-The `Watcher` and  `.watch` extension provides seamless integration with various native Flutter controllers, enhancing the development of reactive UIs. Below are examples demonstrating how Watcher can be utilized with common Flutter controllers:
-
-### TextEditingController
-
-Watcher can reactively handle text input changes, making it ideal for scenarios like live character counts or conditional UI updates based on user input.
-
-```dart
-final textEditingController = TextEditingController();
-
-textEditingController.watch(
-	(TextEditingValue value) {
-    return Column(
-      children: [
-        TextField(controller: textEditingController),
-        Text('Character Count: ${value.text.length}'),
-      ],
-    );
-  },
-);
-```
-
-### AnimationController
-
-Incorporate Watcher with AnimationController for dynamic UI elements that respond to animation state changes, enhancing the visual experience.
-
-```dart
-final animationController = AnimationController(
-  vsync: this,
-  duration: Duration(seconds: 2),
-)..repeat(reverse: true);
-
-animationController.watch(
-  (double value) {
-    double scale = 1 + value; // Adjust scale based on animation value
-    return Transform.scale(
-      scale: scale,
-      child: MyAnimatedWidget(),
-    );
-  },
-);
-```
 
 ## Full Counter Example
 
@@ -325,7 +317,7 @@ class MyCounter extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(title: const Text('Watch Counter')),
         body: Center(
-          child: ValueWatch<int>(
+          child: WatchValue<int>(
             watcher: counter,
             builder: (context, value) {
               return Text('Counter: $value');
@@ -342,12 +334,37 @@ class MyCounter extends StatelessWidget {
 }
 ```
 
+## FAQ
+
+**Why should I use Watcher:**
+
+While there is a great state management available I can recommend to use watcher in some cases:
+
+- If your app is simple and won't require complex state management solution watcher is a good choice.
+- If you already use strong state management, but you want to manage a specific (simple) feature or component in your
+  app `Watcher` can help with that. Sometimes when you use BLoC its just not convenient to `emit` new state for the sake
+  to toggle a switcher in the screen.
+- If you want to use singletons, watcher instances in a singleton class is a great choice, for example you can use
+  CachedWatcher with user settings, or Themes, etc.
+
+**Does it offer any dependency injection?**
+
+No, the flutter watcher package designed to be simple, you can use it with `Provider` if you wish to make your watcher
+instance available in your widget tree.
+
+**Are there any examples that demonstrate the use of the package?**
+
+I am planning to publish a documentation website soon with useful examples and detailed documentation.
+
 ## Contributions
 
-Contributions to this package are welcome. If you have any suggestions, issues, or feature requests, please create a pull request in the [repository](https://github.com/omar-hanafy/flutter_watcher).
+Contributions to this package are welcome. If you have any suggestions, issues, or feature requests, please create a
+pull request in the [repository](https://github.com/omar-hanafy/flutter_watcher).
 
 ## License
 
 `flutter_watcher` is available under the [BSD 3-Clause License.](https://opensource.org/license/bsd-3-clause/)
+
+## Support
 
 <a href="https://www.buymeacoffee.com/omar.hanafy" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>

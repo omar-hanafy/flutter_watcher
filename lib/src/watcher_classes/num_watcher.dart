@@ -1,4 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_watcher/flutter_watcher.dart';
+
+/// allows to quickly create a Watcher of type num.
+class NumWatcher extends Watcher<num> {
+  NumWatcher(super.initial);
+}
 
 /// NumericWatcherExtension
 ///
@@ -18,7 +23,7 @@ import 'package:flutter/material.dart';
 /// numberWatcher.multiply(2);  // Directly multiplies the value by 2 (now 30)
 /// // These operations modify the numeric value within the ValueNotifier without accessing `.value`
 /// ```
-extension NumericWatcherExtension on ValueNotifier<num> {
+extension NumericWatcherExtension on Watcher<num> {
   /// Compares this to `other`.
   ///
   /// Returns a negative number if `this` is less than `other`, zero if they are

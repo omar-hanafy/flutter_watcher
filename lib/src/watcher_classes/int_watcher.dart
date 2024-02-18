@@ -1,4 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_watcher/flutter_watcher.dart';
+
+/// allows to quickly create a Watcher of type int.
+class IntWatcher extends Watcher<int> {
+  IntWatcher(super.initial);
+}
 
 /// IntWatcherExtension
 ///
@@ -18,7 +23,7 @@ import 'package:flutter/material.dart';
 /// intWatcher.toggleBetween(11, 5); // Toggles the value to 5 as current is 11
 /// // These operations directly modify the int value within the ValueNotifier without accessing `.value`
 /// ```
-extension IntWatcherExtension on ValueNotifier<int> {
+extension IntWatcherExtension on Watcher<int> {
   /// Bit-wise and operator.
   ///
   /// Treating both `this` and [other] as sufficiently large two's component

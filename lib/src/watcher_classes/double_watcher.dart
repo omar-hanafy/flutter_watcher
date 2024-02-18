@@ -1,4 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_watcher/flutter_watcher.dart';
+
+/// allows to quickly create a Watcher of type double.
+class DoubleWatcher extends Watcher<double> {
+  DoubleWatcher(super.initial);
+
+  @override
+  String toString() => value.toStringAsFixed(2);
+}
 
 /// DoubleWatcherExtension
 ///
@@ -18,7 +26,7 @@ import 'package:flutter/material.dart';
 /// doubleWatcher.round(); // Directly rounds the value (now 13.0)
 /// // These operations modify the double value within the ValueNotifier without accessing `.value`
 /// ```
-extension DoubleWatcherExtension on ValueNotifier<double> {
+extension DoubleWatcherExtension on Watcher<double> {
   /// The remainder of the truncating division of `this` by [other].
   double remainder(num other) => value.remainder(other);
 

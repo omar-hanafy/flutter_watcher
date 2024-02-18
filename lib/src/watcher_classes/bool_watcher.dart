@@ -1,18 +1,24 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
+
+/// allows to quickly create a Watcher of type bool.
+class BoolWatcher extends Watcher<bool> {
+  BoolWatcher(super.initial);
+}
 
 /// BoolWatcherExtension
 ///
 /// Extension on `Watcher<bool>` providing additional boolean-specific functionalities.
-/// This extension simplifies toggling and other boolean operations directly on the notifier.
+/// This extension simplifies toggling and other boolean operations directly on
+/// the [Watcher] without the need to perform actions in the value itself.
 ///
 /// Example:
 /// ```dart
 /// final boolWatcher = true.watcher;
 /// boolWatcher.toggle(); // Toggles the boolean value.
 /// ```
-extension BoolWatcherExtension on ValueNotifier<bool> {
+extension BoolWatcherExtension on Watcher<bool> {
   /// toggle the value of the [Watcher]
   void toggle() => value = !value;
 

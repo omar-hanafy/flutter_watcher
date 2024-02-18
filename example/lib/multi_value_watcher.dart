@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
 void main() => runApp(const MyApp());
@@ -9,57 +10,59 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MultiValueWatcher Example',
-      home: MyHomePage(),
+      title: 'Watch All Example',
+      home: UserSettingsPage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  final counterWatcher = Watcher<int>(0);
-  final stringWatcher = Watcher<String>('Hello World');
+class UserSettingsPage extends StatelessWidget {
+  final username = 'User123'.watcher;
+  final notificationEnabled = true.watcher;
+  final themeMode = ThemeMode.light.watcher;
 
-  final scrollController = ScrollController();
-
-  final textCtrl = TextEditingController();
-
-  MyHomePage({super.key});
+  UserSettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Watch(
-          watcher: scrollController,
-          builder: (context) {
-            return const Text('MultiValueWatcher Example');
-          },
-        ),
+        title: const Text('User Settings'),
       ),
       body: WatchAll(
-        watchers: [
-          counterWatcher,
-          stringWatcher,
-        ],
+        watchers: [username, notificationEnabled, themeMode],
         builder: (context) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Counter value is $counterWatcher'),
-                Text('String message is $stringWatcher'),
-              ],
-            ),
+          return ListView(
+            children: [
+              ListTile(
+                title: Text('Username: ${username.value}'),
+                trailing: IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    username.value = 'NewUser${1000.getRandom}';
+                  },
+                ),
+              ),
+              SwitchListTile(
+                title: const Text('Notifications'),
+                value: notificationEnabled.value,
+                onChanged: (bool value) {
+                  notificationEnabled.value = value;
+                },
+              ),
+              ListTile(
+                title: const Text('Theme Mode'),
+                subtitle: Text(
+                    'Current: ${themeMode.value.toString().split('.').last}'),
+                onTap: () {
+                  themeMode.value = themeMode.value == ThemeMode.light
+                      ? ThemeMode.dark
+                      : ThemeMode.light;
+                },
+              ),
+            ],
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          counterWatcher.value++;
-          stringWatcher.value = 'Updated at ${DateTime.now()}';
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

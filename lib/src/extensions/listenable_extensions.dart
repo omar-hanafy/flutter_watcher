@@ -1,12 +1,21 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
 extension WatcherListenableExtension on Listenable {
+  /// [watch]
+  /// This method simplifies the creation of [Watch]
+  ///
+  /// Example:
+  /// ```dart
+  /// final myWatcher = 0.watcher;
+  /// controller.watch(
+  ///   (context) => Text('Value is ${myWatcher.value}'),
+  /// );
+  /// // The Text widget will update whenever [myWatcher] changes.
+  /// ```
   Widget watch(
-    Widget Function() builder, {
+    Widget Function(BuildContext context) builder, {
     bool Function()? watchWhen,
     Duration? threshold,
   }) {
@@ -14,14 +23,28 @@ extension WatcherListenableExtension on Listenable {
       watcher: this,
       watchWhen: watchWhen,
       threshold: threshold,
-      builder: (_) => builder(),
+      builder: builder,
     );
   }
 }
 
 extension WatcherListenablesExtension on List<Listenable?> {
+  /// [watchAll]
+  /// This method simplifies the creation of [WatchAll]
+  ///
+  /// Example:
+  /// ```dart
+  /// final textController = TextEditingController();
+  /// final scrollController = ScrollController();
+  /// final myWatcher = 0.watcher;
+  /// final myListeners = <Listenable>[textController, scrollController, myWatcher];
+  /// myListeners.watchAll(
+  ///   (context) => Text('Value is $value'),
+  /// );
+  /// // The Text widget will update whenever any of myListeners changes.
+  /// ```
   Widget watchAll(
-    Widget Function() builder, {
+    Widget Function(BuildContext context) builder, {
     bool Function()? watchWhen,
     Duration? threshold,
   }) {
@@ -29,46 +52,19 @@ extension WatcherListenablesExtension on List<Listenable?> {
       watchers: this,
       watchWhen: watchWhen,
       threshold: threshold,
-      builder: (_) => builder(),
+      builder: builder,
     );
   }
 }
 
-extension ValueListenableBuilderExtension<T> on ValueNotifier<T> {
-  /// [stream]
-  ///
-  /// Converts the [ValueListenable] into a [Stream]. This stream emits values whenever the
-  /// listenable's value changes. The use of [distinct] ensures that consecutive duplicate values are
-  /// filtered out, thus the stream only emits when the value actually changes.
-  ///
-  /// This conversion enables the integration of [ValueListenable] with reactive programming patterns,
-  /// allowing for more complex and dynamic handling of the listenable's value changes in scenarios where
-  /// streams are preferred or more efficient.
-  ///
-  /// Example:
-  /// ```dart
-  /// final myWatcher = 0.watcher;
-  /// final myWatcherStream = myWatcher.stream;
-  /// myValueStream.listen((value) {
-  ///   // Handle the stream of changes here
-  /// });
-  /// ```
-  Stream<T> get stream =>
-      Stream.periodic(Duration.zero, (_) => value).distinct();
-
+extension WatcherValueListenableExtension<T> on ValueListenable<T> {
   /// [watchValue]
-  ///
-  /// A convenience method that wraps the current [Watcher] or any [ValueListenable] type with a [WatchValue],
-  /// providing a straightforward way to build a widget in response to changes in the listenable's value.
-  ///
-  /// This method simplifies the creation of reactive UI components, where the UI needs to update whenever
-  /// the underlying value changes. It takes a builder function that returns the widget to be displayed,
-  /// ensuring that the UI stays in sync with the listenable's current value.
+  /// This method simplifies the creation of [WatchValue]
   ///
   /// Example:
   /// ```dart
   /// final myWatcher = 0.watcher;
-  /// final myWidget = myWatcher.watchValue(
+  /// myWatcher.watchValue(
   ///   (value) => Text('Value is $value'),
   /// );
   /// // The Text widget will update whenever [myWatcher] changes.

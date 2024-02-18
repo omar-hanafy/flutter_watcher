@@ -1,3 +1,20 @@
+### 2.1.0+2
+
+- Updated some docs.
+
+### 2.1.0
+
+#### Enhancements
+
+- Enhanced all the `Watcher` and `CachedWatcher` classes.
+    - To improve usability, we recommend using custom classes for built-in types, such
+      as `ListWatcher<E>`, `MapWatcher<K, V>`, `DateTimeWatcher`, etc. These specialized classes are designed to behave
+      just like
+      their native counterparts. For instance, you can use `ListWatcher<E>` with a `for` loop just as you would with any
+      standard `List`. However, When using the `.watcher` extension, there's no need to update your code; it
+      automatically creates the appropriate
+      type based on your context.
+
 ### 2.0.0
 
 #### New Features
@@ -18,7 +35,10 @@
 
 #### Breaking Changes
 
-- **Widget Renaming**: Renamed `ValueWatch` Widget to `WatchValue`.
+- **Widget Renaming**: Renamed `WatchValue` Widget to `WatchValue`.
+
+- The `prevValue` is removed from the Watcher class and now available only through the watchWhen in the all watcher
+  widgets.
 
 - **Extension Modification**: Modified `.watch` extension; it no longer provides the value in the builder function.
   Use `.watchValue` instead.
@@ -27,9 +47,9 @@
   methods for enhanced custom data handling.
 
   **Changes**:
-  - Before: `final typeCachedWatcher = Type().cachedWatcher(read: .., write: ..);`
-  - Now: `final typeCachedWatcher = TypeCachedWatcher(); // TypeCachedWatcher extends CachedWatcher`
-  - Primitive types usage remains the same: `final counter = 0.cachedWatcher('counter_key');`
+    - Before: `final typeCachedWatcher = Type().cachedWatcher(read: .., write: ..);`
+    - Now: `final typeCachedWatcher = TypeCachedWatcher(); // TypeCachedWatcher extends CachedWatcher`
+    - Primitive types usage remains the same: `final counter = 0.cachedWatcher('counter_key');`
 
 ### 1.0.4
 

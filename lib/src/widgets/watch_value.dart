@@ -2,11 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
-/// ValueWatch Widget
+/// WatchValue Widget
 ///
 /// A widget that simplifies the integration and usage of [Watcher] instances within the Flutter UI.
-/// It efficiently handles the rendering of widgets in response to state changes, utilizing
-/// Flutter's native [ValueListenableBuilder] and [ValueNotifier] for effective state management.
+/// It efficiently handles the rendering of widgets in response to state changes.
 ///
 /// The [WatchValue] widget takes a [Watcher] instance and a builder function. The builder function
 /// is responsible for returning the widget that should be rendered based on the current value of the [Watcher].
@@ -22,7 +21,7 @@ import 'package:flutter_watcher/flutter_watcher.dart';
 ///
 /// @override
 /// Widget build(BuildContext context) {
-///   return ValueWatch<bool>(
+///   return WatchValue<bool>(
 ///     builder: (context, value) => MyWidget(value), // Builder function
 ///     watcher: isLoading, // Watcher instance
 ///   );
@@ -59,7 +58,7 @@ class WatchValue<T> extends StatefulWidget {
   /// This variable holds the state that the [WatchValue] widget will be observing.
   /// It's the core element that integrates the state management functionality of [Watcher]
   /// into the Flutter widget tree.
-  final ValueNotifier<T> watcher;
+  final ValueListenable<T> watcher;
 
   /// [builder]
   ///
@@ -114,12 +113,12 @@ class _WatchValueState<T> extends State<WatchValue<T>> {
   void _updateValue(T? previous, T current) {
     if (previous == null ||
         (widget.watchWhen?.call(previous, current) ?? true)) {
-      if (mounted) {
-        setState(() {
-          _prevValue = current;
-          if (widget.threshold != null) _lastBuildTime = DateTime.now();
-        });
-      }
+      // if (mounted) {
+      setState(() {
+        _prevValue = current;
+        if (widget.threshold != null) _lastBuildTime = DateTime.now();
+      });
+      // }
     }
   }
 
