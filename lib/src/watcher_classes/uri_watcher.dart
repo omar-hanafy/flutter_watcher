@@ -1,6 +1,7 @@
 import 'package:flutter_watcher/flutter_watcher.dart';
 
-/// allows to quickly create a Watcher of type Uri.
+/// create a [Watcher] of type [Uri], which reacts just like normal [Uri],
+/// but with watcher capabilities.
 class UriWatcher extends Watcher<Uri> implements Uri {
   UriWatcher(super.initial);
 

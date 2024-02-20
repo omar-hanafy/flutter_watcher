@@ -1,7 +1,8 @@
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
-/// allows to quickly create a Watcher of type Map<K, V>.
+/// create a [Watcher] of type Map<K, V>, which reacts just like normal [Map],
+/// but with watcher capabilities.
 class MapWatcher<K, V> extends Watcher<Map<K, V>> implements Map<K, V> {
   MapWatcher(super.initial);
 

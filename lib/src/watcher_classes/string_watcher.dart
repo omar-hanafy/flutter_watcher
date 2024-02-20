@@ -8,15 +8,14 @@ class StringWatcher extends Watcher<String> {
   String toString() => value;
 }
 
-/// BoolWatcherExtension
+/// StringWatcherExtension
 ///
-/// Extension on `Watcher<bool>` providing additional boolean-specific functionalities.
-/// This extension simplifies toggling and other boolean operations directly on the notifier.
+/// Extension on `Watcher<String>` providing additional String-specific functionalities.
 ///
 /// Example:
 /// ```dart
-/// final boolWatcher = true.watcher;
-/// boolWatcher.toggle(); // Toggles the boolean value.
+/// final StringWatcher = 'hello'.watcher;
+/// print(stringWatcher[0]) // h
 /// ```
 extension StringWatcherExtension on Watcher<String> {
   /// The character (as a single-code-unit [String]) at the given [index].

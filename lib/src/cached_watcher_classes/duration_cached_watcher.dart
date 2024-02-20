@@ -1,7 +1,7 @@
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
-/// create a [Watcher] of type [Duration], which reacts just like normal [Duration],
+/// create a [CachedWatcher] of type [Duration], which reacts just like normal [Duration],
 /// but with watcher capabilities.
 class DurationCachedWatcher extends CachedWatcher<Duration>
     implements Duration {

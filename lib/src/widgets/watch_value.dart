@@ -28,11 +28,11 @@ import 'package:flutter_watcher/flutter_watcher.dart';
 /// }
 /// ```
 ///
-/// Alternatively, the [watch] extension method can be used for a more concise syntax:
+/// Alternatively, the [watchValue] extension method can be used for a more concise syntax:
 /// ```dart
 /// @override
 /// Widget build(BuildContext context) {
-///   return isLoading.watch(
+///   return isLoading.watchValue(
 ///     (value) => MyWidget(value),
 ///   );
 /// }

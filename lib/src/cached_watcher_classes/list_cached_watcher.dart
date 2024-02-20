@@ -19,7 +19,8 @@ class ListCachedWatcher<E> extends BaseListCachedWatcher<E> {
   dynamic write(List<E> value) => value;
 }
 
-/// allows to quickly create a Watcher of type List<T>.
+/// create a [CachedWatcher] of type [List], which reacts just like normal [List],
+/// but with watcher capabilities.
 abstract class BaseListCachedWatcher<E> extends CachedWatcher<List<E>>
     implements List<E> {
   BaseListCachedWatcher(super.initialValue, String key) : super(key: key);

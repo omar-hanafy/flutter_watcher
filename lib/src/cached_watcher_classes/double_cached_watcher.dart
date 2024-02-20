@@ -13,6 +13,7 @@ class DoubleCachedWatcher extends CachedWatcher<double> {
   @override
   dynamic write(double value) => value;
 }
+
 //
 // /// [DoubleCachedWatcher] with Null Safety
 // class DoubleNCachedWatcher extends CachedWatcher<double?> {

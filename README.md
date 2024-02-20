@@ -2,9 +2,8 @@
 
 * [Overview](#overview)
 * [Quick Sample](#quick-sample)
+* [ValueNotifier vs. Watcher](#valuenotifier-vs-watcher)
 * [The Watcher Class](#the-watcher-class)
-   * [Initialization](#initialization)
-   * [Modifying the Value](#modifying-the-value)
 * [Watcher Types](#watcher-types)
    * [Native-like Watchers](#native-like-watchers)
    * [Extension-based Watchers](#extension-based-watchers)
@@ -44,9 +43,13 @@ counter.watchValue(
 onPress: () => counter.increment()
 ```
 
-## The Watcher Class
+## **ValueNotifier vs. Watcher**
 
-The `Watcher<T>` class is a fundamental part of the package, designed to simplify state management in Flutter applications. It extends `ChangeNotifier` and implementing `ValueListenable<T>`.
+- **Asynchronous Safety**: `Watcher` enhances safety in asynchronous contexts with a `safeMode` and `isDisposed` check, preventing errors when a notifier is updated after being disposed. This is a common issue with `ValueNotifier` in async scenarios that `Watcher` effectively addresses.
+- **Internal Changes Notification**: Unlike `ValueNotifier`, `Watcher` automatically notifies listeners of internal changes in complex data types like lists and maps, thanks to [custom types](#watcher-types) like `ListWatcher` and `MapWatcher`. This ensures UI components can react dynamically to state changes.
+- **Simplified Syntax**: `Watcher` offers a more concise syntax, reducing boilerplate and improving code readability . For instance, what requires a verbose `ValueListenableBuilder` setup with `ValueNotifier` can be more succinctly done using `.watchValue(builder: (value) {})` with `Watcher`. for more see [quick initialization](#quick-initialization) and [widgets extensions](#widgets-extensions).
+
+## The Watcher Class
 
 ### Initialization
 
@@ -61,6 +64,14 @@ final myWatcher = Watcher<int>(0);
 ```dart
 myWatcher.value = newValue; // Updates the value and notifies listeners
 ```
+
+### Checking for Disposal
+
+```dart
+print(myWatcher.isDisposed) // whether the watcher instnace is disposed or not.
+```
+
+check the [Utilities](#utilities) for more.
 
 ## Watcher Types
 
@@ -335,6 +346,10 @@ class MyCounter extends StatelessWidget {
 ```
 
 ## FAQ
+
+**ValueNotifier vs Watcher:**
+
+
 
 **Why should I use Watcher:**
 

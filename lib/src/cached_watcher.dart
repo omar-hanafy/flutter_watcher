@@ -48,7 +48,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 /// - [stopCaching]: Disables caching of the watcher's value.
 /// - [deleteCache]: Clears the cache for this specific [CachedWatcher].
 /// - [deleteAllCaches]: Static method to clear all caches associated with [CachedWatcher].
-///
 abstract class CachedWatcher<T> extends Watcher<T> {
   CachedWatcher(
     this.initialValue, {

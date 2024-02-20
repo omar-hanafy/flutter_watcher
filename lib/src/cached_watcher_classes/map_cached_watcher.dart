@@ -14,7 +14,8 @@ class MapCachedWatcher<K, V> extends BaseMapCachedWatcher<K, V> {
   dynamic write(Map<K, V> value) => value;
 }
 
-/// allows to quickly create a Watcher of type Map<K, V>.
+/// create a [CachedWatcher] of type [Map], which reacts just like normal [Map],
+/// but with watcher capabilities.
 abstract class BaseMapCachedWatcher<K, V> extends CachedWatcher<Map<K, V>>
     implements Map<K, V> {
   BaseMapCachedWatcher(super.initialValue, String key) : super(key: key);

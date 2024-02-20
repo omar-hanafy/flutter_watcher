@@ -1,7 +1,8 @@
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
-/// allows to quickly create a Watcher of type DateTime.
+/// create a [CachedWatcher] of type [DateTime], which reacts just like normal [DateTime],
+/// but with watcher capabilities.
 class DateTimeCachedWatcher extends CachedWatcher<DateTime>
     implements DateTime {
   DateTimeCachedWatcher(super.initialValue, String key) : super(key: key);

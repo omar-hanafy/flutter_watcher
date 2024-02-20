@@ -1,7 +1,8 @@
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 
-/// allows to quickly create a [Watcher] of type [Set].
+/// create a [Watcher] of type Set, which reacts just like normal [Set],
+/// but with watcher capabilities.
 class SetWatcher<E> extends Watcher<Set<E>> implements Set<E> {
   SetWatcher(super.initial);
 

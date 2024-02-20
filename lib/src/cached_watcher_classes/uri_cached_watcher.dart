@@ -13,7 +13,8 @@ import 'package:flutter_watcher/flutter_watcher.dart';
 //   dynamic write(Uri? value) => value?.toString();
 // }
 
-/// allows to quickly create a Watcher of type Uri.
+/// create a [CachedWatcher] of type [Uri], which reacts just like normal [Uri],
+/// but with watcher capabilities.
 class UriCachedWatcher extends CachedWatcher<Uri> implements Uri {
   UriCachedWatcher(super.initialValue, String key) : super(key: key);
 

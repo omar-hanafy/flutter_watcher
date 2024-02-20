@@ -9,19 +9,24 @@ import 'package:flutter_watcher/flutter_watcher.dart';
 /// value as evaluated by the equality operator ==, this class notifies its
 /// listeners.
 ///
+/// When [safeMode] is enabled, and this [isDisposed], any [notifyListeners],
+/// or setting new [value] will be ignored.
+///
 /// ## Limitations
 ///
 /// Because this class only notifies listeners when the [value]'s _identity_
 /// changes, listeners will not be notified when mutable state within the
 /// value itself changes.
 ///
-/// For example, a `ValueNotifier<List<int>>` will not notify its listeners
-/// when the _contents_ of the list are changed.
+/// While there is custom watcher types that helps reusing this limitation
+/// like [ListWatcher], [MapWatcher], [SetWatcher], etc,
+/// When working with custom objects/types like changing variable inside your instance,
+/// you need to manually using [refresh], or [notifyListeners].
 ///
 /// As a result, this class is best used with only immutable data types.
 ///
-/// For mutable data types, consider extending [ChangeNotifier] directly.
-
+/// For mutable data types, consider using the [watcher_classes]
+/// or extending [ChangeNotifier] directly.
 class Watcher<T> extends ChangeNotifier implements ValueListenable<T> {
   /// Creates a [ChangeNotifier] that wraps this value.
   Watcher(this._value, {this.safeMode = true}) {

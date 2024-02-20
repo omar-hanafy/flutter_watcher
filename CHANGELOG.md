@@ -1,3 +1,8 @@
+### 2.1.1
+
+- refactored some internal code,
+- updated the README.
+
 ### 2.1.0+2
 
 - Updated some docs.
