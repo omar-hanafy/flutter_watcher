@@ -31,14 +31,11 @@ extension StreamToWatcher<T> on Stream<T> {
   }) {
     final watcher = Watcher<T>(initialValue);
     listen(
-      (value) =>
-          watcher.value = value, // Update watcher value on each stream emission
-      onError:
-          onError ?? _defaultOnError, // Use provided error handler or default
-      onDone: () => onDone?.call(
-          watcher.value), // Call onDone with last value on stream completion
+      (value) => watcher.value = value,
+      onError: onError ?? _defaultOnError,
+      onDone: () => onDone?.call(watcher.value),
     );
-    return watcher; // Return the initialized and listening watcher
+    return watcher;
   }
 
   /// Default error handler that logs any errors coming from the stream.

@@ -1,13 +1,14 @@
 # Watcher State Management
 
-* [Overview](#overview)
+Flutter Watcher is an alternative to ValueNotifier. It provides convenient syntax, built-in asynchronous safety, automatic tracking of changes within complex data structures, and value caching capabilities. Additionally, Flutter Watcher includes rich widgets to handle not only Watcher objects but any Listenable type.
+
 * [Quick Sample](#quick-sample)
-* [ValueNotifier vs. Watcher](#valuenotifier-vs-watcher)
 * [The Watcher Class](#the-watcher-class)
+* [ValueNotifier vs. Watcher](#valuenotifier-vs-watcher)
 * [Watcher Types](#watcher-types)
    * [Native-like Watchers](#native-like-watchers)
    * [Extension-based Watchers](#extension-based-watchers)
-   * [Quick Initialization](#quick-initialization)
+   * [Quick Initialization](#quick-initialization)n
 * [Watcher Widgets](#watcher-widgets)
    * [WatchValue](#watchvalue)
    * [Watch](#watch)
@@ -20,13 +21,10 @@
 * [Utilities](#utilities)
 * [Full Counter Example](#full-counter-example)
 * [FAQ](#faq)
-* [Contributions](#contributions)
+* [Contributions & Issues](#contributions)
 * [License](#license)
 * [Support](#support)
 
-## Overview
-
-Flutter Watcher is extremely lightweight, simple, and fast. it offers uncomplicated way to handle state management for simple components like switchers, checkboxes, etc. including the `CachedWatcher` used to cache watcher values.
 
 ## Quick Sample
 
@@ -43,12 +41,6 @@ counter.watchValue(
 onPress: () => counter.increment()
 ```
 
-## **ValueNotifier vs. Watcher**
-
-- **Asynchronous Safety**: `Watcher` enhances safety in asynchronous contexts with a `safeMode` and `isDisposed` check, preventing errors when a notifier is updated after being disposed. This is a common issue with `ValueNotifier` in async scenarios that `Watcher` effectively addresses.
-- **Internal Changes Notification**: Unlike `ValueNotifier`, `Watcher` automatically notifies listeners of internal changes in complex data types like lists and maps, thanks to [custom types](#watcher-types) like `ListWatcher` and `MapWatcher`. This ensures UI components can react dynamically to state changes.
-- **Simplified Syntax**: `Watcher` offers a more concise syntax, reducing boilerplate and improving code readability . For instance, what requires a verbose `ValueListenableBuilder` setup with `ValueNotifier` can be more succinctly done using `.watchValue(builder: (value) {})` with `Watcher`. for more see [quick initialization](#quick-initialization) and [widgets extensions](#widgets-extensions).
-
 ## The Watcher Class
 
 ### Initialization
@@ -57,7 +49,7 @@ onPress: () => counter.increment()
 final myWatcher = Watcher<int>(0);
 ```
 
-- This is the basic initialization of watcher, please see [watcher types](##watcher-types), and [quick initialization](##quick-initialization) for a recommended approach.
+- This is the basic initialization of watcher, please see [watcher types](#watcher-types), and [quick initialization](#quick-initialization) for a recommended approach.
 
 ### Modifying the Value
 
@@ -72,6 +64,13 @@ print(myWatcher.isDisposed) // whether the watcher instnace is disposed or not.
 ```
 
 check the [Utilities](#utilities) for more.
+
+## **ValueNotifier vs. Watcher**
+
+- **Asynchronous Safety**: `Watcher` enhances safety in asynchronous contexts with a `safeMode` and `isDisposed` check, preventing errors when a notifier is updated after being disposed. This is a common issue with `ValueNotifier` in async scenarios that `Watcher` effectively addresses.
+- **Internal Changes Notification**: Unlike `ValueNotifier`, `Watcher` automatically notifies listeners of internal changes in complex data types like lists and maps, thanks to [custom types](#watcher-types) like `ListWatcher` and `MapWatcher`. This ensures UI components can react dynamically to state changes.
+- **Simplified Syntax**: `Watcher` offers a more concise syntax, reducing boilerplate and improving code readability . For instance, what requires a verbose `ValueListenableBuilder` setup with `ValueNotifier` can be more succinctly done using `.watchValue(builder: (value) {})` with `Watcher`. for more see [quick initialization](#quick-initialization) and [widgets extensions](#widgets-extensions).
+- **Versatile Reactivity**: `Watcher` provides specialized widgets (`WatchValue`, `Watch`, `WatchAll`) that cater to various reactive scenarios, supporting not only `Watcher` instances but any `ValueListenable` or `Listenable` object.  For better control, these widgets include optional parameters like `watchWhen` (to conditionally trigger rebuilds based on value changes) and `threshold` (to limit rebuild frequency and optimize performance).
 
 ## Watcher Types
 
@@ -252,7 +251,7 @@ class AuthService extends CachedWatcher<AuthState> {
 - **`key` (Optional)**: A unique identifier for the `CachedWatcher`'s stored data, used to save and retrieve the cached
   value from local storage. Default is the type name
 
-The `CachedWatcher` instance can be used with all [Watcher Widgets](##watcher-widgets).
+The `CachedWatcher` instance can be used with all [Watcher Widgets](#watcher-widgets).
 
 ## Utilities
 
@@ -347,10 +346,6 @@ class MyCounter extends StatelessWidget {
 
 ## FAQ
 
-**ValueNotifier vs Watcher:**
-
-
-
 **Why should I use Watcher:**
 
 While there is a great state management available I can recommend to use watcher in some cases:
@@ -359,8 +354,15 @@ While there is a great state management available I can recommend to use watcher
 - If you already use strong state management, but you want to manage a specific (simple) feature or component in your
   app `Watcher` can help with that. Sometimes when you use BLoC its just not convenient to `emit` new state for the sake
   to toggle a switcher in the screen.
+- If you are using the built in `ValueNotifer` but need a simpler syntax, avoiding errors if state updates after disposal, and need your UI to automatically react to changes within lists, maps, or similar data structures watcher is the best alternative for you.
 - If you want to use singletons, watcher instances in a singleton class is a great choice, for example you can use
   CachedWatcher with user settings, or Themes, etc.
+
+**How to move from ValueNotifier to Watcher:**
+
+1. **For new state elements:** Start using the `Watcher` class directly (`final counter = 0.watcher`).
+2. **Gradual Transition:** Your existing `ValueNotifier` instances can be used seamlessly with Watcher's widgets (like `.watchValue`, `.watch`, and `.watchAll`) . This lets you transition gradually without needing to immediately convert all your ValueNotifiers.
+3. **Replace as Needed** As your project evolves, consider replacing ValueNotifier instances with `Watcher` where you specifically want the advantages of simplified syntax, built-in asynchronous safety, or automatic tracking of complex data changes.
 
 **Does it offer any dependency injection?**
 
