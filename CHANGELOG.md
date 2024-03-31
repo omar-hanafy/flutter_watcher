@@ -1,3 +1,7 @@
+### 2.1.2+1
+
+- updated the package description to be more concise.
+
 ### 2.1.2
 
 - CHORE: Updated [flutter_helper_utils](https://pub.dev/packages/flutter_helper_utils) to latest.

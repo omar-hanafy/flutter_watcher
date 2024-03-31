@@ -1,8 +1,8 @@
 name: flutter_watcher
-description: Flutter Watcher is an alternative to ValueNotifier. It provides a more convenient syntax, caching value, built-in asynchronous safety, and automatic tracking of complex data changes.
+description: Flutter Watcher is an alternative to ValueNotifier. It provides a more simple syntax, caching value, built-in asynchronous safety, and automatic tracking of complex data changes.
 
 repository: https://github.com/omar-hanafy/flutter_watcher
-version: 2.1.2
+version: 2.1.2+1
 
 environment:
   sdk: '>=3.0.6 <4.0.0'
