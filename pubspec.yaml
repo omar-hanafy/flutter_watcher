@@ -13,7 +13,8 @@ dependencies:
     sdk: flutter
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  flutter_helper_utils: ^4.0.0
+  flutter_helper_utils: ^4.1.0
+  dart_helper_utils: ^1.0.0
 
 dev_dependencies:
   flutter_test:
