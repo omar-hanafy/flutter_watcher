@@ -210,7 +210,7 @@ abstract class _BaseStoredWatcher {
     required String key,
     Box<dynamic>? box,
   }) async {
-    if (data != null && !isPrimitiveType(data)) throw UnSupportedType();
+    if (data != null && !isValuePrimitive(data)) throw UnSupportedType();
     if (box != null) return box.put(key, data);
     await (await _box).put(key, data);
   }

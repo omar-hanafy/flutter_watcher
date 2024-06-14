@@ -1,6 +1,6 @@
 ### 2.1.4
 
-chore(deps): upgrade to flutter_helper_utils ^4.1.0
+chore(deps): upgrade to flutter_helper_utils ^5.0.0
 
 ### 2.1.3
 
