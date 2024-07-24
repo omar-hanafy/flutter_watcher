@@ -10,8 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_helper_utils: ^5.0.0
-  dart_helper_utils: ^2.0.0
+  flutter_helper_utils: ^6.0.3
+  dart_helper_utils: ^2.1.0
   # internal packages
   flutter_watcher:
     path: ../
