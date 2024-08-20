@@ -1,3 +1,7 @@
+### 2.1.6
+
+- Fixed analysis issue
+
 ### 2.1.5
 
 chore(deps): upgrade to flutter_helper_utils ^6.0.3

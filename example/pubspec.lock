@@ -53,10 +53,10 @@ packages:
     dependency: "direct main"
     description:
       name: dart_helper_utils
-      sha256: "3e0cca05ab7dadbc53e2942d3edf0d560440abff409ca3160c5da4df19b150b9"
+      sha256: "3fdaec871f0209785f46b14b5ac16ac343d1b701b73e2d912557b5777cbe2e22"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.3.0"
   fake_async:
     dependency: transitive
     description:
@@ -82,10 +82,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_helper_utils
-      sha256: "6ebecb96ef9ffe79877df14562e236873a1430c28eb517fda43f1c79ec1cfed6"
+      sha256: caaae349935c879a94122534a47ca8a3e3794998816875ce3f21d8747372ca0c
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.3"
+    version: "6.1.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -105,7 +105,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "2.1.4"
+    version: "2.1.5"
   hive:
     dependency: transitive
     description:

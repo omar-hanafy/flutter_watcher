@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:flutter_watcher/flutter_watcher.dart';
 import 'package:flutter_watcher/src/exceptions/parsing_exception.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_flutter/hive_flutter.dart' as hive;
 
 /// CachedWatcher
 ///
@@ -172,28 +172,29 @@ abstract class CachedWatcher<T> extends Watcher<T> {
   @override
   set v(T newValue) => this.value = newValue;
 
-  Future<void> _writeCache(FutureOr<dynamic> data, {Box<dynamic>? box}) async =>
+  Future<void> _writeCache(FutureOr<dynamic> data,
+          {hive.Box<dynamic>? box}) async =>
       _BaseStoredWatcher._updateValue(await data, key: key, box: box);
 }
 
 abstract class _BaseStoredWatcher {
   static const String _boxName = '_StoredWatcherBox';
-  static Box<dynamic>? _staticBox;
+  static hive.Box<dynamic>? _staticBox;
 
   static bool _isHiveInit = false;
 
   static Future<void> _init() async {
     if (!_isHiveInit) {
-      await Hive.initFlutter();
+      await hive.Hive.initFlutter();
       _isHiveInit = true;
     }
   }
 
-  static Future<Box<dynamic>> get _box async {
+  static Future<hive.Box<dynamic>> get _box async {
     await _init();
     if (_staticBox == null || !(_staticBox?.isOpen ?? false)) {
       try {
-        _staticBox = await Hive.openBox(_boxName);
+        _staticBox = await hive.Hive.openBox(_boxName);
       } catch (_) {}
     }
     return _staticBox!;
@@ -208,7 +209,7 @@ abstract class _BaseStoredWatcher {
   static Future<void> _updateValue(
     dynamic data, {
     required String key,
-    Box<dynamic>? box,
+    hive.Box<dynamic>? box,
   }) async {
     if (data != null && !isValuePrimitive(data)) throw UnSupportedType();
     if (box != null) return box.put(key, data);
